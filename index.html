@@ -308,7 +308,7 @@ footer p {
 
     <select
         id="pouleClassement"
-        onchange="afficherClassement">
+        onchange="afficherClassement()">
 
         <option value="D1 A">D1 A</option>
         <option value="D1 B">D1 B</option>
@@ -947,7 +947,6 @@ function afficherResultats() {
 
     });
 
-    // Tri par journée puis par date
     data.sort(function(a, b) {
 
         const journeeA = Number(a.Journee) || 0;
@@ -965,7 +964,6 @@ function afficherResultats() {
 
     });
 
-    // Regrouper les matchs par journée
     const journees = {};
 
     data.forEach(function(row) {
@@ -988,7 +986,6 @@ function afficherResultats() {
 
     let html = "";
 
-    // Récupérer les journées et les trier
     const listeJournees =
         Object.keys(journees).sort(function(a, b) {
 
