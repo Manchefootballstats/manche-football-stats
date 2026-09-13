@@ -497,25 +497,13 @@ footer p {
 
 <script>
 
-// =====================================================
-// CONFIGURATION
-// =====================================================
-
 const API_URL =
 "https://script.google.com/macros/s/AKfycbxBUI2bCPUZT_p-0JasgBvFD-tcsvU1wj2VDiIKFFhBhFTc25ferP-gvJBW0qd7VHefrQ/exec";
 
 let classementData = [];
-
 let buteursData = [];
-
 let cartonsData = [];
-
 let matchsData = [];
-
-
-// =====================================================
-// NORMALISER UNE POULE
-// =====================================================
 
 function normaliserPoule(valeur) {
 
@@ -525,69 +513,37 @@ function normaliserPoule(valeur) {
 
 }
 
-
-// =====================================================
-// CHANGER DE RUBRIQUE
-// =====================================================
-
 function afficherSection(section) {
 
     document.querySelectorAll(".section").forEach(function(el) {
-
         el.classList.remove("active");
-
     });
 
     document.querySelectorAll("nav button").forEach(function(el) {
-
         el.classList.remove("active");
-
     });
 
     document.getElementById(section).classList.add("active");
 
     if (section === "classement") {
-
-        document
-            .getElementById("btnClassement")
-            .classList.add("active");
-
+        document.getElementById("btnClassement").classList.add("active");
     }
 
     if (section === "buteurs") {
-
-        document
-            .getElementById("btnButeurs")
-            .classList.add("active");
-
+        document.getElementById("btnButeurs").classList.add("active");
     }
 
     if (section === "cartons") {
-
-        document
-            .getElementById("btnCartons")
-            .classList.add("active");
-
+        document.getElementById("btnCartons").classList.add("active");
         afficherCartons();
-
     }
 
     if (section === "resultats") {
-
-        document
-            .getElementById("btnResultats")
-            .classList.add("active");
-
+        document.getElementById("btnResultats").classList.add("active");
         afficherResultats();
-
     }
 
 }
-
-
-// =====================================================
-// CHARGER CLASSEMENTS
-// =====================================================
 
 async function chargerClassements() {
 
@@ -623,11 +579,6 @@ async function chargerClassements() {
 
 }
 
-
-// =====================================================
-// AFFICHER CLASSEMENT
-// =====================================================
-
 function afficherClassement() {
 
     const poule =
@@ -645,27 +596,20 @@ function afficherClassement() {
     data.sort(function(a, b) {
 
         const ptsA = Number(a.Pts) || 0;
-
         const ptsB = Number(b.Pts) || 0;
 
         if (ptsB !== ptsA) {
-
             return ptsB - ptsA;
-
         }
 
         const diffA = Number(a.Diff) || 0;
-
         const diffB = Number(b.Diff) || 0;
 
         if (diffB !== diffA) {
-
             return diffB - diffA;
-
         }
 
         const bpA = Number(a.BP) || 0;
-
         const bpB = Number(b.BP) || 0;
 
         return bpB - bpA;
@@ -683,23 +627,14 @@ function afficherClassement() {
             <tr>
 
                 <th>Pos</th>
-
                 <th>Club</th>
-
                 <th>MJ</th>
-
                 <th>V</th>
-
                 <th>N</th>
-
                 <th>D</th>
-
                 <th>BP</th>
-
                 <th>BC</th>
-
                 <th>Diff</th>
-
                 <th>Pts</th>
 
             </tr>
@@ -717,23 +652,14 @@ function afficherClassement() {
             <tr>
 
                 <td><strong>${index + 1}</strong></td>
-
                 <td>${row.Club || ""}</td>
-
                 <td>${row.MJ || 0}</td>
-
                 <td>${row.V || 0}</td>
-
                 <td>${row.N || 0}</td>
-
                 <td>${row.D || 0}</td>
-
                 <td>${row.BP || 0}</td>
-
                 <td>${row.BC || 0}</td>
-
                 <td>${row.Diff || 0}</td>
-
                 <td><strong>${row.Pts || 0}</strong></td>
 
             </tr>
@@ -764,9 +690,7 @@ function afficherClassement() {
     html += `
 
         </tbody>
-
         </table>
-
         </div>
 
     `;
@@ -776,11 +700,6 @@ function afficherClassement() {
     ).innerHTML = html;
 
 }
-
-
-// =====================================================
-// CHARGER BUTEURS
-// =====================================================
 
 async function chargerButeurs() {
 
@@ -816,11 +735,6 @@ async function chargerButeurs() {
 
 }
 
-
-// =====================================================
-// AFFICHER BUTEURS
-// =====================================================
-
 function afficherButeurs() {
 
     const poule =
@@ -838,7 +752,6 @@ function afficherButeurs() {
     data.sort(function(a, b) {
 
         const butsA = Number(a.Buts) || 0;
-
         const butsB = Number(b.Buts) || 0;
 
         return butsB - butsA;
@@ -856,11 +769,8 @@ function afficherButeurs() {
             <tr>
 
                 <th>Pos</th>
-
                 <th>Joueur</th>
-
                 <th>Club</th>
-
                 <th>Buts</th>
 
             </tr>
@@ -878,11 +788,8 @@ function afficherButeurs() {
             <tr>
 
                 <td><strong>${index + 1}</strong></td>
-
                 <td>${row.Joueur || ""}</td>
-
                 <td>${row.Club || ""}</td>
-
                 <td><strong>${row.Buts || 0}</strong></td>
 
             </tr>
@@ -913,9 +820,7 @@ function afficherButeurs() {
     html += `
 
         </tbody>
-
         </table>
-
         </div>
 
     `;
@@ -925,11 +830,6 @@ function afficherButeurs() {
     ).innerHTML = html;
 
 }
-
-
-// =====================================================
-// CHARGER CARTONS
-// =====================================================
 
 async function chargerCartons() {
 
@@ -973,11 +873,6 @@ async function chargerCartons() {
 
 }
 
-
-// =====================================================
-// AFFICHER CARTONS
-// =====================================================
-
 function afficherCartons() {
 
     const select =
@@ -986,9 +881,7 @@ function afficherCartons() {
         );
 
     if (!select) {
-
         return;
-
     }
 
     const poule = select.value;
@@ -1000,23 +893,27 @@ function afficherCartons() {
 
     });
 
+    // ==========================================
+    // TRI DES CARTONS
+    // 🟥 ROUGES PRIORITAIRES
+    // 🟨 JAUNES ENSUITE
+    // ==========================================
+
     data.sort(function(a, b) {
 
-        const jaunesA = Number(a.Jaunes) || 0;
-
-        const jaunesB = Number(b.Jaunes) || 0;
-
-        if (jaunesB !== jaunesA) {
-
-            return jaunesB - jaunesA;
-
-        }
-
         const rougesA = Number(a.Rouges) || 0;
-
         const rougesB = Number(b.Rouges) || 0;
 
-        return rougesB - rougesA;
+        // Priorité aux cartons rouges
+        if (rougesB !== rougesA) {
+            return rougesB - rougesA;
+        }
+
+        const jaunesA = Number(a.Jaunes) || 0;
+        const jaunesB = Number(b.Jaunes) || 0;
+
+        // Puis classement par cartons jaunes
+        return jaunesB - jaunesA;
 
     });
 
@@ -1031,13 +928,9 @@ function afficherCartons() {
             <tr>
 
                 <th>Pos</th>
-
                 <th>Joueur</th>
-
                 <th>Club</th>
-
                 <th>🟨 Jaunes</th>
-
                 <th>🟥 Rouges</th>
 
             </tr>
@@ -1105,11 +998,6 @@ function afficherCartons() {
 
 }
 
-
-// =====================================================
-// CHARGER LES MATCHS
-// =====================================================
-
 async function chargerMatchs() {
 
     try {
@@ -1157,11 +1045,6 @@ async function chargerMatchs() {
 
 }
 
-
-// =====================================================
-// AFFICHER LES RESULTATS PAR JOURNEE
-// =====================================================
-
 function afficherResultats() {
 
     const select =
@@ -1170,9 +1053,7 @@ function afficherResultats() {
         );
 
     if (!select) {
-
         return;
-
     }
 
     const poule = select.value;
@@ -1183,15 +1064,11 @@ function afficherResultats() {
             !row.Domicile &&
             !row.Exterieur
         ) {
-
             return false;
-
         }
 
         if (poule === "Toutes") {
-
             return true;
-
         }
 
         return normaliserPoule(row.Poule) ===
@@ -1202,13 +1079,10 @@ function afficherResultats() {
     data.sort(function(a, b) {
 
         const journeeA = Number(a.Journee) || 0;
-
         const journeeB = Number(b.Journee) || 0;
 
         if (journeeA !== journeeB) {
-
             return journeeB - journeeA;
-
         }
 
         return convertirDate(b.Date) -
@@ -1227,9 +1101,7 @@ function afficherResultats() {
                 : "Autres";
 
         if (!journees[journee]) {
-
             journees[journee] = [];
-
         }
 
         journees[journee].push(row);
@@ -1242,16 +1114,13 @@ function afficherResultats() {
         Object.keys(journees).sort(function(a, b) {
 
             const numA = Number(a);
-
             const numB = Number(b);
 
             if (
                 !isNaN(numA) &&
                 !isNaN(numB)
             ) {
-
                 return numB - numA;
-
             }
 
             return String(b).localeCompare(
@@ -1404,17 +1273,10 @@ function afficherResultats() {
 
 }
 
-
-// =====================================================
-// CONVERTIR DATE FRANCAISE
-// =====================================================
-
 function convertirDate(dateValue) {
 
     if (!dateValue) {
-
         return new Date(0);
-
     }
 
     const texte =
@@ -1428,9 +1290,7 @@ function convertirDate(dateValue) {
         return new Date(
 
             Number(parts[2]),
-
             Number(parts[1]) - 1,
-
             Number(parts[0])
 
         );
@@ -1441,32 +1301,16 @@ function convertirDate(dateValue) {
 
 }
 
-
-// =====================================================
-// CHARGEMENT INITIAL
-// =====================================================
-
 chargerClassements();
-
 chargerButeurs();
-
 chargerCartons();
-
 chargerMatchs();
-
-
-// =====================================================
-// ACTUALISATION AUTOMATIQUE
-// =====================================================
 
 setInterval(function() {
 
     chargerClassements();
-
     chargerButeurs();
-
     chargerCartons();
-
     chargerMatchs();
 
 }, 60000);
