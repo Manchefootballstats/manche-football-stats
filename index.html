@@ -8,7 +8,6 @@
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-
   gtag('js', new Date());
 
   gtag('config', 'G-LXQZ77D58C');
@@ -306,6 +305,14 @@ footer p {
         onclick="afficherSection('cartons')">
 
         🟨 Cartons
+
+    </button>
+
+    <button
+        id="btnReactions"
+        onclick="afficherSection('reactions')">
+
+        🗣️ Réactions
 
     </button>
 
@@ -894,31 +901,18 @@ function afficherCartons() {
 
     });
 
-    /*
-    ==========================================
-    TRI DES CARTONS
-
-    🟥 PRIORITÉ AUX CARTONS ROUGES
-    🟨 PUIS AUX CARTONS JAUNES
-
-    Exemple :
-    Joueur A → 2 rouges / 0 jaune
-    Joueur B → 1 rouge / 5 jaunes
-    Joueur C → 0 rouge / 8 jaunes
-
-    Classement :
-    1. Joueur A
-    2. Joueur B
-    3. Joueur C
-    ==========================================
-    */
+    // ==========================================
+    // TRI DES CARTONS
+    // 🟥 ROUGES PRIORITAIRES
+    // 🟨 JAUNES ENSUITE
+    // ==========================================
 
     data.sort(function(a, b) {
 
         const rougesA = Number(a.Rouges) || 0;
         const rougesB = Number(b.Rouges) || 0;
 
-        // Les cartons rouges sont prioritaires
+        // Priorité aux cartons rouges
         if (rougesB !== rougesA) {
             return rougesB - rougesA;
         }
@@ -926,7 +920,7 @@ function afficherCartons() {
         const jaunesA = Number(a.Jaunes) || 0;
         const jaunesB = Number(b.Jaunes) || 0;
 
-        // À nombre de rouges égal, les jaunes départagent
+        // Puis classement par cartons jaunes
         return jaunesB - jaunesA;
 
     });
@@ -1320,14 +1314,6 @@ chargerButeurs();
 chargerCartons();
 chargerMatchs();
 
-setInterval(function() {
-
-    chargerClassements();
-    chargerButeurs();
-    chargerCartons();
-    chargerMatchs();
-
-}, 60000);
 
 </script>
 
