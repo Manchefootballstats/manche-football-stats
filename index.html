@@ -588,6 +588,7 @@ let classementData = [];
 let buteursData = [];
 let cartonsData = [];
 let reactionsData = [];
+let reactionsLoaded = false;
 let matchsData = [];
 
 function normaliserPoule(valeur) {
@@ -625,7 +626,11 @@ function afficherSection(section) {
 
     if (section === "reactions") {
         document.getElementById("btnReactions").classList.add("active");
-        afficherReactions();
+        if (!reactionsLoaded) {
+            chargerReactions();
+        } else {
+            afficherReactions();
+        }
     }
 
     if (section === "resultats") {
@@ -1100,7 +1105,14 @@ async function chargerReactions() {
             throw new Error("Erreur lors du chargement des réactions");
         }
 
-        reactionsData = await response.json();
+        const json = await response.json();
+
+        if (!Array.isArray(json)) {
+            throw new Error("Format de données invalide pour les réactions");
+        }
+
+        reactionsData = json;
+        reactionsLoaded = true;
 
         afficherReactions();
 
@@ -1123,7 +1135,400 @@ async function chargerReactions() {
 }
 
 function echapperHtml(valeur) {
-    return String(valeur ?? "")
+    return String(valeur == null ? "" : valeur)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
-        .rep
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function afficherReactions() {
+
+    const select = document.getElementById("pouleReactions");
+
+    if (!select) {
+        return;
+    }
+
+    const poule = select.value;
+
+    if (!Array.isArray(reactionsData)) {
+        reactionsData = [];
+    }
+
+    let data = reactionsData.filter(function(row) {
+
+        if (!row.Reaction && !row["Réaction"]) {
+            return false;
+        }
+
+        if (poule === "Toutes") {
+            return true;
+        }
+
+        return normaliserPoule(row.Poule) === normaliserPoule(poule);
+
+    });
+
+    data.sort(function(a, b) {
+        return convertirDate(b.Date) - convertirDate(a.Date);
+    });
+
+    let html = "";
+
+    data.forEach(function(row) {
+
+        const reaction = row["Réaction"] || row.Reaction || "";
+        const fonction = row.Fonction || "";
+        const equipe = row.Equipe || row["Équipe"] || "";
+
+        html += `
+            <article class="reaction-card">
+                <div class="reaction-meta">
+                    <span>📅 ${echapperHtml(row.Date || "")}</span>
+                    <span>${echapperHtml(row.Poule || "")}</span>
+                </div>
+
+                <div class="reaction-match">
+                    ⚽ ${echapperHtml(row.Match || "Match") }
+                </div>
+
+                <div class="reaction-author">
+                    🗣️ ${echapperHtml(row.Auteur || "")}${fonction ? " — " + echapperHtml(fonction) : ""}${equipe ? " | " + echapperHtml(equipe) : ""}
+                </div>
+
+                <div class="reaction-text">
+                    “${echapperHtml(reaction)}”
+                </div>
+            </article>
+        `;
+
+    });
+
+    if (data.length === 0) {
+        html = `
+            <div class="message">
+                Aucune réaction enregistrée pour cette sélection.
+            </div>
+        `;
+    }
+
+    document.getElementById("reactionsResult").innerHTML = html;
+}
+
+
+async function chargerMatchs() {
+
+    try {
+
+        const response = await fetch(
+            API_URL + "?sheet=Matchs"
+        );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Erreur lors du chargement des matchs"
+            );
+
+        }
+
+        matchsData = await response.json();
+
+        console.log(
+            "Matchs récupérés :",
+            matchsData
+        );
+
+        afficherResultats();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "resultatsResult"
+        ).innerHTML = `
+
+            <div class="message">
+
+                ❌ Impossible de charger les résultats.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+function afficherResultats() {
+
+    const select =
+        document.getElementById(
+            "pouleResultats"
+        );
+
+    if (!select) {
+        return;
+    }
+
+    const poule = select.value;
+
+    let data = matchsData.filter(function(row) {
+
+        if (
+            !row.Domicile &&
+            !row.Exterieur
+        ) {
+            return false;
+        }
+
+        if (poule === "Toutes") {
+            return true;
+        }
+
+        return normaliserPoule(row.Poule) ===
+               normaliserPoule(poule);
+
+    });
+
+    data.sort(function(a, b) {
+
+        const journeeA = Number(a.Journee) || 0;
+        const journeeB = Number(b.Journee) || 0;
+
+        if (journeeA !== journeeB) {
+            return journeeB - journeeA;
+        }
+
+        return convertirDate(b.Date) -
+               convertirDate(a.Date);
+
+    });
+
+    const journees = {};
+
+    data.forEach(function(row) {
+
+        const journee =
+            row.Journee !== undefined &&
+            row.Journee !== ""
+                ? row.Journee
+                : "Autres";
+
+        if (!journees[journee]) {
+            journees[journee] = [];
+        }
+
+        journees[journee].push(row);
+
+    });
+
+    let html = "";
+
+    const listeJournees =
+        Object.keys(journees).sort(function(a, b) {
+
+            const numA = Number(a);
+            const numB = Number(b);
+
+            if (
+                !isNaN(numA) &&
+                !isNaN(numB)
+            ) {
+                return numB - numA;
+            }
+
+            return String(b).localeCompare(
+                String(a),
+                "fr"
+            );
+
+        });
+
+    listeJournees.forEach(function(journee) {
+
+        html += `
+
+            <div class="match-day">
+
+                <div class="match-day-title">
+
+                    📅 Journée ${journee}
+
+                </div>
+
+        `;
+
+        journees[journee].forEach(function(row) {
+
+            const domicile =
+                row.Domicile || "";
+
+            const exterieur =
+                row.Exterieur || "";
+
+            const scoreDom =
+                row["Score Dom."] || "";
+
+            const scoreExt =
+                row["Score Ext."] || "";
+
+            let score = "À venir";
+
+            if (
+                scoreDom !== "" ||
+                scoreExt !== ""
+            ) {
+
+                score =
+                    scoreDom +
+                    " - " +
+                    scoreExt;
+
+            }
+
+            html += `
+
+                <div class="match-card">
+
+                    <div class="match-header">
+
+                        <div>
+
+                            <div class="match-date">
+
+                                📅 ${row.Date || ""}
+
+                            </div>
+
+                            <div class="match-competition">
+
+                                🏆 ${row.Competition || ""}
+
+                            </div>
+
+                        </div>
+
+                        <div class="match-poule">
+
+                            ${row.Poule || ""}
+
+                        </div>
+
+                    </div>
+
+                    <div class="match-teams">
+
+                        <div class="team home">
+
+                            ${domicile}
+
+                        </div>
+
+                        <div class="score">
+
+                            ${score}
+
+                        </div>
+
+                        <div class="team away">
+
+                            ${exterieur}
+
+                        </div>
+
+                    </div>
+
+                    ${
+                        row.Statu
+                        ?
+                        `
+                        <div class="match-status">
+
+                            ${row.Statu}
+
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+            `;
+
+        });
+
+        html += `
+
+            </div>
+
+        `;
+
+    });
+
+    if (data.length === 0) {
+
+        html = `
+
+            <div class="message">
+
+                Aucun match enregistré
+                pour cette sélection.
+
+            </div>
+
+        `;
+
+    }
+
+    document.getElementById(
+        "resultatsResult"
+    ).innerHTML = html;
+
+}
+
+function convertirDate(dateValue) {
+
+    if (!dateValue) {
+        return new Date(0);
+    }
+
+    const texte =
+        String(dateValue).trim();
+
+    const parts =
+        texte.split("/");
+
+    if (parts.length === 3) {
+
+        return new Date(
+
+            Number(parts[2]),
+            Number(parts[1]) - 1,
+            Number(parts[0])
+
+        );
+
+    }
+
+    return new Date(dateValue);
+
+}
+
+chargerClassements();
+chargerButeurs();
+chargerCartons();
+chargerMatchs();
+
+
+</script>
+
+</body>
+
+</html>
