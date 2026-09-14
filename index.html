@@ -216,6 +216,41 @@ tr:last-child td {
     color: #666;
 }
 
+/* Cartes des réactions */
+.reaction-card {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.reaction-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.reaction-match {
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+.reaction-author {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.reaction-text {
+    line-height: 1.5;
+    white-space: pre-line;
+}
+
 .loading {
     text-align: center;
     padding: 25px;
@@ -451,6 +486,47 @@ footer p {
 </section>
 
 
+<section id="reactions" class="section">
+
+    <h2>🗣️ Réactions d'après-match</h2>
+
+    <select
+        id="pouleReactions"
+        onchange="afficherReactions()">
+
+        <option value="Toutes">Toutes les poules</option>
+
+        <option value="D1 A">D1 A</option>
+        <option value="D1 B">D1 B</option>
+
+        <option value="D2 A">D2 A</option>
+        <option value="D2 B">D2 B</option>
+        <option value="D2 C">D2 C</option>
+
+        <option value="D3 A">D3 A</option>
+        <option value="D3 B">D3 B</option>
+        <option value="D3 C">D3 C</option>
+        <option value="D3 D">D3 D</option>
+        <option value="D3 E">D3 E</option>
+
+        <option value="D4 A">D4 A</option>
+        <option value="D4 B">D4 B</option>
+        <option value="D4 C">D4 C</option>
+        <option value="D4 D">D4 D</option>
+        <option value="D4 E">D4 E</option>
+        <option value="D4 F">D4 F</option>
+
+    </select>
+
+    <div id="reactionsResult">
+        <div class="loading">
+            Chargement des réactions...
+        </div>
+    </div>
+
+</section>
+
+
 <section id="resultats" class="section">
 
     <h2>📅 Résultats</h2>
@@ -511,6 +587,7 @@ const API_URL =
 let classementData = [];
 let buteursData = [];
 let cartonsData = [];
+let reactionsData = [];
 let matchsData = [];
 
 function normaliserPoule(valeur) {
@@ -544,6 +621,11 @@ function afficherSection(section) {
     if (section === "cartons") {
         document.getElementById("btnCartons").classList.add("active");
         afficherCartons();
+    }
+
+    if (section === "reactions") {
+        document.getElementById("btnReactions").classList.add("active");
+        afficherReactions();
     }
 
     if (section === "resultats") {
@@ -1006,30 +1088,21 @@ function afficherCartons() {
 
 }
 
-async function chargerMatchs() {
+async function chargerReactions() {
 
     try {
 
         const response = await fetch(
-            API_URL + "?sheet=Matchs"
+            API_URL + "?sheet=Reactions"
         );
 
         if (!response.ok) {
-
-            throw new Error(
-                "Erreur lors du chargement des matchs"
-            );
-
+            throw new Error("Erreur lors du chargement des réactions");
         }
 
-        matchsData = await response.json();
+        reactionsData = await response.json();
 
-        console.log(
-            "Matchs récupérés :",
-            matchsData
-        );
-
-        afficherResultats();
+        afficherReactions();
 
     }
 
@@ -1038,285 +1111,19 @@ async function chargerMatchs() {
         console.error(error);
 
         document.getElementById(
-            "resultatsResult"
+            "reactionsResult"
         ).innerHTML = `
-
             <div class="message">
-
-                ❌ Impossible de charger les résultats.
-
+                ❌ Impossible de charger les réactions.
             </div>
-
         `;
 
     }
 
 }
 
-function afficherResultats() {
-
-    const select =
-        document.getElementById(
-            "pouleResultats"
-        );
-
-    if (!select) {
-        return;
-    }
-
-    const poule = select.value;
-
-    let data = matchsData.filter(function(row) {
-
-        if (
-            !row.Domicile &&
-            !row.Exterieur
-        ) {
-            return false;
-        }
-
-        if (poule === "Toutes") {
-            return true;
-        }
-
-        return normaliserPoule(row.Poule) ===
-               normaliserPoule(poule);
-
-    });
-
-    data.sort(function(a, b) {
-
-        const journeeA = Number(a.Journee) || 0;
-        const journeeB = Number(b.Journee) || 0;
-
-        if (journeeA !== journeeB) {
-            return journeeB - journeeA;
-        }
-
-        return convertirDate(b.Date) -
-               convertirDate(a.Date);
-
-    });
-
-    const journees = {};
-
-    data.forEach(function(row) {
-
-        const journee =
-            row.Journee !== undefined &&
-            row.Journee !== ""
-                ? row.Journee
-                : "Autres";
-
-        if (!journees[journee]) {
-            journees[journee] = [];
-        }
-
-        journees[journee].push(row);
-
-    });
-
-    let html = "";
-
-    const listeJournees =
-        Object.keys(journees).sort(function(a, b) {
-
-            const numA = Number(a);
-            const numB = Number(b);
-
-            if (
-                !isNaN(numA) &&
-                !isNaN(numB)
-            ) {
-                return numB - numA;
-            }
-
-            return String(b).localeCompare(
-                String(a),
-                "fr"
-            );
-
-        });
-
-    listeJournees.forEach(function(journee) {
-
-        html += `
-
-            <div class="match-day">
-
-                <div class="match-day-title">
-
-                    📅 Journée ${journee}
-
-                </div>
-
-        `;
-
-        journees[journee].forEach(function(row) {
-
-            const domicile =
-                row.Domicile || "";
-
-            const exterieur =
-                row.Exterieur || "";
-
-            const scoreDom =
-                row["Score Dom."] || "";
-
-            const scoreExt =
-                row["Score Ext."] || "";
-
-            let score = "À venir";
-
-            if (
-                scoreDom !== "" ||
-                scoreExt !== ""
-            ) {
-
-                score =
-                    scoreDom +
-                    " - " +
-                    scoreExt;
-
-            }
-
-            html += `
-
-                <div class="match-card">
-
-                    <div class="match-header">
-
-                        <div>
-
-                            <div class="match-date">
-
-                                📅 ${row.Date || ""}
-
-                            </div>
-
-                            <div class="match-competition">
-
-                                🏆 ${row.Competition || ""}
-
-                            </div>
-
-                        </div>
-
-                        <div class="match-poule">
-
-                            ${row.Poule || ""}
-
-                        </div>
-
-                    </div>
-
-                    <div class="match-teams">
-
-                        <div class="team home">
-
-                            ${domicile}
-
-                        </div>
-
-                        <div class="score">
-
-                            ${score}
-
-                        </div>
-
-                        <div class="team away">
-
-                            ${exterieur}
-
-                        </div>
-
-                    </div>
-
-                    ${
-                        row.Statu
-                        ?
-                        `
-                        <div class="match-status">
-
-                            ${row.Statu}
-
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                </div>
-
-            `;
-
-        });
-
-        html += `
-
-            </div>
-
-        `;
-
-    });
-
-    if (data.length === 0) {
-
-        html = `
-
-            <div class="message">
-
-                Aucun match enregistré
-                pour cette sélection.
-
-            </div>
-
-        `;
-
-    }
-
-    document.getElementById(
-        "resultatsResult"
-    ).innerHTML = html;
-
-}
-
-function convertirDate(dateValue) {
-
-    if (!dateValue) {
-        return new Date(0);
-    }
-
-    const texte =
-        String(dateValue).trim();
-
-    const parts =
-        texte.split("/");
-
-    if (parts.length === 3) {
-
-        return new Date(
-
-            Number(parts[2]),
-            Number(parts[1]) - 1,
-            Number(parts[0])
-
-        );
-
-    }
-
-    return new Date(dateValue);
-
-}
-
-chargerClassements();
-chargerButeurs();
-chargerCartons();
-chargerMatchs();
-
-
-</script>
-
-</body>
-
-</html>
+function echapperHtml(valeur) {
+    return String(valeur ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .rep
