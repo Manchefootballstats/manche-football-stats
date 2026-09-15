@@ -275,6 +275,8 @@ footer p {
     margin: 5px;
 }
 
+.forme{display:flex;justify-content:center;gap:4px;white-space:nowrap}.forme-badge{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;color:white;font-size:12px;font-weight:bold}.forme-v{background:#16a34a}.forme-n{background:#9ca3af}.forme-d{background:#dc2626}
+
 @media (max-width: 600px) {
 
     header h1 {
@@ -628,6 +630,7 @@ let cartonsData = [];
 let reactionsData = [];
 let reactionsLoaded = false;
 let matchsData = [];
+let formeData = [];
 
 function normaliserPoule(valeur) {
 
@@ -694,6 +697,7 @@ async function chargerClassements() {
         classementData = await response.json();
 
         afficherClassement();
+        chargerForme();
 
     }
 
@@ -715,6 +719,40 @@ async function chargerClassements() {
 
     }
 
+}
+
+
+async function chargerForme() {
+    try {
+        const response = await fetch(API_URL + "?sheet=Forme");
+        if (!response.ok) throw new Error("Erreur lors du chargement de la forme");
+        const json = await response.json();
+        formeData = Array.isArray(json) ? json : [];
+        afficherClassement();
+    } catch (error) {
+        console.error(error);
+        formeData = [];
+    }
+}
+
+function normaliserClub(valeur) {
+    return String(valeur || "").trim().replace(/\s+/g, " ").toUpperCase();
+}
+
+function afficherFormeClub(club, poule) {
+    const ligne = formeData.find(function(row) {
+        return normaliserClub(row.Club) === normaliserClub(club) &&
+               normaliserPoule(row.Poule) === normaliserPoule(poule);
+    });
+    if (!ligne) return '<span style="color:#9ca3af">—</span>';
+    const resultats = [ligne["Match 1"], ligne["Match 2"], ligne["Match 3"], ligne["Match 4"], ligne["Match 5"]]
+        .map(v => String(v || "").trim().toUpperCase())
+        .filter(v => ["V","N","D"].includes(v));
+    if (!resultats.length) return '<span style="color:#9ca3af">—</span>';
+    return '<div class="forme">' + resultats.map(function(r) {
+        const c = r === "V" ? "forme-v" : r === "N" ? "forme-n" : "forme-d";
+        return '<span class="forme-badge ' + c + '">' + r + '</span>';
+    }).join("") + '</div>';
 }
 
 function afficherClassement() {
@@ -774,6 +812,7 @@ function afficherClassement() {
                 <th>BC</th>
                 <th>Diff</th>
                 <th>Pts</th>
+                <th>Forme</th>
 
             </tr>
 
@@ -799,6 +838,7 @@ function afficherClassement() {
                 <td>${row.BC || 0}</td>
                 <td>${row.Diff || 0}</td>
                 <td><strong>${row.Pts || 0}</strong></td>
+                <td>${afficherFormeClub(row.Club, poule)}</td>
 
             </tr>
 
@@ -812,7 +852,7 @@ function afficherClassement() {
 
             <tr>
 
-                <td colspan="10">
+                <td colspan="11">
 
                     Aucun classement enregistré
                     pour cette poule.
