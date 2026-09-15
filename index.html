@@ -275,7 +275,7 @@ footer p {
     margin: 5px;
 }
 
-.forme{display:flex;justify-content:center;gap:4px;white-space:nowrap}.forme-badge{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;color:white;font-size:12px;font-weight:bold}.forme-v{background:#16a34a}.forme-n{background:#9ca3af}.forme-d{background:#dc2626}
+.classement-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.classement-tabs button{border:1px solid #d1d5db;background:white;padding:9px 14px;border-radius:8px;font-weight:bold;cursor:pointer}.classement-tabs button.active{background:#111827;color:white;border-color:#111827}.forme{display:flex;justify-content:center;gap:4px;white-space:nowrap}.forme-badge{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;color:white;font-size:12px;font-weight:bold}.forme-v{background:#16a34a}.forme-n{background:#9ca3af}.forme-d{background:#dc2626}
 
 @media (max-width: 600px) {
 
@@ -402,6 +402,12 @@ footer p {
         <option value="D4 F">D4 F</option>
 
     </select>
+
+    <div class="classement-tabs">
+        <button id="typeGeneral" class="active" onclick="changerTypeClassement('general')">🌍 Général</button>
+        <button id="typeDomicile" onclick="changerTypeClassement('domicile')">🏠 Domicile</button>
+        <button id="typeExterieur" onclick="changerTypeClassement('exterieur')">✈️ Extérieur</button>
+    </div>
 
     <div id="classementResult">
 
@@ -631,6 +637,9 @@ let reactionsData = [];
 let reactionsLoaded = false;
 let matchsData = [];
 let formeData = [];
+let classementDomicileData = [];
+let classementExterieurData = [];
+let typeClassement = "general";
 
 function normaliserPoule(valeur) {
 
@@ -698,6 +707,7 @@ async function chargerClassements() {
 
         afficherClassement();
         chargerForme();
+        chargerClassementsSecondaires();
 
     }
 
@@ -755,6 +765,31 @@ function afficherFormeClub(club, poule) {
     }).join("") + '</div>';
 }
 
+
+async function chargerClassementsSecondaires() {
+    try {
+        const reponses = await Promise.all([
+            fetch(API_URL + "?sheet=" + encodeURIComponent("Classement Domicile")),
+            fetch(API_URL + "?sheet=" + encodeURIComponent("Classement Exterieur"))
+        ]);
+        classementDomicileData = await reponses[0].json();
+        classementExterieurData = await reponses[1].json();
+        afficherClassement();
+    } catch (error) {
+        console.error("Erreur classements domicile/extérieur :", error);
+    }
+}
+
+function changerTypeClassement(type) {
+    typeClassement = type;
+    ["typeGeneral","typeDomicile","typeExterieur"].forEach(id => {
+        const b=document.getElementById(id); if(b) b.classList.remove("active");
+    });
+    const id = type==="domicile" ? "typeDomicile" : type==="exterieur" ? "typeExterieur" : "typeGeneral";
+    const b=document.getElementById(id); if(b) b.classList.add("active");
+    afficherClassement();
+}
+
 function afficherClassement() {
 
     const poule =
@@ -762,7 +797,11 @@ function afficherClassement() {
             "pouleClassement"
         ).value;
 
-    let data = classementData.filter(function(row) {
+    const source = typeClassement === "domicile" ? classementDomicileData :
+                   typeClassement === "exterieur" ? classementExterieurData :
+                   classementData;
+
+    let data = source.filter(function(row) {
 
         return normaliserPoule(row.Poule) ===
                normaliserPoule(poule);
@@ -812,7 +851,7 @@ function afficherClassement() {
                 <th>BC</th>
                 <th>Diff</th>
                 <th>Pts</th>
-                <th>Forme</th>
+                ${typeClassement === "general" ? "<th>Forme</th>" : ""}
 
             </tr>
 
@@ -838,7 +877,7 @@ function afficherClassement() {
                 <td>${row.BC || 0}</td>
                 <td>${row.Diff || 0}</td>
                 <td><strong>${row.Pts || 0}</strong></td>
-                <td>${afficherFormeClub(row.Club, poule)}</td>
+                ${typeClassement === "general" ? `<td>${afficherFormeClub(row.Club, poule)}</td>` : ""}
 
             </tr>
 
@@ -852,7 +891,7 @@ function afficherClassement() {
 
             <tr>
 
-                <td colspan="11">
+                <td colspan="${typeClassement === "general" ? 11 : 10}">
 
                     Aucun classement enregistré
                     pour cette poule.
