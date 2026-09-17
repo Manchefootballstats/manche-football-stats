@@ -277,6 +277,11 @@ footer p {
 
 .classement-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.classement-tabs button{border:1px solid #d1d5db;background:white;padding:9px 14px;border-radius:8px;font-weight:bold;cursor:pointer}.classement-tabs button.active{background:#111827;color:white;border-color:#111827}.forme{display:flex;justify-content:center;gap:4px;white-space:nowrap}.forme-badge{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;color:white;font-size:12px;font-weight:bold}.forme-v{background:#16a34a}.forme-n{background:#9ca3af}.forme-d{background:#dc2626}
 
+.classement-entete,.fiche-entete{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#e9eef5;border-radius:10px;padding:14px;margin-bottom:12px}
+.classement-entete span,.fiche-entete span{color:#475569;font-size:14px}
+.club-link{border:0;background:transparent;color:#17569a;font:inherit;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.club-link:hover{color:#0f172a}.info-note{background:#e9eef5;border-radius:10px;padding:12px;line-height:1.5}
+.fiche-entete h3{margin:0}.fiche-chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px;margin-bottom:25px}.fiche-chiffre{background:white;padding:15px;border-radius:10px;box-shadow:0 2px 8px #0000000a;display:flex;flex-direction:column;gap:8px}.fiche-chiffre small{color:#64748b}.fiche-chiffre strong{font-size:22px}.fiche-match{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;text-align:center;align-items:center}.fiche-match strong{white-space:nowrap}
 @media (max-width: 600px) {
 
     header h1 {
@@ -360,6 +365,8 @@ footer p {
         📊 Stats
 
     </button>
+
+    <button id="btnClubs" onclick="afficherSection('clubs')">⚽ Clubs</button>
 
     <button
         id="btnResultats"
@@ -573,6 +580,13 @@ footer p {
 </section>
 
 
+<section id="clubs" class="section">
+<h2>⚽ Fiches clubs</h2>
+<p>Retrouvez le bilan, les buteurs et les rencontres de chaque équipe.</p>
+<select id="pouleClubs" onchange="actualiserChoixClubs()"></select>
+<select id="clubChoisi" onchange="afficherFicheClub()"></select>
+<div id="ficheClubResult" aria-live="polite"></div>
+</section>
 <section id="resultats" class="section">
 
     <h2>📅 Résultats</h2>
@@ -688,6 +702,11 @@ function afficherSection(section) {
         afficherStats();
     }
 
+    if (section === "clubs") {
+        document.getElementById("btnClubs").classList.add("active");
+        initialiserClubs();
+    }
+
     if (section === "resultats") {
         document.getElementById("btnResultats").classList.add("active");
         afficherResultats();
@@ -706,6 +725,8 @@ async function chargerClassements() {
         classementData = await response.json();
 
         afficherClassement();
+        afficherStats();
+        if (document.getElementById("clubs").classList.contains("active")) initialiserClubs();
         chargerForme();
         chargerClassementsSecondaires();
 
@@ -739,6 +760,7 @@ async function chargerForme() {
         const json = await response.json();
         formeData = Array.isArray(json) ? json : [];
         afficherClassement();
+        afficherStats();
     } catch (error) {
         console.error(error);
         formeData = [];
@@ -775,6 +797,7 @@ async function chargerClassementsSecondaires() {
         classementDomicileData = await reponses[0].json();
         classementExterieurData = await reponses[1].json();
         afficherClassement();
+        if (document.getElementById("clubs").classList.contains("active")) afficherFicheClub();
     } catch (error) {
         console.error("Erreur classements domicile/extérieur :", error);
     }
@@ -868,7 +891,7 @@ function afficherClassement() {
             <tr>
 
                 <td><strong>${index + 1}</strong></td>
-                <td>${row.Club || ""}</td>
+                <td>${lienClub(row.Club,poule)}</td>
                 <td>${row.MJ || 0}</td>
                 <td>${row.V || 0}</td>
                 <td>${row.N || 0}</td>
@@ -912,9 +935,8 @@ function afficherClassement() {
 
     `;
 
-    document.getElementById(
-        "classementResult"
-    ).innerHTML = html;
+    const titre = typeClassement === "domicile" ? "🏠 Classement à domicile" : typeClassement === "exterieur" ? "✈️ Classement à l'extérieur" : "🌍 Classement général";
+    document.getElementById("classementResult").innerHTML = `<div class="classement-entete"><strong>${titre} · ${echapperHtml(poule)}</strong><span>${data.length} équipes</span></div>` + html;
 
 }
 
@@ -942,16 +964,37 @@ function afficherStats() {
     function tableau(liste, titre, colonne, libelle) {
         let html = `<h3>${titre}</h3><div class="table-container"><table><thead><tr><th>Pos</th><th>Club</th><th>${libelle}</th></tr></thead><tbody>`;
         liste.forEach(function(row, index) {
-            html += `<tr><td><strong>${index + 1}</strong></td><td>${echapperHtml(row.Club || "")}</td><td><strong>${Number(row[colonne]) || 0}</strong></td></tr>`;
+            html += `<tr><td><strong>${index + 1}</strong></td><td>${lienClub(row.Club,poule)}</td><td><strong>${Number(row[colonne]) || 0}</strong></td></tr>`;
         });
         if (liste.length === 0) html += `<tr><td colspan="3">Aucune statistique disponible pour cette poule.</td></tr>`;
         return html + `</tbody></table></div>`;
     }
 
+    const victoires = [...data].sort((a,b) => (Number(b.V)||0)-(Number(a.V)||0) || String(a.Club).localeCompare(String(b.Club),"fr"));
+    const moyennes = [...data].sort((a,b) => (Number(b.BP)/Number(b.MJ))-(Number(a.BP)/Number(a.MJ)));
+    const series = data.map(row => {
+        const matchs = matchsData.filter(m => normaliserPoule(m.Poule) === normaliserPoule(poule) &&
+            [m.Domicile,m.Exterieur].some(c => normaliserClub(c) === normaliserClub(row.Club)) && matchTermine(m))
+            .sort((a,b) => convertirDate(b.Date)-convertirDate(a.Date) || (Number(b.Journee)||0)-(Number(a.Journee)||0));
+        let vic=0, inv=0;
+        for(const m of matchs){if(resultatClub(m,row.Club)==="V") vic++; else break;}
+        for(const m of matchs){if(resultatClub(m,row.Club)!=="D") inv++; else break;}
+        return {Club:row.Club, vic, inv, matchs:matchs.length};
+    });
+    function tableauSeries(cle,titre){
+        const liste=series.filter(r=>r.matchs).sort((a,b)=>b[cle]-a[cle] || a.Club.localeCompare(b.Club,"fr"));
+        return `<h3>${titre}</h3><div class="table-container"><table><thead><tr><th>Pos</th><th>Club</th><th>Matchs consécutifs</th></tr></thead><tbody>`+
+          (liste.length ? liste.map((r,i)=>`<tr><td>${i+1}</td><td>${lienClub(r.Club,poule)}</td><td><strong>${r[cle]}</strong></td></tr>`).join("") : `<tr><td colspan="3">Aucun match terminé disponible.</td></tr>`)+`</tbody></table></div>`;
+    }
     document.getElementById("statsResult").innerHTML =
+        `<p class="info-note">Statistiques par poule. Les séries sont calculées uniquement sur les matchs terminés saisis, hors forfaits et rencontres reportées. Vérifiez que l'historique des matchs est complet.</p>` +
         tableau(attaques, "⚽ Meilleures attaques", "BP", "Buts marqués") +
         `<div style="height:25px"></div>` +
-        tableau(defenses, "🧤 Meilleures défenses", "BC", "Buts encaissés");
+        tableau(defenses, "🧤 Meilleures défenses", "BC", "Buts encaissés") +
+        `<div style="height:25px"></div>` + tableau(victoires,"🏆 Plus de victoires","V","Victoires") +
+        `<h3>📈 Moyenne de buts marqués par match</h3><div class="table-container"><table><thead><tr><th>Club</th><th>Buts/match</th></tr></thead><tbody>`+
+        (moyennes.length ? moyennes.map(r=>`<tr><td>${lienClub(r.Club,poule)}</td><td>${(Number(r.BP)/Number(r.MJ)).toLocaleString("fr-FR",{maximumFractionDigits:2})}</td></tr>`).join("") : `<tr><td colspan="2">Aucune donnée disponible.</td></tr>`)+
+        `</tbody></table></div>` + tableauSeries("vic","🔥 Série de victoires en cours") + tableauSeries("inv","🛡️ Série d'invincibilité en cours");
 }
 
 
@@ -966,6 +1009,7 @@ async function chargerButeurs() {
         buteursData = await response.json();
 
         afficherButeurs();
+        if (document.getElementById("clubs").classList.contains("active")) afficherFicheClub();
 
     }
 
@@ -1043,7 +1087,7 @@ function afficherButeurs() {
 
                 <td><strong>${index + 1}</strong></td>
                 <td>${row.Joueur || ""}</td>
-                <td>${row.Club || ""}</td>
+                <td>${lienClub(row.Club,poule)}</td>
                 <td><strong>${row.Buts || 0}</strong></td>
 
             </tr>
@@ -1401,6 +1445,8 @@ async function chargerMatchs() {
         );
 
         afficherResultats();
+        afficherStats();
+        if (document.getElementById("clubs").classList.contains("active")) afficherFicheClub();
 
     }
 
@@ -1678,6 +1724,68 @@ function convertirDate(dateValue) {
 
     return new Date(dateValue);
 
+}
+
+
+/* Fiches et statistiques : aucune feuille supplémentaire requise. */
+function matchTermine(m) {
+    const statut = String(m.Statu || m.Statut || "").toLowerCase();
+    if (/report|annul|forfait|non jou|à venir|a venir/.test(statut)) return false;
+    return m["Score Dom."] !== "" && m["Score Dom."] != null &&
+           m["Score Ext."] !== "" && m["Score Ext."] != null &&
+           Number.isFinite(Number(m["Score Dom."])) && Number.isFinite(Number(m["Score Ext."]));
+}
+function resultatClub(m,club) {
+    if (!matchTermine(m)) return "";
+    const dom = normaliserClub(m.Domicile) === normaliserClub(club);
+    const a=Number(m["Score Dom."]), b=Number(m["Score Ext."]);
+    return a===b ? "N" : (dom ? a>b : b>a) ? "V" : "D";
+}
+function lienClub(club,poule) {
+    return `<button class="club-link" type="button" data-club="${echapperHtml(club)}" data-poule="${echapperHtml(poule)}">${echapperHtml(club)}</button>`;
+}
+document.addEventListener("click",function(e){
+    const bouton=e.target.closest(".club-link");
+    if(!bouton) return;
+    afficherSection("clubs");
+    document.getElementById("pouleClubs").value=bouton.dataset.poule;
+    actualiserChoixClubs();
+    document.getElementById("clubChoisi").value=bouton.dataset.club;
+    afficherFicheClub();
+});
+function initialiserClubs(){
+    const sel=document.getElementById("pouleClubs");
+    const ancienne=sel.value;
+    sel.innerHTML=document.getElementById("pouleClassement").innerHTML;
+    sel.value=ancienne || document.getElementById("pouleClassement").value;
+    actualiserChoixClubs();
+}
+function actualiserChoixClubs(){
+    const poule=document.getElementById("pouleClubs").value;
+    const sel=document.getElementById("clubChoisi"), ancien=sel.value;
+    const clubs=classementData.filter(r=>normaliserPoule(r.Poule)===normaliserPoule(poule)).map(r=>r.Club).filter(Boolean).sort((a,b)=>a.localeCompare(b,"fr"));
+    sel.innerHTML=clubs.map(c=>`<option value="${echapperHtml(c)}">${echapperHtml(c)}</option>`).join("");
+    if(clubs.includes(ancien)) sel.value=ancien;
+    afficherFicheClub();
+}
+function afficherFicheClub(){
+    const cible=document.getElementById("ficheClubResult");
+    const poule=document.getElementById("pouleClubs").value, club=document.getElementById("clubChoisi").value;
+    const classement=classementData.filter(r=>normaliserPoule(r.Poule)===normaliserPoule(poule))
+      .sort((a,b)=>(Number(b.Pts)||0)-(Number(a.Pts)||0) || (Number(b.Diff)||0)-(Number(a.Diff)||0) || (Number(b.BP)||0)-(Number(a.BP)||0));
+    const rang=classement.findIndex(r=>normaliserClub(r.Club)===normaliserClub(club));
+    if(rang<0){cible.innerHTML='<div class="message">Aucun club disponible pour cette poule. Vérifiez les données du classement.</div>';return;}
+    const r=classement[rang];
+    const matchs=matchsData.filter(m=>normaliserPoule(m.Poule)===normaliserPoule(poule) && [m.Domicile,m.Exterieur].some(c=>normaliserClub(c)===normaliserClub(club)))
+      .sort((a,b)=>convertirDate(b.Date)-convertirDate(a.Date));
+    const buteurs=buteursData.filter(b=>normaliserPoule(b.Poule)===normaliserPoule(poule)&&normaliserClub(b.Club)===normaliserClub(club)).sort((a,b)=>(Number(b.Buts)||0)-(Number(a.Buts)||0));
+    const chiffres=[["Classement",`${rang+1} / ${classement.length}`],["Points",r.Pts],["Matchs",r.MJ],["V / N / D",`${r.V} / ${r.N} / ${r.D}`],["Buts marqués",r.BP],["Buts encaissés",r.BC],["Différence",r.Diff]];
+    cible.innerHTML=`<div class="fiche-entete"><h3>${echapperHtml(club)}</h3><span>${echapperHtml(poule)}</span></div>`+
+      `<div class="fiche-chiffres">${chiffres.map(([titre,val])=>`<div class="fiche-chiffre"><small>${titre}</small><strong>${echapperHtml(val ?? "—")}</strong></div>`).join("")}</div>`+
+      `<h3>⚽ Buteurs</h3><div class="table-container"><table><thead><tr><th>Joueur</th><th>Buts</th></tr></thead><tbody>`+
+      (buteurs.length?buteurs.map(b=>`<tr><td>${echapperHtml(b.Joueur)}</td><td>${echapperHtml(b.Buts)}</td></tr>`).join(""):`<tr><td colspan="2">Aucun buteur renseigné.</td></tr>`)+`</tbody></table></div>`+
+      `<h3>📅 Résultats et prochains matchs</h3>`+
+      (matchs.length?matchs.map(m=>`<div class="match-card"><div class="reaction-meta"><span>${echapperHtml(m.Date||"Date non renseignée")}</span><span>Journée ${echapperHtml(m.Journee||"—")}</span></div><div class="fiche-match"><span>${echapperHtml(m.Domicile)}</span><strong>${matchTermine(m)?echapperHtml(m["Score Dom."])+" - "+echapperHtml(m["Score Ext."]):"À venir / non joué"}</strong><span>${echapperHtml(m.Exterieur)}</span></div>${m.Statu?`<p class="match-status">${echapperHtml(m.Statu)}</p>`:""}</div>`).join(""):`<div class="message">Aucun match enregistré pour cette équipe.</div>`);
 }
 
 chargerClassements();
