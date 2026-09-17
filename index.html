@@ -1891,7 +1891,9 @@ function afficherFicheClub(){
     const buteurs=buteursData.filter(b=>normaliserPoule(b.Poule)===normaliserPoule(poule)&&normaliserClub(b.Club)===normaliserClub(club)).sort((a,b)=>(Number(b.Buts)||0)-(Number(a.Buts)||0));
     const cartons=cartonsData.filter(c=>normaliserPoule(c.Poule)===normaliserPoule(poule)&&normaliserClub(c.Club)===normaliserClub(club))
       .sort((a,b)=>(Number(b.Rouges)||0)-(Number(a.Rouges)||0)||(Number(b.Jaunes)||0)-(Number(a.Jaunes)||0));
-    const chiffres=[["Classement",`${rang+1} / ${classement.length}`],["Points",r.Pts],["Matchs",r.MJ],["V / N / D",`${r.V} / ${r.N} / ${r.D}`],["Buts marqués",r.BP],["Buts encaissés",r.BC],["Différence",r.Diff]];
+    const totalJaunes=cartons.reduce((total,c)=>total+(Number(c.Jaunes)||0),0);
+    const totalRouges=cartons.reduce((total,c)=>total+(Number(c.Rouges)||0),0);
+    const chiffres=[["Classement",`${rang+1} / ${classement.length}`],["Points",r.Pts],["Matchs",r.MJ],["V / N / D",`${r.V} / ${r.N} / ${r.D}`],["Buts marqués",r.BP],["Buts encaissés",r.BC],["Différence",r.Diff],["🟨 Cartons jaunes",totalJaunes],["🟥 Cartons rouges",totalRouges]];
     cible.innerHTML=`<div class="fiche-entete"><h3>${echapperHtml(club)}</h3><span>${echapperHtml(poule)}</span></div>`+
       `<div class="fiche-chiffres">${chiffres.map(([titre,val])=>`<div class="fiche-chiffre"><small>${titre}</small><strong>${echapperHtml(val ?? "—")}</strong></div>`).join("")}</div>`+
       `<h3>⚽ Buteurs</h3><div class="table-container"><table><thead><tr><th>Joueur</th><th>Buts</th></tr></thead><tbody>`+
