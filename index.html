@@ -396,6 +396,16 @@ footer{padding:25px 15px}
 .fiche-carton.rouge{background:#ffe0e0;color:#a51919}
 @media(max-width:600px){.fiche-table th,.fiche-table td{padding:11px 7px;font-size:13px}}
 .news-card{background:white;border-radius:12px;padding:20px;margin-bottom:16px;box-shadow:0 2px 8px #00000012;border-left:4px solid #087b42}.news-meta{color:#64748b;font-size:13px;margin-bottom:8px}.news-card h3{margin:0 0 10px;color:#10263c}.news-card p{line-height:1.6;white-space:pre-line;overflow-wrap:anywhere}.news-card details{margin-top:10px}.news-card summary{cursor:pointer;color:#087b42;font-weight:bold}
+/* Fil d’actualité compact sur l’accueil */
+.accueil-layout{display:grid;grid-template-columns:minmax(0,1fr) 305px;gap:18px;align-items:start}
+.accueil-main{min-width:0}.accueil-news{background:white;border:1px solid #e0eae5;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px #0b20340b}
+.accueil-news-head{background:linear-gradient(105deg,#098446,#005b33);color:white;padding:13px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.accueil-news-head h3{font-size:15px;margin:0}.accueil-news-head button{border:0;background:transparent;color:white;font-weight:bold;cursor:pointer;font-size:12px}
+.accueil-news-list{padding:0 12px}.accueil-news-item{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #e5e7eb;background:white;padding:12px 2px;cursor:pointer;color:#172b39}
+.accueil-news-item:last-child{border-bottom:0}.accueil-news-item:hover,.accueil-news-item:focus-visible{color:#087b42;background:#f4faf6;outline:2px solid #b8ebcd}
+.accueil-news-item small{display:block;color:#64748b;font-size:11px;margin-bottom:5px}.accueil-news-item strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:13px;line-height:1.4}
+.accueil-news-message{padding:15px;font-size:13px;color:#64748b}
+@media(max-width:900px){.accueil-layout{grid-template-columns:1fr}.accueil-news{max-width:none}}
 </style>
 
 </head>
@@ -487,7 +497,7 @@ footer{padding:25px 15px}
 <!-- Emplacement publicitaire réservé : invisible tant qu’aucune publicité n’est activée. -->
 <div class="ad-slot" id="pubAccueilHaut" hidden></div>
 <div class="home-filter"><label for="pouleAccueil">Choisir une poule</label><select id="pouleAccueil" onchange="afficherAccueil()"></select></div>
-<div id="accueilResult" aria-live="polite"><div class="loading">Chargement des informations…</div></div>
+<div class="accueil-layout"><div class="accueil-main"><div id="accueilResult" aria-live="polite"><div class="loading">Chargement des informations…</div></div></div><aside class="accueil-news" aria-label="Dernières actualités"><div class="accueil-news-head"><h3>📰 Fil d’actualité</h3><button type="button" onclick="afficherSection('actualites')">Voir tout →</button></div><div id="accueilNewsList" class="accueil-news-list" aria-live="polite"><div class="accueil-news-message">Chargement des actualités…</div></div></aside></div>
 </section>
 <section id="actualites" class="section"><h2>📰 Actualités du football manchois</h2><div id="actualitesResult" aria-live="polite"><div class="loading">Chargement des actualités…</div></div></section>
 <section id="classement" class="section">
@@ -2048,14 +2058,26 @@ async function chargerActualites() {
                 return `<article class="news-card"><div class="news-meta">${date} · ${categorie}</div><h3>${titre}</h3>${resume ? `<p>${resume}</p>` : ''}${article ? `<details><summary>Lire l’article</summary><p>${article}</p></details>` : ''}</article>`;
             }).join('');
         }
+        const accueilNews = document.getElementById('accueilNewsList');
+        if (accueilNews) {
+            accueilNews.innerHTML = articles.length ? articles.slice(0,5).map(a => {
+                const date = echapperHtml(a.Date || '');
+                const categorie = echapperHtml(a.Categorie || a['Catégorie'] || 'Actualité');
+                const titre = echapperHtml(a.Titre || 'Actualité');
+                return `<button type="button" class="accueil-news-item" onclick="afficherSection('actualites')"><small>${date} · ${categorie}</small><strong>${titre}</strong></button>`;
+            }).join('') : '<div class="accueil-news-message">Aucune actualité publiée pour le moment.</div>';
+        }
         actualitesLoaded = true;
     } catch (error) {
         cible.innerHTML = '<div class="message">Impossible de charger les actualités. Vérifie le déploiement Apps Script et l’onglet « Actualites ».</div>';
+        const accueilNews = document.getElementById('accueilNewsList');
+        if (accueilNews) accueilNews.innerHTML = '<div class="accueil-news-message">Actualités indisponibles pour le moment.</div>';
         console.error('Actualités :', error);
     }
 }
 
 initialiserAccueil();
+chargerActualites();
 chargerClassements();
 chargerButeurs();
 chargerCartons();
