@@ -382,6 +382,10 @@ footer{padding:25px 15px}
 .header-contact a:hover,.header-contact a:focus-visible{background:#087a43;outline:2px solid #51d88b;outline-offset:2px}
 @media(max-width:760px){.header-inner{flex-direction:column;align-items:stretch;gap:15px}.header-ball{width:48px;height:48px;font-size:27px;border-radius:12px}.header-brand{gap:10px}.site-header h1{font-size:clamp(21px,5vw,30px)}.site-header p{font-size:10px;letter-spacing:1px}.header-contact{align-items:flex-start;text-align:left;padding-left:58px}.header-contact-label{display:none}.header-contact a{font-size:12px;padding:8px 10px}}
 @media(max-width:380px){.header-contact{padding-left:0}.header-ball{width:42px;height:42px}.header-brand{gap:8px}}
+.export-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 15px}
+.export-actions button{border:0;border-radius:9px;background:#087b42;color:white;font-weight:700;padding:12px 16px;cursor:pointer}
+.export-actions button:hover,.export-actions button:focus-visible{background:#065d35;outline:2px solid #a0e7b7}
+#exportMessage{font-size:13px;color:#475569}
 /* Fiches clubs : tableaux lisibles, sans logos de clubs */
 .fiche-section-title{margin:25px 0 12px;color:var(--nuit)}
 .fiche-table{margin-bottom:22px}
@@ -518,6 +522,8 @@ footer{padding:25px 15px}
         <button id="typeDomicile" onclick="changerTypeClassement('domicile')">🏠 Domicile</button>
         <button id="typeExterieur" onclick="changerTypeClassement('exterieur')">✈️ Extérieur</button>
     </div>
+
+    <div class="export-actions"><button type="button" id="exportClassement" onclick="telechargerClassementImage()">📸 Télécharger le classement en image (PNG)</button><span id="exportMessage" role="status" aria-live="polite"></span></div>
 
     <div id="classementResult">
 
@@ -757,6 +763,7 @@ let formeData = [];
 let classementDomicileData = [];
 let classementExterieurData = [];
 let typeClassement = "general";
+let classementPourImage = [];
 
 function normaliserPoule(valeur) {
 
@@ -960,6 +967,10 @@ function afficherClassement() {
 
     });
 
+    classementPourImage = data.slice();
+    const boutonExport = document.getElementById("exportClassement");
+    if (boutonExport) boutonExport.disabled = data.length === 0;
+
     let html = `
 
         <div class="table-container">
@@ -1044,6 +1055,76 @@ function afficherClassement() {
     const titre = typeClassement === "domicile" ? "🏠 Classement à domicile" : typeClassement === "exterieur" ? "✈️ Classement à l'extérieur" : "🌍 Classement général";
     document.getElementById("classementResult").innerHTML = `<div class="classement-entete"><strong>${titre} · ${echapperHtml(poule)}</strong><span>${data.length} équipes</span></div>` + html;
 
+}
+
+// Génération PNG autonome à partir du classement actuellement affiché.
+// Aucune bibliothèque externe ni nouvelle feuille Google Sheets nécessaires.
+function telechargerClassementImage() {
+    const message = document.getElementById("exportMessage");
+    const data = classementPourImage;
+    if (!data.length) {
+        if (message) message.textContent = "Aucun classement à télécharger pour cette poule.";
+        return;
+    }
+    try {
+        const poule = document.getElementById("pouleClassement").value;
+        const type = typeClassement === "domicile" ? "DOMICILE" : typeClassement === "exterieur" ? "EXTÉRIEUR" : "GÉNÉRAL";
+        const W = 1400, marge = 65, entete = 300, ligne = 70, pied = 110;
+        const H = entete + data.length * ligne + pied;
+        const canvas = document.createElement("canvas");
+        canvas.width = W; canvas.height = H;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) throw new Error("Canvas indisponible");
+        ctx.fillStyle = "#f4f8f6"; ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = "#10263c"; ctx.fillRect(0, 0, W, 205);
+        ctx.fillStyle = "#16a34a"; ctx.fillRect(0, 205, W, 9);
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#ffffff"; ctx.font = "bold 49px Arial, sans-serif";
+        ctx.fillText("MANCHE FOOTBALL STATS", marge, 77);
+        ctx.fillStyle = "#a0e7b7"; ctx.font = "bold 30px Arial, sans-serif";
+        ctx.fillText("CLASSEMENT " + type + "  •  " + poule.toUpperCase(), marge, 145);
+        const colonnes = [marge, 145, 750, 845, 930, 1015, 1100, 1190, 1290];
+        const titres = ["POS", "CLUB", "MJ", "V", "N", "D", "DIFF", "PTS"];
+        ctx.fillStyle = "#087b42"; ctx.fillRect(marge, 240, W - marge * 2, 60);
+        ctx.font = "bold 23px Arial, sans-serif"; ctx.fillStyle = "#ffffff";
+        titres.forEach((t,i) => ctx.fillText(t, colonnes[i] + 10, 270));
+        function clubTexte(texte, maxLargeur) {
+            let t = String(texte || "Club");
+            while (t.length > 1 && ctx.measureText(t).width > maxLargeur) t = t.slice(0,-1);
+            return t === String(texte || "Club") ? t : t.trimEnd() + "…";
+        }
+        data.forEach((r,i) => {
+            const y = entete + i * ligne;
+            ctx.fillStyle = i % 2 ? "#eaf2ee" : "#ffffff";
+            ctx.fillRect(marge, y, W - marge * 2, ligne);
+            ctx.fillStyle = "#d5e3dc"; ctx.fillRect(marge, y + ligne - 1, W - marge * 2, 1);
+            ctx.fillStyle = "#10263c"; ctx.font = "bold 26px Arial, sans-serif";
+            ctx.fillText(String(i+1), colonnes[0]+10, y+35);
+            ctx.font = "bold 24px Arial, sans-serif";
+            ctx.fillText(clubTexte(r.Club, 565), colonnes[1]+10, y+35);
+            ctx.font = "23px Arial, sans-serif";
+            [r.MJ,r.V,r.N,r.D,r.Diff,r.Pts].forEach((v,j) => {
+                ctx.fillStyle = j === 5 ? "#087b42" : "#10263c";
+                if (j === 5) ctx.font = "bold 25px Arial, sans-serif";
+                ctx.fillText(String(v ?? 0), colonnes[j+2]+10, y+35);
+                if (j === 5) ctx.font = "23px Arial, sans-serif";
+            });
+        });
+        ctx.fillStyle = "#10263c"; ctx.fillRect(0, H-pied, W, pied);
+        ctx.fillStyle = "#ffffff"; ctx.font = "bold 24px Arial, sans-serif";
+        ctx.fillText("LE FOOTBALL MANCHOIS EN CHIFFRES", marge, H-65);
+        ctx.fillStyle = "#a0e7b7"; ctx.font = "20px Arial, sans-serif";
+        ctx.fillText("manchefootballstats.github.io/manche-football-stats/", marge, H-30);
+        const lien = document.createElement("a");
+        const nom = (poule + "-" + type).normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9-]+/g, "-").toLowerCase();
+        lien.download = "manche-football-stats-" + nom + ".png";
+        lien.href = canvas.toDataURL("image/png");
+        document.body.appendChild(lien); lien.click(); lien.remove();
+        if (message) message.textContent = "Image PNG générée !";
+    } catch (erreur) {
+        console.error("Export du classement :", erreur);
+        if (message) message.textContent = "Impossible de générer l’image sur ce navigateur.";
+    }
 }
 
 function afficherStats() {
