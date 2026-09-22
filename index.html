@@ -620,6 +620,11 @@ footer{padding:25px 15px}
 
     </select>
 
+    <div class="classement-tabs" role="group" aria-label="Type de classement des cartons">
+        <button type="button" id="cartonsJoueurs" class="active" onclick="changerVueCartons('joueurs')">Par joueur</button>
+        <button type="button" id="cartonsEquipes" onclick="changerVueCartons('equipes')">Par équipe</button>
+    </div>
+
     <div id="cartonsResult">
 
         <div class="loading">
@@ -1379,129 +1384,56 @@ async function chargerCartons() {
 
 }
 
+let vueCartons = "joueurs";
+
+function changerVueCartons(vue) {
+    vueCartons = vue === "equipes" ? "equipes" : "joueurs";
+    document.getElementById("cartonsJoueurs").classList.toggle("active", vueCartons === "joueurs");
+    document.getElementById("cartonsEquipes").classList.toggle("active", vueCartons === "equipes");
+    afficherCartons();
+}
+
 function afficherCartons() {
-
-    const select =
-        document.getElementById(
-            "pouleCartons"
-        );
-
-    if (!select) {
-        return;
-    }
-
+    const select = document.getElementById("pouleCartons");
+    if (!select) return;
     const poule = select.value;
+    const data = cartonsData.filter(row => normaliserPoule(row.Poule) === normaliserPoule(poule));
+    const nombre = valeur => Number(valeur) || 0;
+    let lignes;
+    let colonnes;
 
-    let data = cartonsData.filter(function(row) {
-
-        return normaliserPoule(row.Poule) ===
-               normaliserPoule(poule);
-
-    });
-
-    // ==========================================
-    // TRI DES CARTONS
-    // 🟥 ROUGES PRIORITAIRES
-    // 🟨 JAUNES ENSUITE
-    // ==========================================
-
-    data.sort(function(a, b) {
-
-        const rougesA = Number(a.Rouges) || 0;
-        const rougesB = Number(b.Rouges) || 0;
-
-        // Priorité aux cartons rouges
-        if (rougesB !== rougesA) {
-            return rougesB - rougesA;
-        }
-
-        const jaunesA = Number(a.Jaunes) || 0;
-        const jaunesB = Number(b.Jaunes) || 0;
-
-        // Puis classement par cartons jaunes
-        return jaunesB - jaunesA;
-
-    });
-
-    let html = `
-
-        <div class="table-container">
-
-        <table>
-
-        <thead>
-
-            <tr>
-
-                <th>Pos</th>
-                <th>Joueur</th>
-                <th>Club</th>
-                <th>🟨 Jaunes</th>
-                <th>🟥 Rouges</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-    `;
-
-    data.forEach(function(row, index) {
-
-        html += `
-
-            <tr>
-
-                <td><strong>${index + 1}</strong></td>
-
-                <td>${row.Joueur || ""}</td>
-
-                <td>${row.Club || ""}</td>
-
-                <td><strong>${row.Jaunes || 0}</strong></td>
-
-                <td><strong>${row.Rouges || 0}</strong></td>
-
-            </tr>
-
-        `;
-
-    });
-
-    if (data.length === 0) {
-
-        html += `
-
-            <tr>
-
-                <td colspan="5">
-
-                    Aucun carton enregistré
-                    pour cette poule.
-
-                </td>
-
-            </tr>
-
-        `;
-
+    if (vueCartons === "equipes") {
+        const clubs = new Map();
+        data.forEach(row => {
+            const club = String(row.Club || "").trim();
+            if (!club) return;
+            const cle = normaliserClub(club);
+            if (!clubs.has(cle)) clubs.set(cle, { Club: club, Jaunes: 0, Rouges: 0 });
+            const total = clubs.get(cle);
+            total.Jaunes += nombre(row.Jaunes);
+            total.Rouges += nombre(row.Rouges);
+        });
+        lignes = [...clubs.values()];
+        colonnes = "<th>Pos</th><th>Club</th><th>🟨 Jaunes</th><th>🟥 Rouges</th>";
+    } else {
+        lignes = [...data];
+        colonnes = "<th>Pos</th><th>Joueur</th><th>Club</th><th>🟨 Jaunes</th><th>🟥 Rouges</th>";
     }
 
-    html += `
+    lignes.sort((a, b) => nombre(b.Rouges) - nombre(a.Rouges) ||
+                           nombre(b.Jaunes) - nombre(a.Jaunes) ||
+                           String(a.Club || "").localeCompare(String(b.Club || ""), "fr"));
 
-        </tbody>
-
-        </table>
-
-        </div>
-
-    `;
-
-    document.getElementById(
-        "cartonsResult"
-    ).innerHTML = html;
-
+    const html = `<div class="table-container"><table><thead><tr>${colonnes}</tr></thead><tbody>` +
+        (lignes.length ? lignes.map((row, index) => `<tr>
+            <td><strong>${index + 1}</strong></td>
+            ${vueCartons === "equipes" ? "" : `<td>${echapperHtml(row.Joueur || "")}</td>`}
+            <td>${echapperHtml(row.Club || "")}</td>
+            <td><strong>${nombre(row.Jaunes)}</strong></td>
+            <td><strong>${nombre(row.Rouges)}</strong></td>
+        </tr>`).join("") : `<tr><td colspan="${vueCartons === "equipes" ? 4 : 5}">Aucun carton enregistré pour cette poule.</td></tr>`) +
+        "</tbody></table></div>";
+    document.getElementById("cartonsResult").innerHTML = html;
 }
 
 async function chargerReactions() {
