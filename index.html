@@ -482,6 +482,7 @@ footer{padding:25px 15px}
     </button>
 
     <button id="btnActualites" onclick="afficherSection('actualites')">📰 Actualités</button>
+    <button id="btnArbitres" onclick="afficherSection('arbitres')">👨‍⚖️ Arbitres</button>
 </nav>
 
 <main>
@@ -493,6 +494,7 @@ footer{padding:25px 15px}
 <button class="home-tile" onclick="afficherSection('classement')"><span class="tile-icon">🏆</span><span class="tile-copy"><strong>Classements</strong><small>De D1 à D4</small></span><span class="tile-arrow">➜</span></button>
 <button class="home-tile" onclick="afficherSection('buteurs')"><span class="tile-icon">⚽</span><span class="tile-copy"><strong>Buteurs</strong><small>Les meilleurs réalisateurs</small></span><span class="tile-arrow">➜</span></button>
 <button class="home-tile" onclick="afficherSection('reactions')"><span class="tile-icon">🗣️</span><span class="tile-copy"><strong>Réactions</strong><small>Après-match</small></span><span class="tile-arrow">➜</span></button>
+<button class="home-tile" onclick="afficherSection('arbitres')"><span class="tile-icon">👨‍⚖️</span><span class="tile-copy"><strong>Arbitres</strong><small>Matchs arbitrés</small></span><span class="tile-arrow">➜</span></button>
 </div>
 <!-- Emplacement publicitaire réservé : invisible tant qu’aucune publicité n’est activée. -->
 <div class="ad-slot" id="pubAccueilHaut" hidden></div>
@@ -548,6 +550,13 @@ footer{padding:25px 15px}
 
 </section>
 
+
+
+<section id="arbitres" class="section">
+    <h2>👨‍⚖️ Classement des arbitres</h2>
+    <p class="info-note">Classement selon le nombre de matchs arbitrés enregistrés cette saison.</p>
+    <div id="arbitresResult"><div class="loading">Chargement des arbitres...</div></div>
+</section>
 
 <section id="buteurs" class="section">
 
@@ -773,6 +782,7 @@ const API_URL =
 
 let classementData = [];
 let buteursData = [];
+let arbitresData = [];
 let cartonsData = [];
 let reactionsData = [];
 let reactionsLoaded = false;
@@ -812,6 +822,11 @@ function afficherSection(section) {
 
     if (section === "buteurs") {
         document.getElementById("btnButeurs").classList.add("active");
+    }
+
+    if (section === "arbitres") {
+        document.getElementById("btnArbitres").classList.add("active");
+        afficherArbitres();
     }
 
     if (section === "cartons") {
@@ -1208,6 +1223,36 @@ function afficherStats() {
         `</tbody></table></div>` + tableauSeries("vic","🔥 Série de victoires en cours") + tableauSeries("inv","🛡️ Série d'invincibilité en cours");
 }
 
+
+
+async function chargerArbitres() {
+    try {
+        const response = await fetch(API_URL + "?sheet=Arbitres");
+        arbitresData = await response.json();
+        afficherArbitres();
+    } catch (error) {
+        console.error(error);
+        document.getElementById("arbitresResult").innerHTML = '<div class="message">❌ Impossible de charger les arbitres.</div>';
+    }
+}
+
+function afficherArbitres() {
+    const cible = document.getElementById("arbitresResult");
+    if (!cible) return;
+
+    const data = arbitresData.slice().sort(function(a, b) {
+        const matchsA = Number(a["Matchs arbitrés"] ?? a["Matchs arbitres"] ?? a.Matchs ?? 0) || 0;
+        const matchsB = Number(b["Matchs arbitrés"] ?? b["Matchs arbitres"] ?? b.Matchs ?? 0) || 0;
+        return matchsB - matchsA || String(a.Arbitre || "").localeCompare(String(b.Arbitre || ""), "fr");
+    });
+
+    const lignes = data.map(function(row, index) {
+        const matchs = Number(row["Matchs arbitrés"] ?? row["Matchs arbitres"] ?? row.Matchs ?? 0) || 0;
+        return `<tr><td><strong>${index + 1}</strong></td><td>${echapperHtml(row.Arbitre || "")}</td><td><strong>${matchs}</strong></td></tr>`;
+    }).join("");
+
+    cible.innerHTML = `<div class="table-container"><table><thead><tr><th>Rang</th><th>Arbitre</th><th>Matchs arbitrés</th></tr></thead><tbody>${lignes || '<tr><td colspan="3">Aucun arbitre enregistré.</td></tr>'}</tbody></table></div>`;
+}
 
 async function chargerButeurs() {
 
@@ -2012,6 +2057,7 @@ initialiserAccueil();
 chargerActualites();
 chargerClassements();
 chargerButeurs();
+chargerArbitres();
 chargerCartons();
 chargerMatchs();
 
