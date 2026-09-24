@@ -802,6 +802,8 @@ let reactionsLoaded = false;
 let actualitesLoaded = false;
 let matchsData = [];
 let formeData = [];
+let statsEquipesData = [];
+let statsEquipesLoaded = false;
 let classementDomicileData = [];
 let classementExterieurData = [];
 let typeClassement = "general";
@@ -917,6 +919,25 @@ async function chargerClassements() {
 
 }
 
+
+async function chargerStatsEquipes() {
+    try {
+        const response = await fetch(
+            API_URL + "?sheet=" + encodeURIComponent("Stats équipes")
+        );
+        if (!response.ok) throw new Error("Erreur lors du chargement des stats équipes");
+
+        const json = await response.json();
+        statsEquipesData = Array.isArray(json) ? json : [];
+        statsEquipesLoaded = true;
+        afficherStats();
+    } catch (error) {
+        console.error("Stats équipes :", error);
+        statsEquipesData = [];
+        statsEquipesLoaded = false;
+        afficherStats();
+    }
+}
 
 async function chargerForme() {
     try {
@@ -1181,62 +1202,171 @@ function telechargerClassementImage() {
 
 function afficherStats() {
     const select = document.getElementById("pouleStats");
-    if (!select) return;
+    const cible = document.getElementById("statsResult");
+    if (!select || !cible) return;
 
     const poule = select.value;
-    let data = classementData.filter(function(row) {
-        return normaliserPoule(row.Poule) === normaliserPoule(poule) && (Number(row.MJ) || 0) > 0;
+
+    // Classement général : utilisé pour les statistiques déjà présentes.
+    const data = classementData.filter(function(row) {
+        return normaliserPoule(row.Poule) === normaliserPoule(poule) &&
+               (Number(row.MJ) || 0) > 0;
+    });
+
+    // Nouvelle feuille "Stats équipes".
+    const stats = statsEquipesData.filter(function(row) {
+        return normaliserPoule(row.Poule) === normaliserPoule(poule) &&
+               (Number(row.MJ) || 0) > 0;
     });
 
     const attaques = [...data].sort(function(a, b) {
-        const ecart = (Number(b.BP) || 0) - (Number(a.BP) || 0);
-        if (ecart !== 0) return ecart;
-        return String(a.Club || "").localeCompare(String(b.Club || ""), "fr");
+        return (Number(b.BP) || 0) - (Number(a.BP) || 0) ||
+               String(a.Club || "").localeCompare(String(b.Club || ""), "fr");
     });
 
     const defenses = [...data].sort(function(a, b) {
-        const ecart = (Number(a.BC) || 0) - (Number(b.BC) || 0);
-        if (ecart !== 0) return ecart;
-        return String(a.Club || "").localeCompare(String(b.Club || ""), "fr");
+        return (Number(a.BC) || 0) - (Number(b.BC) || 0) ||
+               String(a.Club || "").localeCompare(String(b.Club || ""), "fr");
     });
+
+    const victoires = [...data].sort(function(a, b) {
+        return (Number(b.V) || 0) - (Number(a.V) || 0) ||
+               String(a.Club || "").localeCompare(String(b.Club || ""), "fr");
+    });
+
+    const efficacite = [...stats].sort(function(a, b) {
+        return (Number(b["Moy. buts/match"]) || 0) - (Number(a["Moy. buts/match"]) || 0) ||
+               (Number(b["Buts marqués"]) || 0) - (Number(a["Buts marqués"]) || 0) ||
+               String(a.Club || "").localeCompare(String(b.Club || ""), "fr");
+    });
+
+    const cleanSheets = [...stats].sort(function(a, b) {
+        return (Number(b["Clean sheets"]) || 0) - (Number(a["Clean sheets"]) || 0) ||
+               pourcentageNombre(b["% Clean sheets"]) - pourcentageNombre(a["% Clean sheets"]) ||
+               String(a.Club || "").localeCompare(String(b.Club || ""), "fr");
+    });
+
+    function pourcentageNombre(valeur) {
+        if (typeof valeur === "number") {
+            return valeur <= 1 ? valeur * 100 : valeur;
+        }
+        const texte = String(valeur ?? "").trim().replace("%", "").replace(",", ".");
+        const nombre = Number(texte);
+        return Number.isFinite(nombre) ? nombre : 0;
+    }
+
+    function formatNombre(valeur) {
+        const nombre = Number(valeur);
+        return Number.isFinite(nombre)
+            ? nombre.toLocaleString("fr-FR", { maximumFractionDigits: 2 })
+            : "0";
+    }
+
+    function formatPourcentage(valeur) {
+        if (typeof valeur === "number") {
+            const pct = valeur <= 1 ? valeur * 100 : valeur;
+            return pct.toLocaleString("fr-FR", { maximumFractionDigits: 1 }) + " %";
+        }
+        const texte = String(valeur ?? "").trim();
+        if (!texte) return "0 %";
+        if (texte.includes("%")) return texte.replace(".", ",");
+        const nombre = Number(texte.replace(",", "."));
+        if (!Number.isFinite(nombre)) return "0 %";
+        const pct = nombre <= 1 ? nombre * 100 : nombre;
+        return pct.toLocaleString("fr-FR", { maximumFractionDigits: 1 }) + " %";
+    }
 
     function tableau(liste, titre, colonne, libelle) {
         let html = `<h3>${titre}</h3><div class="table-container"><table><thead><tr><th>Pos</th><th>Club</th><th>${libelle}</th></tr></thead><tbody>`;
         liste.forEach(function(row, index) {
             html += `<tr><td><strong>${index + 1}</strong></td><td>${lienClub(row.Club,poule)}</td><td><strong>${Number(row[colonne]) || 0}</strong></td></tr>`;
         });
-        if (liste.length === 0) html += `<tr><td colspan="3">Aucune statistique disponible pour cette poule.</td></tr>`;
+        if (!liste.length) html += `<tr><td colspan="3">Aucune statistique disponible pour cette poule.</td></tr>`;
         return html + `</tbody></table></div>`;
     }
 
-    const victoires = [...data].sort((a,b) => (Number(b.V)||0)-(Number(a.V)||0) || String(a.Club).localeCompare(String(b.Club),"fr"));
-    const moyennes = [...data].sort((a,b) => (Number(b.BP)/Number(b.MJ))-(Number(a.BP)/Number(a.MJ)));
+    function tableauEfficacite() {
+        return `<h3>🎯 Efficacité offensive</h3>
+        <div class="table-container"><table>
+        <thead><tr><th>Pos</th><th>Club</th><th>MJ</th><th>Buts</th><th>Buts/match</th></tr></thead>
+        <tbody>` +
+        (efficacite.length
+            ? efficacite.map((r, i) => `<tr>
+                <td><strong>${i + 1}</strong></td>
+                <td>${lienClub(r.Club,poule)}</td>
+                <td>${Number(r.MJ) || 0}</td>
+                <td>${Number(r["Buts marqués"]) || 0}</td>
+                <td><strong>${formatNombre(r["Moy. buts/match"])}</strong></td>
+            </tr>`).join("")
+            : `<tr><td colspan="5">${statsEquipesLoaded ? "Aucune donnée disponible pour cette poule." : "Chargement des statistiques équipes..."}</td></tr>`) +
+        `</tbody></table></div>`;
+    }
+
+    function tableauCleanSheets() {
+        return `<h3>🧤 Clean sheets</h3>
+        <div class="table-container"><table>
+        <thead><tr><th>Pos</th><th>Club</th><th>MJ</th><th>Clean sheets</th><th>%</th></tr></thead>
+        <tbody>` +
+        (cleanSheets.length
+            ? cleanSheets.map((r, i) => `<tr>
+                <td><strong>${i + 1}</strong></td>
+                <td>${lienClub(r.Club,poule)}</td>
+                <td>${Number(r.MJ) || 0}</td>
+                <td><strong>${Number(r["Clean sheets"]) || 0}</strong></td>
+                <td>${formatPourcentage(r["% Clean sheets"])}</td>
+            </tr>`).join("")
+            : `<tr><td colspan="5">${statsEquipesLoaded ? "Aucune donnée disponible pour cette poule." : "Chargement des statistiques équipes..."}</td></tr>`) +
+        `</tbody></table></div>`;
+    }
+
     const series = data.map(row => {
-        const matchs = matchsData.filter(m => normaliserPoule(m.Poule) === normaliserPoule(poule) &&
-            [m.Domicile,m.Exterieur].some(c => normaliserClub(c) === normaliserClub(row.Club)) && matchTermine(m))
-            .sort((a,b) => convertirDate(b.Date)-convertirDate(a.Date) || (Number(b.Journee)||0)-(Number(a.Journee)||0));
-        let vic=0, inv=0;
-        for(const m of matchs){if(resultatClub(m,row.Club)==="V") vic++; else break;}
-        for(const m of matchs){if(resultatClub(m,row.Club)!=="D") inv++; else break;}
+        const matchs = matchsData.filter(m =>
+            normaliserPoule(m.Poule) === normaliserPoule(poule) &&
+            [m.Domicile,m.Exterieur].some(c => normaliserClub(c) === normaliserClub(row.Club)) &&
+            matchTermine(m)
+        ).sort((a,b) =>
+            convertirDate(b.Date)-convertirDate(a.Date) ||
+            (Number(b.Journee)||0)-(Number(a.Journee)||0)
+        );
+
+        let vic = 0, inv = 0;
+        for (const m of matchs) {
+            if (resultatClub(m,row.Club) === "V") vic++;
+            else break;
+        }
+        for (const m of matchs) {
+            if (resultatClub(m,row.Club) !== "D") inv++;
+            else break;
+        }
         return {Club:row.Club, vic, inv, matchs:matchs.length};
     });
-    function tableauSeries(cle,titre){
-        const liste=series.filter(r=>r.matchs).sort((a,b)=>b[cle]-a[cle] || a.Club.localeCompare(b.Club,"fr"));
-        return `<h3>${titre}</h3><div class="table-container"><table><thead><tr><th>Pos</th><th>Club</th><th>Matchs consécutifs</th></tr></thead><tbody>`+
-          (liste.length ? liste.map((r,i)=>`<tr><td>${i+1}</td><td>${lienClub(r.Club,poule)}</td><td><strong>${r[cle]}</strong></td></tr>`).join("") : `<tr><td colspan="3">Aucun match terminé disponible.</td></tr>`)+`</tbody></table></div>`;
+
+    function tableauSeries(cle,titre) {
+        const liste = series.filter(r=>r.matchs)
+            .sort((a,b)=>b[cle]-a[cle] || a.Club.localeCompare(b.Club,"fr"));
+
+        return `<h3>${titre}</h3><div class="table-container"><table>
+        <thead><tr><th>Pos</th><th>Club</th><th>Matchs consécutifs</th></tr></thead><tbody>` +
+        (liste.length
+            ? liste.map((r,i)=>`<tr><td>${i+1}</td><td>${lienClub(r.Club,poule)}</td><td><strong>${r[cle]}</strong></td></tr>`).join("")
+            : `<tr><td colspan="3">Aucun match terminé disponible.</td></tr>`) +
+        `</tbody></table></div>`;
     }
-    document.getElementById("statsResult").innerHTML =
-        `<p class="info-note">Statistiques par poule. Les séries sont calculées uniquement sur les matchs terminés saisis, hors forfaits et rencontres reportées. Vérifiez que l'historique des matchs est complet.</p>` +
+
+    cible.innerHTML =
+        `<p class="info-note">Statistiques par poule. Les clean sheets proviennent de l’onglet « Stats équipes ». Les séries sont calculées sur les matchs terminés saisis.</p>` +
+        tableauCleanSheets() +
+        `<div style="height:25px"></div>` +
         tableau(attaques, "⚽ Meilleures attaques", "BP", "Buts marqués") +
         `<div style="height:25px"></div>` +
-        tableau(defenses, "🧤 Meilleures défenses", "BC", "Buts encaissés") +
-        `<div style="height:25px"></div>` + tableau(victoires,"🏆 Plus de victoires","V","Victoires") +
-        `<h3>📈 Moyenne de buts marqués par match</h3><div class="table-container"><table><thead><tr><th>Club</th><th>Buts/match</th></tr></thead><tbody>`+
-        (moyennes.length ? moyennes.map(r=>`<tr><td>${lienClub(r.Club,poule)}</td><td>${(Number(r.BP)/Number(r.MJ)).toLocaleString("fr-FR",{maximumFractionDigits:2})}</td></tr>`).join("") : `<tr><td colspan="2">Aucune donnée disponible.</td></tr>`)+
-        `</tbody></table></div>` + tableauSeries("vic","🔥 Série de victoires en cours") + tableauSeries("inv","🛡️ Série d'invincibilité en cours");
+        tableau(defenses, "🛡️ Meilleures défenses", "BC", "Buts encaissés") +
+        `<div style="height:25px"></div>` +
+        tableau(victoires, "🏆 Plus de victoires", "V", "Victoires") +
+        `<div style="height:25px"></div>` +
+        tableauSeries("vic","🔥 Série de victoires en cours") +
+        `<div style="height:25px"></div>` +
+        tableauSeries("inv","🛡️ Série d'invincibilité en cours");
 }
-
-
 
 async function chargerArbitres() {
     try {
@@ -2069,6 +2199,7 @@ async function chargerActualites() {
 initialiserAccueil();
 chargerActualites();
 chargerClassements();
+chargerStatsEquipes();
 chargerButeurs();
 chargerArbitres();
 chargerCartons();
