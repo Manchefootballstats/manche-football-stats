@@ -406,6 +406,10 @@ footer{padding:25px 15px}
 .accueil-news-item small{display:block;color:#64748b;font-size:11px;margin-bottom:5px}.accueil-news-item strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:13px;line-height:1.4}
 .accueil-news-message{padding:15px;font-size:13px;color:#64748b}
 @media(max-width:900px){.accueil-layout{grid-template-columns:1fr}.accueil-news{max-width:none}}
+
+/* Soutien Ko-fi compact */
+.support-kofi{display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(110deg,#fff,#edfff4);border:1px solid #cce8d7;border-radius:10px;padding:12px 14px;margin:0 0 18px;box-shadow:0 2px 8px #0b20340b}.support-kofi-copy{min-width:0}.support-kofi-copy strong{display:block;color:var(--nuit);font-size:14px;margin-bottom:3px}.support-kofi-copy small{display:block;color:#64748b;font-size:12px;line-height:1.35}.support-kofi-btn{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;background:#087b42;color:white;text-decoration:none;font-size:13px;font-weight:800;padding:9px 13px;border-radius:8px}.support-kofi-btn:hover,.support-kofi-btn:focus-visible{background:#065d35;outline:2px solid #a0e7b7;outline-offset:2px}@media(max-width:500px){.support-kofi{padding:10px 11px;gap:9px}.support-kofi-copy strong{font-size:13px}.support-kofi-copy small{font-size:11px}.support-kofi-btn{font-size:12px;padding:8px 10px}}
+
 </style>
 
 </head>
@@ -498,6 +502,15 @@ footer{padding:25px 15px}
 </div>
 <!-- Emplacement publicitaire réservé : invisible tant qu’aucune publicité n’est activée. -->
 <div class="ad-slot" id="pubAccueilHaut" hidden></div>
+
+<div class="support-kofi" aria-label="Soutenir Manche Football Stats">
+  <div class="support-kofi-copy">
+    <strong>❤️ Soutenez Manche Football Stats</strong>
+    <small>Le site est et restera entièrement gratuit.</small>
+  </div>
+  <a class="support-kofi-btn" href="https://ko-fi.com/manchefootballstats" target="_blank" rel="noopener noreferrer">☕ Soutenir →</a>
+</div>
+
 <div class="home-filter"><label for="pouleAccueil">Choisir une poule</label><select id="pouleAccueil" onchange="afficherAccueil()"></select></div>
 <div class="accueil-layout"><div class="accueil-main"><div id="accueilResult" aria-live="polite"><div class="loading">Chargement des informations…</div></div></div><aside class="accueil-news" aria-label="Dernières actualités"><div class="accueil-news-head"><h3>📰 Fil d’actualité</h3><button type="button" onclick="afficherSection('actualites')">Voir tout →</button></div><div id="accueilNewsList" class="accueil-news-list" aria-live="polite"><div class="accueil-news-message">Chargement des actualités…</div></div></aside></div>
 </section>
