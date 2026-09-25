@@ -410,6 +410,10 @@ footer{padding:25px 15px}
 /* Soutien Ko-fi compact */
 .support-kofi{display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(110deg,#fff,#edfff4);border:1px solid #cce8d7;border-radius:10px;padding:12px 14px;margin:0 0 18px;box-shadow:0 2px 8px #0b20340b}.support-kofi-copy{min-width:0}.support-kofi-copy strong{display:block;color:var(--nuit);font-size:14px;margin-bottom:3px}.support-kofi-copy small{display:block;color:#64748b;font-size:12px;line-height:1.35}.support-kofi-btn{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;background:#087b42;color:white;text-decoration:none;font-size:13px;font-weight:800;padding:9px 13px;border-radius:8px}.support-kofi-btn:hover,.support-kofi-btn:focus-visible{background:#065d35;outline:2px solid #a0e7b7;outline-offset:2px}@media(max-width:500px){.support-kofi{padding:10px 11px;gap:9px}.support-kofi-copy strong{font-size:13px}.support-kofi-copy small{font-size:11px}.support-kofi-btn{font-size:12px;padding:8px 10px}}
 
+
+/* Football féminin */
+.fem-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.fem-tabs button{border:1px solid #d1d5db;background:white;padding:9px 14px;border-radius:8px;font-weight:bold;cursor:pointer}.fem-tabs button.active{background:var(--terrain);color:white;border-color:var(--terrain)}.fem-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}.fem-controls select{margin:0;max-width:260px}.fem-match-list{display:grid;gap:12px}.fem-match-card{background:white;border:1px solid #e0eae5;border-radius:10px;padding:14px;box-shadow:0 2px 8px #0b20340b}.fem-match-meta{font-size:12px;color:#64748b;margin-bottom:9px}.fem-match-score{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center}.fem-match-score .home{text-align:right;font-weight:700}.fem-match-score .away{text-align:left;font-weight:700}.fem-match-score strong{font-size:20px;white-space:nowrap}.fem-status{text-align:center;color:#64748b;font-size:12px;margin-top:8px}@media(max-width:600px){.fem-match-score{grid-template-columns:1fr auto 1fr;gap:7px;font-size:13px}.fem-match-score strong{font-size:17px}}
+
 </style>
 
 </head>
@@ -484,6 +488,8 @@ footer{padding:25px 15px}
         Résultats
 
     </button>
+
+    <button id="btnFeminines" onclick="afficherSection('feminines')">👩⚽ Féminines</button>
 
     <button id="btnActualites" onclick="afficherSection('actualites')">📰 Actualités</button>
     <button id="btnArbitres" onclick="afficherSection('arbitres')">👨‍⚖️ Arbitres</button>
@@ -736,6 +742,27 @@ footer{padding:25px 15px}
 <select id="clubChoisi" onchange="afficherFicheClub()"></select>
 <div id="ficheClubResult" aria-live="polite"></div>
 </section>
+
+<section id="feminines" class="section">
+    <h2>👩⚽ Football féminin</h2>
+    <p class="info-note">Retrouvez le classement, les résultats et les prochains matchs du championnat féminin.</p>
+
+    <div class="fem-tabs">
+        <button id="femTabClassement" class="active" onclick="changerVueFeminines('classement')">🏆 Classement</button>
+        <button id="femTabResultats" onclick="changerVueFeminines('resultats')">📅 Résultats</button>
+        <button id="femTabAVenir" onclick="changerVueFeminines('avenir')">⏳ Matchs à venir</button>
+    </div>
+
+    <div class="fem-controls">
+        <select id="pouleFeminines" onchange="afficherFeminines()">
+            <option value="A">Poule A</option>
+            <option value="B">Poule B</option>
+        </select>
+    </div>
+
+    <div id="femininesResult"><div class="loading">Chargement du football féminin...</div></div>
+</section>
+
 <section id="resultats" class="section">
 
     <h2>📅 Résultats</h2>
@@ -808,6 +835,10 @@ let classementDomicileData = [];
 let classementExterieurData = [];
 let typeClassement = "general";
 let classementPourImage = [];
+let classementFemininsData = [];
+let matchsFemData = [];
+let femininesLoaded = false;
+let vueFeminines = "classement";
 
 function normaliserPoule(valeur) {
 
@@ -873,11 +904,93 @@ function afficherSection(section) {
         initialiserClubs();
     }
 
+    if (section === "feminines") {
+        document.getElementById("btnFeminines").classList.add("active");
+        if (!femininesLoaded) chargerFeminines();
+        else afficherFeminines();
+    }
+
     if (section === "resultats") {
         document.getElementById("btnResultats").classList.add("active");
         afficherResultats();
     }
 
+}
+
+async function chargerFeminines() {
+    const cible = document.getElementById("femininesResult");
+    if (cible) cible.innerHTML = '<div class="loading">Chargement du football féminin...</div>';
+    try {
+        const [rClassement, rMatchs] = await Promise.all([
+            fetch(API_URL + "?sheet=" + encodeURIComponent("Classement Feminins")),
+            fetch(API_URL + "?sheet=" + encodeURIComponent("MatchsFem"))
+        ]);
+        if (!rClassement.ok || !rMatchs.ok) throw new Error("Réponse API incorrecte");
+        classementFemininsData = await rClassement.json();
+        matchsFemData = await rMatchs.json();
+        femininesLoaded = true;
+        afficherFeminines();
+    } catch (error) {
+        if (cible) cible.innerHTML = '<div class="message">Impossible de charger les données féminines. Vérifie les onglets « Classement Feminins » et « MatchsFem » dans Apps Script.</div>';
+        console.error("Football féminin :", error);
+    }
+}
+
+function changerVueFeminines(vue) {
+    vueFeminines = vue;
+    ["Classement","Resultats","AVenir"].forEach(function(nom) {
+        const b = document.getElementById("femTab" + nom);
+        if (b) b.classList.remove("active");
+    });
+    const actif = vue === "classement" ? "femTabClassement" : vue === "resultats" ? "femTabResultats" : "femTabAVenir";
+    const b = document.getElementById(actif);
+    if (b) b.classList.add("active");
+    afficherFeminines();
+}
+
+function femNombre(v) {
+    const n = Number(String(v ?? "0").replace(",", "."));
+    return Number.isFinite(n) ? n : 0;
+}
+
+function femTexte(v) {
+    return String(v ?? "").replace(/[&<>"']/g, function(c) { return ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[c]; });
+}
+
+function femPoule(row) {
+    return normaliserPoule(row.Poule).replace(/^.*?([AB])$/, "$1");
+}
+
+function femEstTermine(row) {
+    const statut = String(row.Statut || "").toLowerCase();
+    const sd = String(row["Score D"] ?? "").trim();
+    const se = String(row["Score E"] ?? "").trim();
+    return statut.includes("termin") || (sd !== "" && se !== "" && !statut.includes("report"));
+}
+
+function afficherFeminines() {
+    const cible = document.getElementById("femininesResult");
+    if (!cible || !femininesLoaded) return;
+    const poule = document.getElementById("pouleFeminines").value;
+
+    if (vueFeminines === "classement") {
+        const lignes = classementFemininsData
+            .filter(r => femPoule(r) === poule)
+            .sort((a,b) => femNombre(b.Pts)-femNombre(a.Pts) || femNombre(b.Diff)-femNombre(a.Diff) || femNombre(b.BP)-femNombre(a.BP));
+        if (!lignes.length) { cible.innerHTML = '<div class="message">Aucun classement disponible pour cette poule.</div>'; return; }
+        cible.innerHTML = `<div class="table-container"><table><thead><tr><th>#</th><th>Club</th><th>MJ</th><th>V</th><th>N</th><th>D</th><th>BP</th><th>BC</th><th>Diff</th><th>Pts</th></tr></thead><tbody>${lignes.map((r,i)=>`<tr><td>${i+1}</td><td>${femTexte(r.Club)}</td><td>${femNombre(r.MJ)}</td><td>${femNombre(r.V)}</td><td>${femNombre(r.N)}</td><td>${femNombre(r.D)}</td><td>${femNombre(r.BP)}</td><td>${femNombre(r.BC)}</td><td>${femNombre(r.Diff)>0?"+":""}${femNombre(r.Diff)}</td><td><strong>${femNombre(r.Pts)}</strong></td></tr>`).join("")}</tbody></table></div>`;
+        return;
+    }
+
+    let lignes = matchsFemData.filter(r => femPoule(r) === poule);
+    lignes = lignes.filter(r => vueFeminines === "resultats" ? femEstTermine(r) : !femEstTermine(r));
+    if (!lignes.length) { cible.innerHTML = `<div class="message">${vueFeminines === "resultats" ? "Aucun résultat" : "Aucun match à venir"} pour cette poule.</div>`; return; }
+    cible.innerHTML = `<div class="fem-match-list">${lignes.map(r => {
+        const termine = femEstTermine(r);
+        const score = termine ? `${femTexte(r["Score D"])} - ${femTexte(r["Score E"])}` : "VS";
+        const meta = [r.Date, r.Journée ? "J" + r.Journée : ""].filter(Boolean).join(" • ");
+        return `<div class="fem-match-card"><div class="fem-match-meta">${femTexte(meta)}</div><div class="fem-match-score"><span class="home">${femTexte(r.Domicile)}</span><strong>${score}</strong><span class="away">${femTexte(r.Extérieur)}</span></div>${r.Statut ? `<div class="fem-status">${femTexte(r.Statut)}</div>` : ""}</div>`;
+    }).join("")}</div>`;
 }
 
 async function chargerClassements() {
