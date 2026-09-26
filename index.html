@@ -414,6 +414,9 @@ footer{padding:25px 15px}
 /* Football féminin */
 .fem-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}.fem-tabs button{border:1px solid #d1d5db;background:white;padding:9px 14px;border-radius:8px;font-weight:bold;cursor:pointer}.fem-tabs button.active{background:var(--terrain);color:white;border-color:var(--terrain)}.fem-controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}.fem-controls select{margin:0;max-width:260px}.fem-match-list{display:grid;gap:12px}.fem-match-card{background:white;border:1px solid #e0eae5;border-radius:10px;padding:14px;box-shadow:0 2px 8px #0b20340b}.fem-match-meta{font-size:12px;color:#64748b;margin-bottom:9px}.fem-match-score{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center}.fem-match-score .home{text-align:right;font-weight:700}.fem-match-score .away{text-align:left;font-weight:700}.fem-match-score strong{font-size:20px;white-space:nowrap}.fem-status{text-align:center;color:#64748b;font-size:12px;margin-top:8px}@media(max-width:600px){.fem-match-score{grid-template-columns:1fr auto 1fr;gap:7px;font-size:13px}.fem-match-score strong{font-size:17px}}
 
+/* Choix Foot à 11 / Foot à 8 */
+.fem-format-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 12px}.fem-format-tabs button{border:1px solid #b8c7bf;background:#f8fbf9;color:var(--nuit);padding:11px 18px;border-radius:9px;font-weight:800;cursor:pointer}.fem-format-tabs button.active{background:var(--nuit);color:white;border-color:var(--nuit)}
+
 </style>
 
 </head>
@@ -747,6 +750,11 @@ footer{padding:25px 15px}
     <h2>👩⚽ Football féminin</h2>
     <p class="info-note">Retrouvez le classement, les résultats et les prochains matchs du championnat féminin.</p>
 
+    <div class="fem-format-tabs">
+        <button id="femFormat11" class="active" onclick="changerFormatFeminines('11')">⚽ Foot à 11</button>
+        <button id="femFormat8" onclick="changerFormatFeminines('8')">⚽ Foot à 8</button>
+    </div>
+
     <div class="fem-tabs">
         <button id="femTabClassement" class="active" onclick="changerVueFeminines('classement')">🏆 Classement</button>
         <button id="femTabResultats" onclick="changerVueFeminines('resultats')">📅 Résultats</button>
@@ -839,6 +847,9 @@ let classementFemininsData = [];
 let matchsFemData = [];
 let femininesLoaded = false;
 let vueFeminines = "classement";
+let formatFeminines = "11";
+let classementFoot8Data = [];
+let matchsFoot8Data = [];
 
 function normaliserPoule(valeur) {
 
@@ -921,19 +932,36 @@ async function chargerFeminines() {
     const cible = document.getElementById("femininesResult");
     if (cible) cible.innerHTML = '<div class="loading">Chargement du football féminin...</div>';
     try {
-        const [rClassement, rMatchs] = await Promise.all([
+        const [rClassement, rMatchs, rClassement8, rMatchs8] = await Promise.all([
             fetch(API_URL + "?sheet=" + encodeURIComponent("Classement Feminins")),
-            fetch(API_URL + "?sheet=" + encodeURIComponent("MatchsFem"))
+            fetch(API_URL + "?sheet=" + encodeURIComponent("MatchsFem")),
+            fetch(API_URL + "?sheet=" + encodeURIComponent("ClassementFoot8")),
+            fetch(API_URL + "?sheet=" + encodeURIComponent("MatchsFoot8"))
         ]);
-        if (!rClassement.ok || !rMatchs.ok) throw new Error("Réponse API incorrecte");
+        if (!rClassement.ok || !rMatchs.ok || !rClassement8.ok || !rMatchs8.ok) throw new Error("Réponse API incorrecte");
         classementFemininsData = await rClassement.json();
         matchsFemData = await rMatchs.json();
+        classementFoot8Data = await rClassement8.json();
+        matchsFoot8Data = await rMatchs8.json();
         femininesLoaded = true;
         afficherFeminines();
     } catch (error) {
-        if (cible) cible.innerHTML = '<div class="message">Impossible de charger les données féminines. Vérifie les onglets « Classement Feminins » et « MatchsFem » dans Apps Script.</div>';
+        if (cible) cible.innerHTML = '<div class="message">Impossible de charger les données féminines. Vérifie les onglets « Classement Feminins », « MatchsFem », « ClassementFoot8 » et « MatchsFoot8 » dans Apps Script.</div>';
         console.error("Football féminin :", error);
     }
+}
+
+function changerFormatFeminines(format) {
+    formatFeminines = format;
+    document.getElementById("femFormat11").classList.toggle("active", format === "11");
+    document.getElementById("femFormat8").classList.toggle("active", format === "8");
+    const select = document.getElementById("pouleFeminines");
+    const valeur = select.value;
+    select.innerHTML = format === "8"
+        ? '<option value="A">Poule A</option><option value="B">Poule B</option><option value="C">Poule C</option>'
+        : '<option value="A">Poule A</option><option value="B">Poule B</option>';
+    if ([...select.options].some(o => o.value === valeur)) select.value = valeur;
+    afficherFeminines();
 }
 
 function changerVueFeminines(vue) {
@@ -958,7 +986,7 @@ function femTexte(v) {
 }
 
 function femPoule(row) {
-    return normaliserPoule(row.Poule).replace(/^.*?([AB])$/, "$1");
+    return normaliserPoule(row.Poule).replace(/^.*?([ABC])$/, "$1");
 }
 
 function femEstTermine(row) {
@@ -972,9 +1000,11 @@ function afficherFeminines() {
     const cible = document.getElementById("femininesResult");
     if (!cible || !femininesLoaded) return;
     const poule = document.getElementById("pouleFeminines").value;
+    const classementActif = formatFeminines === "8" ? classementFoot8Data : classementFemininsData;
+    const matchsActifs = formatFeminines === "8" ? matchsFoot8Data : matchsFemData;
 
     if (vueFeminines === "classement") {
-        const lignes = classementFemininsData
+        const lignes = classementActif
             .filter(r => femPoule(r) === poule)
             .sort((a,b) => femNombre(b.Pts)-femNombre(a.Pts) || femNombre(b.Diff)-femNombre(a.Diff) || femNombre(b.BP)-femNombre(a.BP));
         if (!lignes.length) { cible.innerHTML = '<div class="message">Aucun classement disponible pour cette poule.</div>'; return; }
@@ -982,7 +1012,7 @@ function afficherFeminines() {
         return;
     }
 
-    let lignes = matchsFemData.filter(r => femPoule(r) === poule);
+    let lignes = matchsActifs.filter(r => femPoule(r) === poule);
     lignes = lignes.filter(r => vueFeminines === "resultats" ? femEstTermine(r) : !femEstTermine(r));
     if (!lignes.length) { cible.innerHTML = `<div class="message">${vueFeminines === "resultats" ? "Aucun résultat" : "Aucun match à venir"} pour cette poule.</div>`; return; }
     cible.innerHTML = `<div class="fem-match-list">${lignes.map(r => {
