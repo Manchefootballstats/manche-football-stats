@@ -1526,7 +1526,12 @@ function afficherArbitres() {
     const cible = document.getElementById("arbitresResult");
     if (!cible) return;
 
-    const data = arbitresData.slice().sort(function(a, b) {
+    const data = arbitresData
+        .filter(function(row) {
+            return String(row.Arbitre || "").trim() !== "";
+        })
+        .slice()
+        .sort(function(a, b) {
         const matchsA = Number(a["Matchs arbitrés"] ?? a["Matchs arbitres"] ?? a.Matchs ?? 0) || 0;
         const matchsB = Number(b["Matchs arbitrés"] ?? b["Matchs arbitres"] ?? b.Matchs ?? 0) || 0;
         return matchsB - matchsA || String(a.Arbitre || "").localeCompare(String(b.Arbitre || ""), "fr");
