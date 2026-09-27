@@ -417,6 +417,95 @@ footer{padding:25px 15px}
 /* Choix Foot à 11 / Foot à 8 */
 .fem-format-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 12px}.fem-format-tabs button{border:1px solid #b8c7bf;background:#f8fbf9;color:var(--nuit);padding:11px 18px;border-radius:9px;font-weight:800;cursor:pointer}.fem-format-tabs button.active{background:var(--nuit);color:white;border-color:var(--nuit)}
 
+/* Réajustement accueil mobile — septembre 2026 */
+@media(max-width:650px){
+  nav{justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:8px 9px;gap:5px}
+  nav::-webkit-scrollbar{display:none}
+  nav button{flex:0 0 auto;padding:9px 11px;font-size:12px;white-space:nowrap}
+}
+
+
+
+/* ===== Optimisation mobile Manche Football Stats — 27/09/2026 ===== */
+@media (max-width: 700px){
+  html{scroll-behavior:smooth}
+  body{overflow-x:hidden;background:#f6faf8}
+
+  /* Header compact : logo + identité, sans gros bloc de contact */
+  .site-header{padding:12px 14px 11px;border-bottom:2px solid var(--terrain-clair)}
+  .header-inner{display:block;width:100%}
+  .header-brand{display:grid;grid-template-columns:52px minmax(0,1fr);align-items:center;gap:11px}
+  .header-ball{width:52px;height:52px;border-radius:13px}
+  .site-header h1{font-size:21px;line-height:1.08;letter-spacing:-.45px;white-space:normal}
+  .site-header p{font-size:9px;letter-spacing:1.25px;margin-top:5px;white-space:nowrap}
+  .header-contact{display:none}
+
+  /* Navigation type application : une ligne, swipe horizontal */
+  nav{position:sticky;top:0;z-index:50;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity;gap:5px;padding:7px 9px;background:#10263cf7;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 4px 14px #10263c24}
+  nav::-webkit-scrollbar{display:none}
+  nav button{scroll-snap-align:start;flex:0 0 auto;min-height:40px;padding:9px 11px;border-radius:10px;font-size:12px;font-weight:750;white-space:nowrap}
+  nav button.active{box-shadow:inset 0 0 0 1px #ffffff55}
+
+  main{width:100%;max-width:none;margin:0;padding:14px 12px 28px}
+  .section h2{font-size:21px;line-height:1.2;margin:8px 0 15px}
+
+  /* Accueil : cartes compactes en 2 colonnes */
+  .home-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 16px}
+  .home-tile{min-height:104px;padding:13px 11px;border-radius:16px;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto 1fr;align-items:start;gap:5px 7px;box-shadow:0 4px 14px #10263c0d}
+  .home-tile .tile-icon{grid-column:1;font-size:25px;line-height:1}
+  .home-tile .tile-copy{grid-column:1;gap:3px;align-self:end}
+  .home-tile .tile-copy strong{font-size:14px;line-height:1.15}
+  .home-tile .tile-copy small{font-size:11px;line-height:1.25}
+  .home-tile .tile-arrow{grid-column:2;grid-row:1 / span 2;align-self:center;width:29px;height:29px;font-size:14px}
+
+  /* Suivi du championnat plus lisible au pouce */
+  .home-filter{display:block;margin:5px 0 15px;padding:14px;background:linear-gradient(120deg,#fff,#edfff4);border:1px solid #cce8d7;border-radius:16px;box-shadow:0 4px 14px #10263c0b}
+  .home-filter label{display:block;font-size:16px;color:var(--nuit);margin:0 0 9px}
+  .home-filter select{width:100%;max-width:none;min-height:46px;margin:0;border-radius:11px;font-size:15px;background:#fff}
+
+  /* Les blocs passent en une colonne */
+  .accueil-layout,.home-columns{grid-template-columns:1fr!important;gap:13px}
+  .accueil-main,.accueil-news{min-width:0;width:100%;max-width:none}
+  .home-panel,.accueil-news{border-radius:14px}
+  .panel-heading,.accueil-news-head{padding:12px 13px}
+  .home-entry{margin:0 12px;padding:11px 0;font-size:13px}
+
+  /* Soutien : compact mais toujours visible */
+  .support-kofi{margin:15px 0 0;padding:11px 12px;border-radius:14px;gap:8px}
+  .support-kofi-copy strong{font-size:13px;line-height:1.2}
+  .support-kofi-copy small{font-size:10.5px}
+  .support-kofi-btn{padding:9px 10px;border-radius:10px;font-size:11.5px}
+
+  /* Formulaires et boutons faciles à toucher */
+  select,input,button{max-width:100%}
+  select{min-height:44px;font-size:16px}
+  .classement-tabs,.fem-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:3px;scrollbar-width:none}
+  .classement-tabs::-webkit-scrollbar,.fem-tabs::-webkit-scrollbar{display:none}
+  .classement-tabs button,.fem-tabs button{flex:0 0 auto;min-height:42px;white-space:nowrap}
+
+  /* Tableaux : ne cassent plus la largeur du téléphone */
+  .table-container,.table-wrapper,.classement-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+  table{font-size:12px}
+  th,td{padding:9px 7px}
+
+  /* Fiches et matchs */
+  .fiche-chiffres{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .fiche-chiffre{padding:12px}
+  .fiche-chiffre strong{font-size:19px}
+  .match-card{border-radius:14px}
+
+  footer{margin-top:24px;padding:18px 12px;font-size:12px}
+}
+
+@media (max-width: 370px){
+  .site-header h1{font-size:19px}
+  .site-header p{font-size:8px;letter-spacing:.9px}
+  .home-tile{padding:11px 9px;min-height:98px}
+  .home-tile .tile-copy strong{font-size:13px}
+  .home-tile .tile-copy small{font-size:10px}
+  .home-tile .tile-arrow{display:none}
+}
+
 </style>
 
 </head>
@@ -457,14 +546,18 @@ footer{padding:25px 15px}
 <section id="accueil" class="section active">
 
 <div class="home-grid">
-<button class="home-tile" onclick="afficherSection('resultats')"><span class="tile-icon">📅</span><span class="tile-copy"><strong>🗓️ Résultats</strong><small>Tous les matchs</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('classement')"><span class="tile-icon">🏆</span><span class="tile-copy"><strong>🥇 Classements</strong><small>De D1 à D4</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('buteurs')"><span class="tile-icon">⚽</span><span class="tile-copy"><strong>🥅 Buteurs</strong><small>Les meilleurs réalisateurs</small></span><span class="tile-arrow">➜</span></button>
+<button class="home-tile" onclick="afficherSection('resultats')"><span class="tile-icon">🗓️</span><span class="tile-copy"><strong>Résultats</strong><small>Tous les matchs</small></span><span class="tile-arrow">➜</span></button>
+<button class="home-tile" onclick="afficherSection('classement')"><span class="tile-icon">🥇</span><span class="tile-copy"><strong>Classements</strong><small>De D1 à D4</small></span><span class="tile-arrow">➜</span></button>
+<button class="home-tile" onclick="afficherSection('buteurs')"><span class="tile-icon">🥅</span><span class="tile-copy"><strong>Buteurs</strong><small>Les meilleurs réalisateurs</small></span><span class="tile-arrow">➜</span></button>
+<button class="home-tile" onclick="afficherSection('actualites')"><span class="tile-icon">📰</span><span class="tile-copy"><strong>Actualités</strong><small>Le football manchois</small></span><span class="tile-arrow">➜</span></button>
 <button class="home-tile" onclick="afficherSection('feminines')"><span class="tile-icon">♀️</span><span class="tile-copy"><strong>Féminines</strong><small>Foot à 11 &amp; Foot à 8</small></span><span class="tile-arrow">➜</span></button>
 <button class="home-tile" onclick="afficherSection('arbitres')"><span class="tile-icon">👨‍⚖️</span><span class="tile-copy"><strong>Arbitres</strong><small>Matchs arbitrés</small></span><span class="tile-arrow">➜</span></button>
 </div>
 <!-- Emplacement publicitaire réservé : invisible tant qu’aucune publicité n’est activée. -->
 <div class="ad-slot" id="pubAccueilHaut" hidden></div>
+
+<div class="home-filter"><label for="pouleAccueil">⚽ Suivre votre championnat</label><select id="pouleAccueil" onchange="afficherAccueil()"></select></div>
+<div class="accueil-layout"><div class="accueil-main"><div id="accueilResult" aria-live="polite"><div class="loading">Chargement des informations…</div></div></div><aside class="accueil-news" aria-label="Dernières actualités"><div class="accueil-news-head"><h3>📰 Fil d’actualité</h3><button type="button" onclick="afficherSection('actualites')">Voir tout →</button></div><div id="accueilNewsList" class="accueil-news-list" aria-live="polite"><div class="accueil-news-message">Chargement des actualités…</div></div></aside></div>
 
 <div class="support-kofi" aria-label="Soutenir Manche Football Stats">
   <div class="support-kofi-copy">
@@ -473,9 +566,6 @@ footer{padding:25px 15px}
   </div>
   <a class="support-kofi-btn" href="https://ko-fi.com/manchefootballstats" target="_blank" rel="noopener noreferrer">☕ Soutenir →</a>
 </div>
-
-<div class="home-filter"><label for="pouleAccueil">Choisir une poule</label><select id="pouleAccueil" onchange="afficherAccueil()"></select></div>
-<div class="accueil-layout"><div class="accueil-main"><div id="accueilResult" aria-live="polite"><div class="loading">Chargement des informations…</div></div></div><aside class="accueil-news" aria-label="Dernières actualités"><div class="accueil-news-head"><h3>📰 Fil d’actualité</h3><button type="button" onclick="afficherSection('actualites')">Voir tout →</button></div><div id="accueilNewsList" class="accueil-news-list" aria-live="polite"><div class="accueil-news-message">Chargement des actualités…</div></div></aside></div>
 </section>
 <section id="actualites" class="section"><h2>📰 Actualités du football manchois</h2><div id="actualitesResult" aria-live="polite"><div class="loading">Chargement des actualités…</div></div></section>
 <section id="classement" class="section">
