@@ -440,61 +440,15 @@ footer{padding:25px 15px}
 </header>
 
 <nav>
-<button id="btnAccueil" class="active" onclick="afficherSection('accueil')">🏠 Accueil</button>
-
-    <button
-        id="btnClassement"
-        onclick="afficherSection('classement')">
-
-        Classements
-
-    </button>
-
-    <button
-        id="btnButeurs"
-        onclick="afficherSection('buteurs')">
-
-        Buteurs
-
-    </button>
-
-    <button
-        id="btnCartons"
-        onclick="afficherSection('cartons')">
-
-        🟨 Cartons
-
-    </button>
-
-    <button
-        id="btnReactions"
-        onclick="afficherSection('reactions')">
-
-        🗣️ Réactions
-
-    </button>
-
-    <button
-        id="btnStats"
-        onclick="afficherSection('stats')">
-
-        📊 Stats
-
-    </button>
-
-    <button id="btnClubs" onclick="afficherSection('clubs')">⚽ Clubs</button>
-
-    <button
-        id="btnResultats"
-        onclick="afficherSection('resultats')">
-
-        Résultats
-
-    </button>
-
-    <button id="btnFeminines" onclick="afficherSection('feminines')">👩⚽ Féminines</button>
-
+    <button id="btnAccueil" class="active" onclick="afficherSection('accueil')">🏠 Accueil</button>
     <button id="btnActualites" onclick="afficherSection('actualites')">📰 Actualités</button>
+    <button id="btnResultats" onclick="afficherSection('resultats')">🗓️ Résultats</button>
+    <button id="btnClassement" onclick="afficherSection('classement')">🥇 Classements</button>
+    <button id="btnButeurs" onclick="afficherSection('buteurs')">🥅 Buteurs</button>
+    <button id="btnCartons" onclick="afficherSection('cartons')">🟨 Cartons</button>
+    <button id="btnStats" onclick="afficherSection('stats')">📊 Stats</button>
+    <button id="btnClubs" onclick="afficherSection('clubs')">⚽ Clubs</button>
+    <button id="btnFeminines" onclick="afficherSection('feminines')">♀️ Féminines</button>
     <button id="btnArbitres" onclick="afficherSection('arbitres')">👨‍⚖️ Arbitres</button>
 </nav>
 
@@ -503,10 +457,10 @@ footer{padding:25px 15px}
 <section id="accueil" class="section active">
 
 <div class="home-grid">
-<button class="home-tile" onclick="afficherSection('resultats')"><span class="tile-icon">📅</span><span class="tile-copy"><strong>Résultats</strong><small>Tous les matchs</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('classement')"><span class="tile-icon">🏆</span><span class="tile-copy"><strong>Classements</strong><small>De D1 à D4</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('buteurs')"><span class="tile-icon">⚽</span><span class="tile-copy"><strong>Buteurs</strong><small>Les meilleurs réalisateurs</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('reactions')"><span class="tile-icon">🗣️</span><span class="tile-copy"><strong>Réactions</strong><small>Après-match</small></span><span class="tile-arrow">➜</span></button>
+<button class="home-tile" onclick="afficherSection('resultats')"><span class="tile-icon">📅</span><span class="tile-copy"><strong>🗓️ Résultats</strong><small>Tous les matchs</small></span><span class="tile-arrow">➜</span></button>
+<button class="home-tile" onclick="afficherSection('classement')"><span class="tile-icon">🏆</span><span class="tile-copy"><strong>🥇 Classements</strong><small>De D1 à D4</small></span><span class="tile-arrow">➜</span></button>
+<button class="home-tile" onclick="afficherSection('buteurs')"><span class="tile-icon">⚽</span><span class="tile-copy"><strong>🥅 Buteurs</strong><small>Les meilleurs réalisateurs</small></span><span class="tile-arrow">➜</span></button>
+<button class="home-tile" onclick="afficherSection('feminines')"><span class="tile-icon">♀️</span><span class="tile-copy"><strong>Féminines</strong><small>Foot à 11 &amp; Foot à 8</small></span><span class="tile-arrow">➜</span></button>
 <button class="home-tile" onclick="afficherSection('arbitres')"><span class="tile-icon">👨‍⚖️</span><span class="tile-copy"><strong>Arbitres</strong><small>Matchs arbitrés</small></span><span class="tile-arrow">➜</span></button>
 </div>
 <!-- Emplacement publicitaire réservé : invisible tant qu’aucune publicité n’est activée. -->
