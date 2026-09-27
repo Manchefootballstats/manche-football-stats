@@ -506,6 +506,12 @@ footer{padding:25px 15px}
   .home-tile .tile-arrow{display:none}
 }
 
+
+/* --- Mon club : favori mémorisé sur l’appareil --- */
+.mon-club-card{margin:18px 0;padding:20px;border:1px solid #cfe9dc;border-radius:20px;background:linear-gradient(135deg,#fff 0%,#f2fff8 100%);box-shadow:0 8px 24px rgba(8,42,61,.07)}
+.mon-club-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.mon-club-head h2{margin:4px 0 4px;font-size:1.35rem}.mon-club-head p{margin:0;color:#617282}.mon-club-kicker{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:#07894e}.mon-club-change{border:0;background:#e7f8ef;color:#087a49;font-weight:800;border-radius:999px;padding:9px 13px;cursor:pointer}.mon-club-choice{display:flex;gap:10px;margin-top:16px}.mon-club-choice select{flex:1;min-width:0}.mon-club-choice button{border:0;border-radius:12px;padding:0 18px;background:#07894e;color:#fff;font-weight:800;cursor:pointer}.mon-club-resume{margin-top:16px}.mon-club-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mon-club-stat{padding:14px;border-radius:15px;background:#fff;border:1px solid #dfece6}.mon-club-stat small{display:block;color:#73818d;margin-bottom:5px}.mon-club-stat strong{display:block;color:#0b2b40;line-height:1.25}.mon-club-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.mon-club-actions button{border:0;border-radius:999px;padding:9px 13px;background:#0b2b40;color:#fff;font-weight:750;cursor:pointer}
+.mon-club-equipe{margin-top:10px;border:1px solid #dfece6;border-radius:14px;background:#fff;overflow:hidden}.mon-club-equipe-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;cursor:pointer}.mon-club-equipe-head:hover{background:#f7fbf9}.mon-club-equipe-title{display:flex;align-items:center;gap:9px;min-width:0}.mon-club-equipe-badge{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 8px;border-radius:9px;background:#e7f8ef;color:#087a49;font-weight:900;font-size:.82rem}.mon-club-equipe-head strong{display:block;color:#0b2b40;font-size:1rem}.mon-club-equipe-head small{display:block;color:#73818d;margin-top:2px}.mon-club-equipe-toggle{border:0;background:transparent;color:#087a49;font-size:1.1rem;font-weight:900;cursor:pointer;padding:6px}.mon-club-equipe-body{padding:0 12px 12px}.mon-club-equipe.collapsed .mon-club-equipe-body{display:none}.mon-club-equipe.collapsed .mon-club-equipe-toggle{transform:rotate(-90deg)}.mon-club-equipe .mon-club-grid{grid-template-columns:repeat(4,1fr);gap:8px}.mon-club-equipe .mon-club-stat{padding:10px 11px;border-radius:11px}.mon-club-equipe .mon-club-stat small{font-size:.72rem;margin-bottom:3px}.mon-club-equipe .mon-club-stat strong{font-size:.88rem}.mon-club-equipe-link{margin-top:8px;text-align:right}.mon-club-equipe-link button{border:0;border-radius:999px;padding:7px 11px;background:#e7f8ef;color:#087a49;font-weight:800;cursor:pointer}
+@media(max-width:700px){.mon-club-card{margin:14px 0;padding:14px;border-radius:16px}.mon-club-choice{flex-direction:column}.mon-club-choice button{min-height:48px}.mon-club-grid{grid-template-columns:1fr}.mon-club-stat{padding:12px}.mon-club-head h2{font-size:1.18rem}.mon-club-equipe .mon-club-grid{grid-template-columns:1fr 1fr}.mon-club-equipe-head{padding:11px 12px}.mon-club-equipe-body{padding:0 10px 10px}.mon-club-equipe .mon-club-stat{padding:9px}.mon-club-equipe .mon-club-stat strong{font-size:.82rem}}
 </style>
 
 </head>
@@ -555,6 +561,15 @@ footer{padding:25px 15px}
 </div>
 <!-- Emplacement publicitaire réservé : invisible tant qu’aucune publicité n’est activée. -->
 <div class="ad-slot" id="pubAccueilHaut" hidden></div>
+
+<section class="mon-club-card" id="monClubCard" aria-label="Mon club favori">
+  <div class="mon-club-head">
+    <div><span class="mon-club-kicker">⭐ MON CLUB</span><h2 id="monClubTitre">Suivez votre club</h2><p id="monClubIntro">Choisissez votre club pour retrouver l’essentiel dès votre arrivée.</p></div>
+    <button type="button" class="mon-club-change" id="monClubChange" onclick="changerMonClub()" hidden>Changer</button>
+  </div>
+  <div id="monClubChoix" class="mon-club-choice"><select id="monClubSelect" aria-label="Choisir mon club"><option value="">Choisir un club…</option></select><button type="button" onclick="enregistrerMonClub()">⭐ Suivre ce club</button></div>
+  <div id="monClubResume" class="mon-club-resume" hidden></div>
+</section>
 
 <div class="home-filter"><label for="pouleAccueil">⚽ Suivre votre championnat</label><select id="pouleAccueil" onchange="afficherAccueil()"></select></div>
 <div class="accueil-layout"><div class="accueil-main"><div id="accueilResult" aria-live="polite"><div class="loading">Chargement des informations…</div></div></div><aside class="accueil-news" aria-label="Dernières actualités"><div class="accueil-news-head"><h3>📰 Fil d’actualité</h3><button type="button" onclick="afficherSection('actualites')">Voir tout →</button></div><div id="accueilNewsList" class="accueil-news-list" aria-live="polite"><div class="accueil-news-message">Chargement des actualités…</div></div></aside></div>
@@ -1080,6 +1095,7 @@ async function chargerClassements() {
         afficherClassement();
         afficherStats();
         afficherAccueil();
+        initialiserMonClub();
         if (document.getElementById("clubs").classList.contains("active")) initialiserClubs();
         chargerForme();
         chargerClassementsSecondaires();
@@ -1601,6 +1617,7 @@ async function chargerButeurs() {
 
         afficherButeurs();
         afficherAccueil();
+        initialiserMonClub();
         if (document.getElementById("clubs").classList.contains("active")) afficherFicheClub();
 
     }
@@ -1968,6 +1985,7 @@ async function chargerMatchs() {
         afficherResultats();
         afficherStats();
         afficherAccueil();
+        initialiserMonClub();
         if (document.getElementById("clubs").classList.contains("active")) afficherFicheClub();
 
     }
@@ -2398,6 +2416,89 @@ chargerCartons();
 chargerMatchs();
 
 
+
+
+/* Mon club : un club peut regrouper plusieurs équipes. */
+function nomClubPrincipal(nom){
+    let s=String(nom||'').trim();
+    /* Réserves courantes : "Club 2", "Club (2)", "Club II", etc. */
+    s=s.replace(/\s*\(\s*[2-9]\s*\)\s*$/i,'');
+    s=s.replace(/\s+(?:[2-9]|II|III|IV|V)\s*$/i,'');
+    return s.trim();
+}
+function cleClubPrincipal(nom){ return normaliserClub(nomClubPrincipal(nom)); }
+function toutesLesEquipes(){
+    const equipes=new Set();
+    classementData.forEach(r=>{ if(r.Club) equipes.add(String(r.Club).trim()); });
+    matchsData.forEach(r=>{ if(r.Domicile) equipes.add(String(r.Domicile).trim()); if(r.Exterieur) equipes.add(String(r.Exterieur).trim()); });
+    buteursData.forEach(r=>{ if(r.Club) equipes.add(String(r.Club).trim()); });
+    return Array.from(equipes).filter(Boolean);
+}
+function listeClubsDisponibles(){
+    const map=new Map();
+    toutesLesEquipes().forEach(e=>{
+        const principal=nomClubPrincipal(e), cle=cleClubPrincipal(e);
+        if(cle && !map.has(cle)) map.set(cle,principal);
+    });
+    return Array.from(map.values()).sort((a,b)=>a.localeCompare(b,'fr',{sensitivity:'base'}));
+}
+function equipesDuClub(club){
+    const cle=cleClubPrincipal(club);
+    const equipes=toutesLesEquipes().filter(e=>cleClubPrincipal(e)===cle);
+    return equipes.sort((a,b)=>{
+        const ap=normaliserClub(a)===normaliserClub(nomClubPrincipal(a))?0:1;
+        const bp=normaliserClub(b)===normaliserClub(nomClubPrincipal(b))?0:1;
+        return ap-bp || a.localeCompare(b,'fr',{numeric:true,sensitivity:'base'});
+    });
+}
+function initialiserMonClub(){
+    const select=document.getElementById('monClubSelect'); if(!select) return;
+    const valeur=select.value; const clubs=listeClubsDisponibles();
+    select.innerHTML='<option value="">Choisir un club…</option>'+clubs.map(c=>`<option value="${echapperHtml(c)}">${echapperHtml(c)}</option>`).join('');
+    if(valeur && clubs.some(c=>cleClubPrincipal(c)===cleClubPrincipal(valeur))) select.value=clubs.find(c=>cleClubPrincipal(c)===cleClubPrincipal(valeur));
+    const favori=localStorage.getItem('mfs_mon_club')||'';
+    if(favori && clubs.some(c=>cleClubPrincipal(c)===cleClubPrincipal(favori))) afficherMonClub(favori);
+}
+function enregistrerMonClub(){
+    const select=document.getElementById('monClubSelect'); if(!select || !select.value) return;
+    localStorage.setItem('mfs_mon_club',select.value); afficherMonClub(select.value);
+}
+function changerMonClub(){
+    document.getElementById('monClubChoix').hidden=false; document.getElementById('monClubResume').hidden=true; document.getElementById('monClubChange').hidden=true;
+    const select=document.getElementById('monClubSelect'); const favori=localStorage.getItem('mfs_mon_club')||'';
+    if(select){ const o=Array.from(select.options).find(x=>cleClubPrincipal(x.value)===cleClubPrincipal(favori)); if(o) select.value=o.value; }
+}
+function ouvrirClubFavori(equipe){
+    afficherSection('clubs'); setTimeout(()=>{ const sel=document.getElementById('clubSelect'); if(!sel) return; const option=Array.from(sel.options).find(o=>normaliserClub(o.value)===normaliserClub(equipe)); if(option){sel.value=option.value; if(typeof afficherFicheClub==='function') afficherFicheClub();}},0);
+}
+function resumeEquipeMonClub(equipe){
+    const n=normaliserClub(equipe), aujourdHui=new Date(); aujourdHui.setHours(0,0,0,0);
+    const matchs=matchsData.filter(m=>normaliserClub(m.Domicile)===n||normaliserClub(m.Exterieur)===n);
+    const termines=matchs.filter(matchTermine).sort((a,b)=>convertirDate(b.Date)-convertirDate(a.Date));
+    const futurs=matchs.filter(m=>!matchTermine(m)&&convertirDate(m.Date)>=aujourdHui&&!/annul|report|forfait/i.test(String(m.Statu||m.Statut||''))).sort((a,b)=>convertirDate(a.Date)-convertirDate(b.Date));
+    const classement=classementData.find(r=>normaliserClub(r.Club)===n);
+    const buteurs=buteursData.filter(r=>normaliserClub(r.Club)===n).sort((a,b)=>(Number(b.Buts)||0)-(Number(a.Buts)||0));
+    const meilleur=buteurs[0], dernier=termines[0], prochain=futurs[0];
+    const competition=(classement&&(classement.Competition||classement['Compétition'])) || (matchs[0]&&(matchs[0].Competition||matchs[0]['Compétition'])) || '';
+    const poule=(classement&&classement.Poule) || (matchs[0]&&matchs[0].Poule) || '';
+    const fmtMatch=(m,score)=>m?`${echapperHtml(m.Domicile||'')} ${score?'<b>'+echapperHtml(m['Score Dom.']||'0')+' – '+echapperHtml(m['Score Ext.']||'0')+'</b>':'–'} ${echapperHtml(m.Exterieur||'')}<small>${echapperHtml(m.Date||'')}</small>`:'Non renseigné';
+    const equipeJs=String(equipe).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    const principal=nomClubPrincipal(equipe);
+    const suffixe=String(equipe).slice(principal.length).trim();
+    let numero='1';
+    const m=suffixe.match(/(?:\(|\s|^)([2-9])\)?/); if(m) numero=m[1];
+    const libelle='Équipe '+numero;
+    return `<div class="mon-club-equipe"><div class="mon-club-equipe-head" onclick="this.parentElement.classList.toggle('collapsed')"><div class="mon-club-equipe-title"><span class="mon-club-equipe-badge">${numero}</span><div><strong>${libelle}</strong><small>${echapperHtml([competition,poule].filter(Boolean).join(' · ')||'Équipe du club')}</small></div></div><button type="button" class="mon-club-equipe-toggle" aria-label="Afficher ou masquer les détails">⌄</button></div><div class="mon-club-equipe-body"><div class="mon-club-grid"><div class="mon-club-stat"><small>Dernier résultat</small><strong>${fmtMatch(dernier,true)}</strong></div><div class="mon-club-stat"><small>Prochain match</small><strong>${fmtMatch(prochain,false)}</strong></div><div class="mon-club-stat"><small>Classement</small><strong>${classement?echapperHtml(classement.Pts||0)+' pts · '+echapperHtml(classement.Poule||''):'Non renseigné'}</strong></div><div class="mon-club-stat"><small>Meilleur buteur</small><strong>${meilleur?echapperHtml(meilleur.Joueur||'Joueur')+' · '+echapperHtml(meilleur.Buts||0)+' but(s)':'Non renseigné'}</strong></div></div><div class="mon-club-equipe-link"><button type="button" onclick="event.stopPropagation();ouvrirClubFavori('${equipeJs}')">Voir la fiche →</button></div></div></div>`;
+}
+function afficherMonClub(club){
+    if(!club) return;
+    const equipes=equipesDuClub(club), principal=nomClubPrincipal(club);
+    document.getElementById('monClubTitre').textContent=principal;
+    document.getElementById('monClubIntro').textContent=equipes.length>1?`${equipes.length} équipes suivies dans ce club`:'Votre résumé personnalisé';
+    document.getElementById('monClubChoix').hidden=true; document.getElementById('monClubChange').hidden=false;
+    const resume=document.getElementById('monClubResume'); resume.hidden=false;
+    resume.innerHTML=(equipes.length?equipes.map(resumeEquipeMonClub).join(''):'<div class="message">Aucune équipe trouvée pour ce club.</div>')+`<div class="mon-club-actions"><button onclick="afficherSection('resultats')">🗓️ Résultats</button><button onclick="afficherSection('buteurs')">🥅 Buteurs</button></div>`;
+}
 </script>
 
 </body>
