@@ -2511,6 +2511,16 @@ function afficherMonClub(club){
 }
 </script>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(() => console.log('Manche Football Stats : Service Worker activé'))
+      .catch(error => console.error('Erreur Service Worker :', error));
+  });
+}
+</script>
+
 </body>
 
 </html>
