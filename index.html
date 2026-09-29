@@ -522,6 +522,9 @@ footer{padding:25px 15px}
 .mon-club-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.mon-club-head h2{margin:4px 0 4px;font-size:1.35rem}.mon-club-head p{margin:0;color:#617282}.mon-club-kicker{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:#07894e}.mon-club-change{border:0;background:#e7f8ef;color:#087a49;font-weight:800;border-radius:999px;padding:9px 13px;cursor:pointer}.mon-club-choice{display:flex;gap:10px;margin-top:16px}.mon-club-choice select{flex:1;min-width:0}.mon-club-choice button{border:0;border-radius:12px;padding:0 18px;background:#07894e;color:#fff;font-weight:800;cursor:pointer}.mon-club-resume{margin-top:16px}.mon-club-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mon-club-stat{padding:14px;border-radius:15px;background:#fff;border:1px solid #dfece6}.mon-club-stat small{display:block;color:#73818d;margin-bottom:5px}.mon-club-stat strong{display:block;color:#0b2b40;line-height:1.25}.mon-club-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.mon-club-actions button{border:0;border-radius:999px;padding:9px 13px;background:#0b2b40;color:#fff;font-weight:750;cursor:pointer}
 .mon-club-equipe{margin-top:10px;border:1px solid #dfece6;border-radius:14px;background:#fff;overflow:hidden}.mon-club-equipe-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;cursor:pointer}.mon-club-equipe-head:hover{background:#f7fbf9}.mon-club-equipe-title{display:flex;align-items:center;gap:9px;min-width:0}.mon-club-equipe-badge{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;padding:0 8px;border-radius:9px;background:#e7f8ef;color:#087a49;font-weight:900;font-size:.82rem}.mon-club-equipe-head strong{display:block;color:#0b2b40;font-size:1rem}.mon-club-equipe-head small{display:block;color:#73818d;margin-top:2px}.mon-club-equipe-toggle{border:0;background:transparent;color:#087a49;font-size:1.1rem;font-weight:900;cursor:pointer;padding:6px}.mon-club-equipe-body{padding:0 12px 12px}.mon-club-equipe.collapsed .mon-club-equipe-body{display:none}.mon-club-equipe.collapsed .mon-club-equipe-toggle{transform:rotate(-90deg)}.mon-club-equipe .mon-club-grid{grid-template-columns:repeat(4,1fr);gap:8px}.mon-club-equipe .mon-club-stat{padding:10px 11px;border-radius:11px}.mon-club-equipe .mon-club-stat small{font-size:.72rem;margin-bottom:3px}.mon-club-equipe .mon-club-stat strong{font-size:.88rem}.mon-club-equipe-link{margin-top:8px;text-align:right}.mon-club-equipe-link button{border:0;border-radius:999px;padding:7px 11px;background:#e7f8ef;color:#087a49;font-weight:800;cursor:pointer}
 @media(max-width:700px){.mon-club-card{margin:14px 0;padding:14px;border-radius:16px}.mon-club-choice{flex-direction:column}.mon-club-choice button{min-height:48px}.mon-club-grid{grid-template-columns:1fr}.mon-club-stat{padding:12px}.mon-club-head h2{font-size:1.18rem}.mon-club-equipe .mon-club-grid{grid-template-columns:1fr 1fr}.mon-club-equipe-head{padding:11px 12px}.mon-club-equipe-body{padding:0 10px 10px}.mon-club-equipe .mon-club-stat{padding:9px}.mon-club-equipe .mon-club-stat strong{font-size:.82rem}}
+
+/* Installation de l’application */
+.install-app{display:none;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px;padding:13px 15px;border:1px solid #cce8d7;border-radius:14px;background:linear-gradient(110deg,#fff,#edfff4);box-shadow:0 3px 12px #10263c0b}.install-app-copy strong{display:block;color:var(--nuit);font-size:14px;margin-bottom:3px}.install-app-copy small{display:block;color:#64748b;font-size:11px;line-height:1.35}.install-app-btn{border:0;border-radius:10px;background:#087b42;color:#fff;font-weight:800;padding:10px 13px;cursor:pointer;white-space:nowrap}.install-app-btn:hover,.install-app-btn:focus-visible{background:#065d35;outline:2px solid #a0e7b7}.install-ios-help{display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:#f4f8f6;color:#475569;font-size:12px;line-height:1.45}@media(max-width:500px){.install-app{padding:11px 12px}.install-app-copy strong{font-size:13px}.install-app-copy small{font-size:10.5px}.install-app-btn{font-size:11.5px;padding:9px 10px}}
 </style>
 
 </head>
@@ -560,6 +563,12 @@ footer{padding:25px 15px}
 <main>
 
 <section id="accueil" class="section active">
+
+
+<div class="install-app" id="installAppBox" aria-label="Installer Manche Football Stats">
+  <div class="install-app-copy"><strong>📲 Manche Football Stats sur votre téléphone</strong><small>Installez le site comme une application pour y accéder en un clic.</small><div class="install-ios-help" id="installIosHelp">Sur iPhone/iPad : ouvrez le site dans Safari, touchez <b>Partager</b>, puis <b>Sur l’écran d’accueil</b>.</div></div>
+  <button type="button" class="install-app-btn" id="installAppBtn">Installer</button>
+</div>
 
 <div class="home-grid">
 <button class="home-tile" onclick="afficherSection('resultats')"><span class="tile-icon">🗓️</span><span class="tile-copy"><strong>Résultats</strong><small>Tous les matchs</small></span><span class="tile-arrow">➜</span></button>
@@ -2519,6 +2528,30 @@ if ('serviceWorker' in navigator) {
       .catch(error => console.error('Erreur Service Worker :', error));
   });
 }
+</script>
+
+
+<script>
+/* Bouton d’installation PWA */
+let mfsInstallPrompt = null;
+const mfsIsStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+const mfsIsIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+function mfsAfficherInstallation(){
+  const box=document.getElementById('installAppBox'), btn=document.getElementById('installAppBtn'), help=document.getElementById('installIosHelp');
+  if(!box || !btn || mfsIsStandalone()) { if(box) box.style.display='none'; return; }
+  if(mfsInstallPrompt){ box.style.display='flex'; btn.textContent='Installer'; if(help) help.style.display='none'; return; }
+  if(mfsIsIOS()){ box.style.display='flex'; btn.textContent='Comment faire ?'; }
+}
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); mfsInstallPrompt=e; mfsAfficherInstallation(); });
+window.addEventListener('appinstalled',()=>{ mfsInstallPrompt=null; const box=document.getElementById('installAppBox'); if(box) box.style.display='none'; });
+window.addEventListener('DOMContentLoaded',()=>{
+  const btn=document.getElementById('installAppBtn'), help=document.getElementById('installIosHelp');
+  if(btn) btn.addEventListener('click',async()=>{
+    if(mfsInstallPrompt){ mfsInstallPrompt.prompt(); await mfsInstallPrompt.userChoice; mfsInstallPrompt=null; mfsAfficherInstallation(); }
+    else if(mfsIsIOS() && help){ help.style.display=help.style.display==='block'?'none':'block'; }
+  });
+  mfsAfficherInstallation();
+});
 </script>
 
 </body>
