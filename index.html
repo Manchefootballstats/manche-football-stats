@@ -525,6 +525,14 @@ footer{padding:25px 15px}
 
 /* Installation de l’application */
 .install-app{display:none;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px;padding:13px 15px;border:1px solid #cce8d7;border-radius:14px;background:linear-gradient(110deg,#fff,#edfff4);box-shadow:0 3px 12px #10263c0b}.install-app-copy strong{display:block;color:var(--nuit);font-size:14px;margin-bottom:3px}.install-app-copy small{display:block;color:#64748b;font-size:11px;line-height:1.35}.install-app-btn{border:0;border-radius:10px;background:#087b42;color:#fff;font-weight:800;padding:10px 13px;cursor:pointer;white-space:nowrap}.install-app-btn:hover,.install-app-btn:focus-visible{background:#065d35;outline:2px solid #a0e7b7}.install-ios-help{display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:#f4f8f6;color:#475569;font-size:12px;line-height:1.45}@media(max-width:500px){.install-app{padding:11px 12px}.install-app-copy strong{font-size:13px}.install-app-copy small{font-size:10.5px}.install-app-btn{font-size:11.5px;padding:9px 10px}}
+
+/* Filtres Résultats : poule + journée */
+.resultats-filtres{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:20px}
+.resultats-filtre{display:flex;flex-direction:column;gap:6px;flex:1;min-width:220px;max-width:350px}
+.resultats-filtre label{font-size:13px;font-weight:800;color:#475569}
+.resultats-filtre select{width:100%;max-width:none;margin:0}
+@media(max-width:600px){.resultats-filtres{display:grid;grid-template-columns:1fr 1fr;gap:8px}.resultats-filtre{min-width:0;max-width:none}.resultats-filtre label{font-size:11px}.resultats-filtre select{font-size:14px;min-height:44px;padding:9px}}
+
 </style>
 
 </head>
@@ -853,9 +861,12 @@ footer{padding:25px 15px}
 
     <h2>📅 Résultats</h2>
 
-    <select
-        id="pouleResultats"
-        onchange="afficherResultats()">
+    <div class="resultats-filtres">
+      <div class="resultats-filtre">
+        <label for="pouleResultats">Division / poule</label>
+        <select
+            id="pouleResultats"
+            onchange="changerPouleResultats()">
 
         <option value="Toutes">Toutes les poules</option>
 
@@ -879,7 +890,16 @@ footer{padding:25px 15px}
         <option value="D4 E">D4 E</option>
         <option value="D4 F">D4 F</option>
 
-    </select>
+        </select>
+      </div>
+
+      <div class="resultats-filtre">
+        <label for="journeeResultats">Journée</label>
+        <select id="journeeResultats" onchange="afficherResultats()">
+          <option value="Toutes">Toutes les journées</option>
+        </select>
+      </div>
+    </div>
 
     <div id="resultatsResult">
 
@@ -2001,6 +2021,7 @@ async function chargerMatchs() {
             matchsData
         );
 
+        initialiserJourneesResultats(true);
         afficherResultats();
         afficherStats();
         afficherAccueil();
@@ -2027,6 +2048,60 @@ async function chargerMatchs() {
 
     }
 
+}
+
+function matchsDeLaPouleResultats() {
+    const select = document.getElementById("pouleResultats");
+    if (!select) return [];
+    const poule = select.value;
+    return matchsData.filter(function(row) {
+        if (!row.Domicile && !row.Exterieur) return false;
+        if (poule === "Toutes") return true;
+        return normaliserPoule(row.Poule) === normaliserPoule(poule);
+    });
+}
+
+function initialiserJourneesResultats(selectionAutomatique) {
+    const selectJournee = document.getElementById("journeeResultats");
+    if (!selectJournee) return;
+
+    const data = matchsDeLaPouleResultats();
+    const ancienneValeur = selectJournee.value;
+    const groupes = {};
+
+    data.forEach(function(row) {
+        const j = row.Journee !== undefined && row.Journee !== "" ? String(row.Journee) : "Autres";
+        if (!groupes[j]) groupes[j] = [];
+        groupes[j].push(row);
+    });
+
+    const jours = Object.keys(groupes).sort(function(a, b) {
+        const aAvenir = groupes[a].some(m => !matchTermine(m));
+        const bAvenir = groupes[b].some(m => !matchTermine(m));
+        if (aAvenir !== bAvenir) return aAvenir ? -1 : 1;
+
+        const datesA = groupes[a].map(m => convertirDate(m.Date).getTime()).filter(Number.isFinite);
+        const datesB = groupes[b].map(m => convertirDate(m.Date).getTime()).filter(Number.isFinite);
+        const dateA = datesA.length ? Math.min(...datesA) : 0;
+        const dateB = datesB.length ? Math.min(...datesB) : 0;
+        if (aAvenir) return dateA - dateB;
+        return dateB - dateA;
+    });
+
+    selectJournee.innerHTML = '<option value="Toutes">Toutes les journées</option>' +
+        jours.map(j => `<option value="${echapperHtml(j)}">Journée ${echapperHtml(j)}</option>`).join("");
+
+    if (selectionAutomatique) {
+        const prochaine = jours.find(j => groupes[j].some(m => !matchTermine(m)));
+        selectJournee.value = prochaine || "Toutes";
+    } else if (jours.includes(ancienneValeur)) {
+        selectJournee.value = ancienneValeur;
+    }
+}
+
+function changerPouleResultats() {
+    initialiserJourneesResultats(true);
+    afficherResultats();
 }
 
 function afficherResultats() {
@@ -2060,17 +2135,40 @@ function afficherResultats() {
 
     });
 
+    const selectJournee = document.getElementById("journeeResultats");
+    const journeeChoisie = selectJournee ? selectJournee.value : "Toutes";
+    if (journeeChoisie !== "Toutes") {
+        data = data.filter(function(row) {
+            return String(row.Journee ?? "Autres") === String(journeeChoisie);
+        });
+    }
+
     data.sort(function(a, b) {
 
-        const journeeA = Number(a.Journee) || 0;
-        const journeeB = Number(b.Journee) || 0;
+        const termineA =
+            a["Score Dom."] !== "" &&
+            a["Score Dom."] != null &&
+            a["Score Ext."] !== "" &&
+            a["Score Ext."] != null;
 
-        if (journeeA !== journeeB) {
-            return journeeB - journeeA;
+        const termineB =
+            b["Score Dom."] !== "" &&
+            b["Score Dom."] != null &&
+            b["Score Ext."] !== "" &&
+            b["Score Ext."] != null;
+
+        // Matchs à venir en premier
+        if (termineA !== termineB) {
+            return termineA ? 1 : -1;
         }
 
-        return convertirDate(b.Date) -
-               convertirDate(a.Date);
+        // Parmi les matchs à venir : le plus proche en premier
+        if (!termineA) {
+            return convertirDate(a.Date) - convertirDate(b.Date);
+        }
+
+        // Parmi les matchs terminés : le plus récent en premier
+        return convertirDate(b.Date) - convertirDate(a.Date);
 
     });
 
@@ -2097,20 +2195,37 @@ function afficherResultats() {
     const listeJournees =
         Object.keys(journees).sort(function(a, b) {
 
-            const numA = Number(a);
-            const numB = Number(b);
+            const matchsA = journees[a];
+            const matchsB = journees[b];
 
-            if (
-                !isNaN(numA) &&
-                !isNaN(numB)
-            ) {
-                return numB - numA;
+            const avenirA = matchsA.some(function(m) {
+                return !matchTermine(m);
+            });
+
+            const avenirB = matchsB.some(function(m) {
+                return !matchTermine(m);
+            });
+
+            // Journées contenant des matchs à venir en premier
+            if (avenirA !== avenirB) {
+                return avenirA ? -1 : 1;
             }
 
-            return String(b).localeCompare(
-                String(a),
-                "fr"
+            const dateA = Math.min(
+                ...matchsA.map(m => convertirDate(m.Date).getTime())
             );
+
+            const dateB = Math.min(
+                ...matchsB.map(m => convertirDate(m.Date).getTime())
+            );
+
+            // À venir : date la plus proche d'abord
+            if (avenirA) {
+                return dateA - dateB;
+            }
+
+            // Terminés : date la plus récente d'abord
+            return dateB - dateA;
 
         });
 
