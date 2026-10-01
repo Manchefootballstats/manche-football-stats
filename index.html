@@ -2452,8 +2452,21 @@ function afficherFicheClub(){
     const r=classement[rang];
     const matchs=matchsData.filter(m=>normaliserPoule(m.Poule)===normaliserPoule(poule) && [m.Domicile,m.Exterieur].some(c=>normaliserClub(c)===normaliserClub(club)))
       .sort((a,b)=>convertirDate(b.Date)-convertirDate(a.Date));
-    const buteurs=buteursData.filter(b=>normaliserPoule(b.Poule)===normaliserPoule(poule)&&normaliserClub(b.Club)===normaliserClub(club)).sort((a,b)=>(Number(b.Buts)||0)-(Number(a.Buts)||0));
-    const cartons=cartonsData.filter(c=>normaliserPoule(c.Poule)===normaliserPoule(poule)&&normaliserClub(c.Club)===normaliserClub(club))
+    // Buteurs / cartons : certains onglets utilisent le nom du club principal
+    // alors que le classement peut contenir "(2)", "2", "II", etc.
+    // On tente d'abord une correspondance exacte, puis le nom principal.
+    const correspondAuClub=(nom)=>{
+        const exact=normaliserClub(nom)===normaliserClub(club);
+        if(exact) return true;
+        return cleClubPrincipal(nom)===cleClubPrincipal(club);
+    };
+
+    const buteurs=buteursData
+      .filter(b=>normaliserPoule(b.Poule)===normaliserPoule(poule) && correspondAuClub(b.Club))
+      .sort((a,b)=>(Number(b.Buts)||0)-(Number(a.Buts)||0));
+
+    const cartons=cartonsData
+      .filter(c=>normaliserPoule(c.Poule)===normaliserPoule(poule) && correspondAuClub(c.Club))
       .sort((a,b)=>(Number(b.Rouges)||0)-(Number(a.Rouges)||0)||(Number(b.Jaunes)||0)-(Number(a.Jaunes)||0));
     const totalJaunes=cartons.reduce((total,c)=>total+(Number(c.Jaunes)||0),0);
     const totalRouges=cartons.reduce((total,c)=>total+(Number(c.Rouges)||0),0);
