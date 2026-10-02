@@ -598,6 +598,33 @@ footer{padding:25px 15px}
   .home-keyfigure-label{font-size:10px;white-space:normal;line-height:1.15}
 }
 
+
+/* ===== Indicateur dernière mise à jour ===== */
+.home-update-status{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:7px;
+  margin:-9px 5px 15px;
+  color:#718078;
+  font-size:11px;
+  font-weight:700;
+}
+.home-update-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#35a36b;
+  box-shadow:0 0 0 3px #35a36b1c;
+  flex:0 0 7px;
+}
+.home-update-status strong{color:#3f8f67}
+@media(max-width:700px){
+  .home-update-status{
+    justify-content:flex-start;
+    margin:-8px 4px 13px;
+    font-size:10px;
+  }
+}
+
 </style>
 
 </head>
@@ -664,6 +691,13 @@ footer{padding:25px 15px}
     <span class="home-keyfigure-icon">🟨</span>
     <span class="home-keyfigure-copy"><strong class="home-keyfigure-value" id="keyCartons">—</strong><span class="home-keyfigure-label">Cartons</span></span>
   </div>
+</div>
+
+<div class="home-update-status" id="homeUpdateStatus">
+  <span class="home-update-dot"></span>
+  <strong>Données à jour</strong>
+  <span>·</span>
+  <span id="homeUpdateText">Actualisation en cours…</span>
 </div>
 
 <div class="home-grid">
@@ -1743,6 +1777,7 @@ async function chargerButeurs() {
         buteursData = await response.json();
 
         majChiffresCles();
+        majDerniereMiseAJour();
         afficherButeurs();
         afficherAccueil();
         initialiserMonClub();
@@ -1885,6 +1920,7 @@ async function chargerCartons() {
         cartonsData = await response.json();
 
         majChiffresCles();
+        majDerniereMiseAJour();
         afficherCartons();
         if (document.getElementById("clubs").classList.contains("active")) afficherFicheClub();
 
@@ -2112,6 +2148,7 @@ async function chargerMatchs() {
         );
 
         majChiffresCles();
+        majDerniereMiseAJour();
         initialiserJourneesResultats(true);
         afficherResultats();
         afficherStats();
@@ -2645,6 +2682,18 @@ async function chargerActualites() {
     }
 }
 
+
+
+function majDerniereMiseAJour(){
+    const el=document.getElementById("homeUpdateText");
+    if(!el) return;
+
+    const maintenant=new Date();
+    const heure=maintenant.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+
+    /* L'heure correspond au dernier chargement des données depuis l'API. */
+    el.textContent="actualisées à "+heure;
+}
 
 /* ===== Chiffres clés de l'accueil — calculés depuis les données déjà chargées ===== */
 function majChiffresCles(){
