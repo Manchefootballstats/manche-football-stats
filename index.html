@@ -4,7 +4,68 @@
 <head>
 
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-LXQZ77D58C"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LXQZ77D58C">
+/* ===== Mon club : replié par défaut, ouverture d'une seule équipe ===== */
+function initialiserMonClubCompact(){
+  const cartes=[...document.querySelectorAll(".mon-club-equipe")];
+  if(!cartes.length) return;
+
+  cartes.forEach(carte=>{
+    carte.classList.remove("is-open");
+
+    /* Le premier bloc enfant qui contient les statistiques devient le corps repliable
+       si le HTML existant n'a pas déjà une classe dédiée. */
+    const enfants=[...carte.children];
+    let corps=carte.querySelector(".mon-club-equipe-body,.mon-club-details,.equipe-details,.team-details");
+
+    if(!corps && enfants.length>1){
+      /* On garde l'en-tête visible et on regroupe le reste sans supprimer le contenu. */
+      const wrap=document.createElement("div");
+      wrap.className="mon-club-equipe-body";
+      enfants.slice(1).forEach(el=>wrap.appendChild(el));
+      carte.appendChild(wrap);
+      corps=wrap;
+    }
+
+    if(corps) corps.style.display="none";
+
+    const entete=carte.firstElementChild;
+    if(entete && !entete.dataset.compactClubBound){
+      entete.dataset.compactClubBound="1";
+      entete.style.cursor="pointer";
+      entete.addEventListener("click",e=>{
+        if(e.target.closest("button,a,select,input")) return;
+        const ouvrir=!carte.classList.contains("is-open");
+
+        cartes.forEach(autre=>{
+          autre.classList.remove("is-open");
+          const b=autre.querySelector(".mon-club-equipe-body,.mon-club-details,.equipe-details,.team-details");
+          if(b) b.style.display="none";
+        });
+
+        if(ouvrir){
+          carte.classList.add("is-open");
+          if(corps) corps.style.display="block";
+        }
+      });
+    }
+  });
+}
+
+/* Le contenu Mon club est généré après chargement : on observe uniquement cette zone. */
+document.addEventListener("DOMContentLoaded",()=>{
+  const lancer=()=>initialiserMonClubCompact();
+  lancer();
+
+  const cible=document.querySelector(".mon-club-card") || document.body;
+  const obs=new MutationObserver(()=>{
+    clearTimeout(window.__mfsClubCompactTimer);
+    window.__mfsClubCompactTimer=setTimeout(lancer,40);
+  });
+  obs.observe(cible,{childList:true,subtree:true});
+});
+
+</script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -723,6 +784,101 @@ footer{padding:25px 15px}
   .header-search-panel{padding:7px 10px 10px}
 }
 
+
+/* ===== À suivre ce week-end ===== */
+.weekend-banner{
+  position:relative;overflow:hidden;
+  display:grid;grid-template-columns:auto auto 1fr auto;
+  align-items:center;gap:22px;
+  margin:14px 0 18px;padding:18px 22px;
+  min-height:105px;border-radius:16px;color:#fff;
+  background:
+    radial-gradient(circle at 90% 55%,#16894c55 0 12%,transparent 36%),
+    linear-gradient(105deg,#071b2b 0%,#0a2633 55%,#123d2b 100%);
+  box-shadow:0 8px 24px #10263c16;
+}
+.weekend-banner:after{
+  content:"⚽";position:absolute;right:10%;top:50%;transform:translateY(-50%);
+  font-size:112px;opacity:.055;pointer-events:none;
+}
+.weekend-banner-left{display:flex;align-items:center;gap:14px;min-width:280px}
+.weekend-calendar{
+  display:flex;align-items:center;justify-content:center;
+  width:54px;height:54px;border-radius:50%;background:#12b866;
+  font-size:27px;box-shadow:0 0 0 7px #12b86615;
+}
+.weekend-kicker{font-size:14px;font-weight:900;letter-spacing:.5px}
+.weekend-title{font-size:25px;font-weight:1000;line-height:1;color:#19d978}
+.weekend-sub{margin-top:7px;font-size:9px;font-weight:800;letter-spacing:1.2px;color:#d8e5e0}
+.weekend-banner-count{
+  display:flex;align-items:center;gap:9px;padding-left:20px;
+  border-left:1px solid #ffffff28;white-space:nowrap;
+}
+.weekend-pitch{font-size:31px;color:#19d978}
+.weekend-banner-count strong{font-size:35px;line-height:1;color:#19d978}
+.weekend-banner-count>span:last-child{font-size:12px;line-height:1.15;color:#f0f6f3}
+.weekend-banner-tags{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.weekend-banner-tags span{
+  padding:5px 8px;border:1px solid #ffffff28;border-radius:6px;
+  background:#ffffff0d;font-size:9px;font-weight:900;
+}
+.weekend-banner-btn{
+  position:relative;z-index:2;border:0;border-radius:10px;
+  background:linear-gradient(135deg,#0db25f,#078646);
+  color:#fff;font-weight:900;font-size:12px;padding:13px 17px;
+  cursor:pointer;white-space:nowrap;box-shadow:0 5px 15px #00000020;
+}
+.weekend-banner-btn:hover{transform:translateY(-1px)}
+.weekend-banner-btn b{margin-left:8px;font-size:16px}
+@media(max-width:900px){
+  .weekend-banner{
+    grid-template-columns:1fr auto;gap:12px;padding:14px 15px;min-height:0;
+  }
+  .weekend-banner-left{min-width:0}
+  .weekend-calendar{width:42px;height:42px;font-size:21px}
+  .weekend-kicker{font-size:11px}
+  .weekend-title{font-size:19px}
+  .weekend-sub{font-size:7px;margin-top:5px}
+  .weekend-banner-count{border-left:0;padding-left:0;justify-content:flex-end}
+  .weekend-pitch{font-size:24px}
+  .weekend-banner-count strong{font-size:28px}
+  .weekend-banner-count>span:last-child{font-size:10px}
+  .weekend-banner-tags{grid-column:1/2;justify-content:flex-start}
+  .weekend-banner-btn{grid-column:2/3;grid-row:2/3;padding:10px 12px;font-size:10px}
+}
+@media(max-width:520px){
+  .weekend-banner{grid-template-columns:1fr auto;gap:10px;margin-top:11px}
+  .weekend-banner-left{gap:10px}
+  .weekend-calendar{width:38px;height:38px}
+  .weekend-title{font-size:17px}
+  .weekend-sub{display:none}
+  .weekend-pitch{display:none}
+  .weekend-banner-count strong{font-size:26px}
+  .weekend-banner-tags span{font-size:8px;padding:4px 6px}
+  .weekend-banner-btn{padding:9px 10px}
+}
+
+
+/* ===== Mon club : équipes compactes par défaut ===== */
+.mon-club-equipe .mon-club-equipe-body,
+.mon-club-equipe .mon-club-details,
+.mon-club-equipe .equipe-details,
+.mon-club-equipe .team-details{
+  display:none;
+}
+.mon-club-equipe.is-open .mon-club-equipe-body,
+.mon-club-equipe.is-open .mon-club-details,
+.mon-club-equipe.is-open .equipe-details,
+.mon-club-equipe.is-open .team-details{
+  display:block;
+}
+.mon-club-equipe{
+  cursor:pointer;
+}
+.mon-club-equipe.is-open{
+  cursor:default;
+}
+
 </style>
 
 </head>
@@ -806,15 +962,31 @@ footer{padding:25px 15px}
   </div>
 </div>
 
-
-<div class="home-grid">
-<button class="home-tile" onclick="afficherSection('resultats')"><span class="tile-icon">🗓️</span><span class="tile-copy"><strong>Résultats</strong><small>Tous les matchs</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('classement')"><span class="tile-icon">🥇</span><span class="tile-copy"><strong>Classements</strong><small>De D1 à D4</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('buteurs')"><span class="tile-icon">🥅</span><span class="tile-copy"><strong>Buteurs</strong><small>Les meilleurs réalisateurs</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('actualites')"><span class="tile-icon">📰</span><span class="tile-copy"><strong>Actualités</strong><small>Le football manchois</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('feminines')"><span class="tile-icon">♀️</span><span class="tile-copy"><strong>Féminines</strong><small>Foot à 11 &amp; Foot à 8</small></span><span class="tile-arrow">➜</span></button>
-<button class="home-tile" onclick="afficherSection('arbitres')"><span class="tile-icon">👨‍⚖️</span><span class="tile-copy"><strong>Arbitres</strong><small>Matchs arbitrés</small></span><span class="tile-arrow">➜</span></button>
+<div class="weekend-banner" id="weekendBanner">
+  <div class="weekend-banner-left">
+    <span class="weekend-calendar">📅</span>
+    <div>
+      <div class="weekend-kicker">À SUIVRE</div>
+      <div class="weekend-title">CE WEEK-END</div>
+      <div class="weekend-sub">CHAMPIONNATS DISTRICT MANCHE</div>
+    </div>
+  </div>
+  <div class="weekend-banner-count">
+    <span class="weekend-pitch">▣</span>
+    <strong id="weekendMatchCount">—</strong>
+    <span>matchs<br>programmés</span>
+  </div>
+  <div class="weekend-banner-tags">
+    <span>D1</span><span>D2</span><span>D3</span><span>D4</span><span>FÉMININES</span>
+  </div>
+  <button class="weekend-banner-btn" type="button" onclick="afficherSection('resultats')">
+    Voir le programme <b>→</b>
+  </button>
 </div>
+
+
+
+
 <!-- Emplacement publicitaire réservé : invisible tant qu’aucune publicité n’est activée. -->
 <div class="ad-slot" id="pubAccueilHaut" hidden></div>
 
@@ -2256,6 +2428,7 @@ async function chargerMatchs() {
 
         majChiffresCles();
         majDerniereMiseAJour();
+        majBandeauWeekend();
         initialiserJourneesResultats(true);
         afficherResultats();
         afficherStats();
@@ -2943,6 +3116,45 @@ document.addEventListener("keydown",e=>{
         if(zone) zone.classList.remove("open");
     }
 });
+
+
+
+/* ===== Nombre de matchs à venir pour le week-end ===== */
+function majBandeauWeekend(){
+  const el=document.getElementById("weekendMatchCount");
+  if(!el || !Array.isArray(matchsData)) return;
+
+  const maintenant=new Date();
+  const jour=maintenant.getDay(); // 0 dim, 1 lun...
+  const deltaSamedi=(6-jour+7)%7;
+  const samedi=new Date(maintenant);
+  samedi.setHours(0,0,0,0);
+  samedi.setDate(samedi.getDate()+deltaSamedi);
+
+  const lundi=new Date(samedi);
+  lundi.setDate(lundi.getDate()+2);
+
+  const lireDate=(v)=>{
+    if(!v) return null;
+    if(v instanceof Date) return v;
+    const s=String(v).trim();
+    let m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    if(m) return new Date(+m[3],+m[2]-1,+m[1]);
+    const d=new Date(s);
+    return isNaN(d)?null:d;
+  };
+
+  const total=matchsData.filter(m=>{
+    const d=lireDate(m.Date);
+    if(!d) return false;
+    d.setHours(0,0,0,0);
+    const statut=String(m.Statut||"").toLowerCase();
+    const aUnScore=String(m["Score Dom."]??"").trim()!=="" || String(m["Score Ext."]??"").trim()!=="";
+    return d>=samedi && d<lundi && !aUnScore && !/report|annul|forfait/.test(statut);
+  }).length;
+
+  el.textContent=new Intl.NumberFormat("fr-FR").format(total);
+}
 
 
 /* ===== Chiffres clés de l'accueil — calculés depuis les données déjà chargées ===== */
