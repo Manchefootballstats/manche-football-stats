@@ -533,6 +533,71 @@ footer{padding:25px 15px}
 .resultats-filtre select{width:100%;max-width:none;margin:0}
 @media(max-width:600px){.resultats-filtres{display:grid;grid-template-columns:1fr 1fr;gap:8px}.resultats-filtre{min-width:0;max-width:none}.resultats-filtre label{font-size:11px}.resultats-filtre select{font-size:14px;min-height:44px;padding:9px}}
 
+
+/* ===== Chiffres clés — accueil ===== */
+.home-keyfigures{
+  display:grid;
+  grid-template-columns:auto repeat(4,minmax(0,1fr));
+  align-items:stretch;
+  margin:0 0 18px;
+  background:#fff;
+  border:1px solid #dfe9e4;
+  border-left:4px solid var(--terrain-clair);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 16px #10263c0d;
+}
+.home-keyfigures-title{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:175px;
+  padding:14px 18px;
+  border-right:1px solid #e6ece9;
+}
+.home-keyfigures-title strong{font-size:17px;color:var(--nuit);letter-spacing:.2px}
+.home-keyfigures-title small{margin-top:4px;color:#7a8791;font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase}
+.home-keyfigure{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-width:0;
+  padding:13px 14px;
+  border-right:1px solid #e6ece9;
+}
+.home-keyfigure:last-child{border-right:0}
+.home-keyfigure-icon{
+  width:40px;height:40px;flex:0 0 40px;
+  display:grid;place-items:center;
+  border-radius:50%;
+  background:#eaf8f0;
+  font-size:20px;
+}
+.home-keyfigure:nth-child(3) .home-keyfigure-icon{background:#edf5ff}
+.home-keyfigure:nth-child(5) .home-keyfigure-icon{background:#fff6d9}
+.home-keyfigure-copy{min-width:0}
+.home-keyfigure-value{display:block;color:var(--nuit);font-size:23px;font-weight:900;line-height:1}
+.home-keyfigure-label{display:block;margin-top:4px;color:#667785;font-size:11px;font-weight:700;white-space:nowrap}
+@media(max-width:900px){
+  .home-keyfigures{grid-template-columns:1fr 1fr}
+  .home-keyfigures-title{grid-column:1/-1;min-width:0;flex-direction:row;justify-content:flex-start;align-items:baseline;gap:8px;padding:11px 13px;border-right:0;border-bottom:1px solid #e6ece9}
+  .home-keyfigures-title small{margin:0}
+  .home-keyfigure{justify-content:flex-start;padding:12px;border-bottom:1px solid #e6ece9}
+  .home-keyfigure:nth-child(2),.home-keyfigure:nth-child(4){border-right:1px solid #e6ece9}
+  .home-keyfigure:nth-child(3),.home-keyfigure:nth-child(5){border-right:0}
+  .home-keyfigure:nth-child(4),.home-keyfigure:nth-child(5){border-bottom:0}
+}
+@media(max-width:420px){
+  .home-keyfigures{border-radius:14px}
+  .home-keyfigures-title strong{font-size:15px}
+  .home-keyfigures-title small{font-size:9px}
+  .home-keyfigure{gap:8px;padding:10px}
+  .home-keyfigure-icon{width:34px;height:34px;flex-basis:34px;font-size:17px}
+  .home-keyfigure-value{font-size:20px}
+  .home-keyfigure-label{font-size:10px;white-space:normal;line-height:1.15}
+}
+
 </style>
 
 </head>
@@ -576,6 +641,29 @@ footer{padding:25px 15px}
 <div class="install-app" id="installAppBox" aria-label="Installer Manche Football Stats">
   <div class="install-app-copy"><strong>📲 Manche Football Stats sur votre téléphone</strong><small>Installez le site comme une application pour y accéder en un clic.</small><div class="install-ios-help" id="installIosHelp">Sur iPhone/iPad : ouvrez le site dans Safari, touchez <b>Partager</b>, puis <b>Sur l’écran d’accueil</b>.</div></div>
   <button type="button" class="install-app-btn" id="installAppBtn">Installer</button>
+</div>
+
+<div class="home-keyfigures" id="homeKeyFigures" aria-label="Chiffres clés de la saison">
+  <div class="home-keyfigures-title">
+    <strong>📊 EN CHIFFRES</strong>
+    <small>Cette saison</small>
+  </div>
+  <div class="home-keyfigure">
+    <span class="home-keyfigure-icon">⚽</span>
+    <span class="home-keyfigure-copy"><strong class="home-keyfigure-value" id="keyMatchs">—</strong><span class="home-keyfigure-label">Matchs joués</span></span>
+  </div>
+  <div class="home-keyfigure">
+    <span class="home-keyfigure-icon">🥅</span>
+    <span class="home-keyfigure-copy"><strong class="home-keyfigure-value" id="keyButs">—</strong><span class="home-keyfigure-label">Buts inscrits</span></span>
+  </div>
+  <div class="home-keyfigure">
+    <span class="home-keyfigure-icon">🎯</span>
+    <span class="home-keyfigure-copy"><strong class="home-keyfigure-value" id="keyButeurs">—</strong><span class="home-keyfigure-label">Buteurs recensés</span></span>
+  </div>
+  <div class="home-keyfigure">
+    <span class="home-keyfigure-icon">🟨</span>
+    <span class="home-keyfigure-copy"><strong class="home-keyfigure-value" id="keyCartons">—</strong><span class="home-keyfigure-label">Cartons</span></span>
+  </div>
 </div>
 
 <div class="home-grid">
@@ -1654,6 +1742,7 @@ async function chargerButeurs() {
 
         buteursData = await response.json();
 
+        majChiffresCles();
         afficherButeurs();
         afficherAccueil();
         initialiserMonClub();
@@ -1795,6 +1884,7 @@ async function chargerCartons() {
 
         cartonsData = await response.json();
 
+        majChiffresCles();
         afficherCartons();
         if (document.getElementById("clubs").classList.contains("active")) afficherFicheClub();
 
@@ -2021,6 +2111,7 @@ async function chargerMatchs() {
             matchsData
         );
 
+        majChiffresCles();
         initialiserJourneesResultats(true);
         afficherResultats();
         afficherStats();
@@ -2491,7 +2582,8 @@ function initialiserAccueil() {
 function afficherAccueil() {
     const cible=document.getElementById('accueilResult');
     if (!cible) return;
-    initialiserAccueil();
+    
+initialiserAccueil();
     const poule=document.getElementById('pouleAccueil').value;
     const correspond=row=>normaliserPoule(row.Poule)===normaliserPoule(poule);
     const matchs=matchsData.filter(m=>correspond(m)&&m.Domicile&&m.Exterieur);
@@ -2551,6 +2643,36 @@ async function chargerActualites() {
         if (accueilNews) accueilNews.innerHTML = '<div class="accueil-news-message">Actualités indisponibles pour le moment.</div>';
         console.error('Actualités :', error);
     }
+}
+
+
+/* ===== Chiffres clés de l'accueil — calculés depuis les données déjà chargées ===== */
+function majChiffresCles(){
+    const setValeur=(id,valeur)=>{
+        const el=document.getElementById(id);
+        if(el) el.textContent=new Intl.NumberFormat("fr-FR").format(valeur || 0);
+    };
+
+    const matchsTermines=(Array.isArray(matchsData)?matchsData:[]).filter(matchTermine);
+
+    const totalButs=matchsTermines.reduce((total,m)=>{
+        return total + (Number(m["Score Dom."])||0) + (Number(m["Score Ext."])||0);
+    },0);
+
+    const buteursUniques=new Set(
+        (Array.isArray(buteursData)?buteursData:[])
+          .filter(b=>String(b.Joueur||"").trim() && (Number(b.Buts)||0)>0)
+          .map(b=>(String(b.Joueur||"").trim()+"|"+String(b.Club||"").trim()).toLowerCase())
+    );
+
+    const totalCartons=(Array.isArray(cartonsData)?cartonsData:[]).reduce((total,c)=>{
+        return total + (Number(c.Jaunes)||0) + (Number(c.Rouges)||0);
+    },0);
+
+    setValeur("keyMatchs", matchsTermines.length);
+    setValeur("keyButs", totalButs);
+    setValeur("keyButeurs", buteursUniques.size);
+    setValeur("keyCartons", totalCartons);
 }
 
 initialiserAccueil();
