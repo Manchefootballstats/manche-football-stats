@@ -972,6 +972,77 @@ footer{padding:25px 15px}
   display:none !important;
 }
 
+
+/* ===== Header mobile compact : Soutenir + recherche ===== */
+@media(max-width:760px){
+  .site-header .header-inner{
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) auto auto !important;
+    align-items:center !important;
+    gap:8px !important;
+    padding-top:14px !important;
+    padding-bottom:14px !important;
+  }
+
+  .site-header .header-brand{
+    min-width:0 !important;
+    margin:0 !important;
+  }
+
+  .site-header .header-support-btn{
+    display:inline-flex !important;
+    width:auto !important;
+    height:38px !important;
+    min-width:0 !important;
+    padding:0 12px !important;
+    margin:0 !important;
+    border-radius:999px !important;
+    gap:5px !important;
+    white-space:nowrap !important;
+  }
+
+  .site-header .header-support-btn span:nth-child(2){
+    display:inline !important;
+    font-size:0 !important;
+  }
+
+  .site-header .header-support-btn span:nth-child(2)::after{
+    content:"Soutenir";
+    font-size:12px;
+    font-weight:900;
+  }
+
+  .site-header .header-support-btn .header-support-cup{
+    display:inline !important;
+    font-size:16px !important;
+  }
+
+  .site-header .header-support-btn b{
+    display:none !important;
+  }
+
+  /* Le bouton de recherche reste à droite du bouton Soutenir */
+  .site-header .header-search,
+  .site-header .search-toggle,
+  .site-header [aria-label*="Recherch"],
+  .site-header [title*="Recherch"]{
+    margin:0 !important;
+  }
+}
+
+@media(max-width:480px){
+  .site-header .header-support-btn{
+    width:auto !important;
+    min-width:82px !important;
+    height:36px !important;
+    padding:0 10px !important;
+  }
+
+  .site-header .header-support-btn span:nth-child(2){
+    display:inline !important;
+  }
+}
+
 </style>
 
 </head>
