@@ -625,6 +625,32 @@ footer{padding:25px 15px}
   }
 }
 
+
+.home-keyfigures-update{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:7px;
+  color:#6f7f87;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.2px;
+}
+.home-keyfigures-update i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#35a36b;
+  box-shadow:0 0 0 3px #35a36b1a;
+}
+@media(max-width:900px){
+  .home-keyfigures-title{flex-wrap:wrap}
+  .home-keyfigures-update{margin-top:0;margin-left:auto}
+}
+@media(max-width:420px){
+  .home-keyfigures-update{font-size:9px}
+}
+
 </style>
 
 </head>
@@ -674,6 +700,7 @@ footer{padding:25px 15px}
   <div class="home-keyfigures-title">
     <strong>📊 EN CHIFFRES</strong>
     <small>Cette saison</small>
+    <span class="home-keyfigures-update"><i></i><span id="homeUpdateText">MAJ : —</span></span>
   </div>
   <div class="home-keyfigure">
     <span class="home-keyfigure-icon">⚽</span>
@@ -693,12 +720,6 @@ footer{padding:25px 15px}
   </div>
 </div>
 
-<div class="home-update-status" id="homeUpdateStatus">
-  <span class="home-update-dot"></span>
-  <strong>Données à jour</strong>
-  <span>·</span>
-  <span id="homeUpdateText">Actualisation en cours…</span>
-</div>
 
 <div class="home-grid">
 <button class="home-tile" onclick="afficherSection('resultats')"><span class="tile-icon">🗓️</span><span class="tile-copy"><strong>Résultats</strong><small>Tous les matchs</small></span><span class="tile-arrow">➜</span></button>
@@ -2692,7 +2713,7 @@ function majDerniereMiseAJour(){
     const heure=maintenant.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
 
     /* L'heure correspond au dernier chargement des données depuis l'API. */
-    el.textContent="actualisées à "+heure;
+    el.textContent="MAJ : "+heure;
 }
 
 /* ===== Chiffres clés de l'accueil — calculés depuis les données déjà chargées ===== */
