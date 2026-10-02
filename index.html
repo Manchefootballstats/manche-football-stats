@@ -651,6 +651,78 @@ footer{padding:25px 15px}
   .home-keyfigures-update{font-size:9px}
 }
 
+
+/* ===== Recherche globale ===== */
+.global-search{position:relative;max-width:620px;margin:0 auto 16px}
+.global-search-box{
+  display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #dfe9e4;
+  border-radius:14px;padding:10px 13px;box-shadow:0 3px 12px #10263c0a;
+}
+.global-search-box span{font-size:17px}
+.global-search-box input{
+  width:100%;border:0;outline:0;background:transparent;color:var(--nuit);
+  font:inherit;font-size:13px;font-weight:700;
+}
+.global-search-box input::placeholder{color:#8b979f;font-weight:600}
+.global-search-results{
+  display:none;position:absolute;z-index:80;left:0;right:0;top:calc(100% + 6px);
+  background:#fff;border:1px solid #dfe9e4;border-radius:14px;
+  box-shadow:0 12px 30px #10263c20;overflow:hidden;max-height:330px;overflow-y:auto;
+}
+.global-search-results.open{display:block}
+.global-search-item{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:11px 13px;border:0;border-bottom:1px solid #edf1ef;background:#fff;
+  text-align:left;cursor:pointer;color:var(--nuit);
+}
+.global-search-item:last-child{border-bottom:0}
+.global-search-item:hover,.global-search-item.active{background:#f2faf5}
+.global-search-item strong{display:block;font-size:13px}
+.global-search-item small{display:block;margin-top:2px;color:#7b8992;font-size:10px}
+.global-search-arrow{color:var(--terrain-clair);font-weight:900}
+.global-search-empty{padding:14px;color:#7b8992;font-size:12px;text-align:center}
+@media(max-width:700px){
+  .global-search{margin-bottom:13px}
+  .global-search-box{padding:9px 11px;border-radius:12px}
+}
+
+
+/* ===== Recherche intégrée au bandeau ===== */
+.header-search-toggle{
+  border:0;background:transparent;color:#fff;cursor:pointer;
+  width:36px;height:36px;border-radius:9px;font-size:17px;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:.18s ease;
+}
+.header-search-toggle:hover{background:#ffffff14}
+.header-search-panel{
+  display:none;background:var(--nuit2);padding:8px 16px 12px;
+  border-top:1px solid #ffffff12;position:relative;z-index:90;
+}
+.header-search-panel.open{display:block}
+.header-search-inner{max-width:680px;margin:auto;position:relative}
+.header-search-box{
+  display:flex;align-items:center;gap:9px;background:#fff;border-radius:11px;
+  padding:8px 10px;box-shadow:0 8px 22px #00000018;
+}
+.header-search-box input{
+  flex:1;min-width:0;border:0;outline:0;background:transparent;
+  color:var(--nuit);font:inherit;font-size:13px;font-weight:700;
+}
+.header-search-box input::placeholder{color:#8b979f;font-weight:600}
+.header-search-box button{
+  border:0;background:transparent;color:#75818a;cursor:pointer;
+  width:28px;height:28px;border-radius:7px;
+}
+.header-search-box button:hover{background:#eef4f1}
+.header-search-results{
+  top:calc(100% + 5px);left:0;right:0;z-index:100;
+}
+@media(max-width:900px){
+  .header-search-toggle{width:34px;height:34px}
+  .header-search-panel{padding:7px 10px 10px}
+}
+
 </style>
 
 </head>
@@ -671,7 +743,21 @@ footer{padding:25px 15px}
       <a href="mailto:manchefootballstats@outlook.fr">✉️ manchefootballstats@outlook.fr</a>
     </div>
   </div>
+<button class="header-search-toggle" id="headerSearchToggle" type="button" aria-label="Rechercher">🔎</button>
 </header>
+
+<div class="header-search-panel" id="headerSearchPanel" aria-hidden="true">
+  <div class="header-search-inner">
+    <div class="header-search-box">
+      <span>🔎</span>
+      <input id="globalSearchInput" type="search" autocomplete="off"
+             placeholder="Rechercher un club ou un joueur…" aria-label="Rechercher un club ou un joueur">
+      <button type="button" id="headerSearchClose" aria-label="Fermer">✕</button>
+    </div>
+    <div class="global-search-results header-search-results" id="globalSearchResults"></div>
+  </div>
+</div>
+
 
 <nav>
     <button id="btnAccueil" class="active" onclick="afficherSection('accueil')">🏠 Accueil</button>
@@ -2715,6 +2801,149 @@ function majDerniereMiseAJour(){
     /* L'heure correspond au dernier chargement des données depuis l'API. */
     el.textContent="MAJ : "+heure;
 }
+
+
+
+/* Ouverture / fermeture de la recherche du bandeau */
+(function(){
+  const ouvrirRecherche=()=>{
+    const panel=document.getElementById("headerSearchPanel");
+    const input=document.getElementById("globalSearchInput");
+    if(!panel) return;
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden","false");
+    setTimeout(()=>input&&input.focus(),30);
+  };
+  const fermerRecherche=()=>{
+    const panel=document.getElementById("headerSearchPanel");
+    const zone=document.getElementById("globalSearchResults");
+    const input=document.getElementById("globalSearchInput");
+    if(!panel) return;
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden","true");
+    if(zone){zone.classList.remove("open");zone.innerHTML="";}
+    if(input) input.value="";
+  };
+
+  document.addEventListener("click",e=>{
+    if(e.target.closest && e.target.closest("#headerSearchToggle")) ouvrirRecherche();
+    if(e.target.closest && e.target.closest("#headerSearchClose")) fermerRecherche();
+  });
+})();
+
+
+/* ===== Recherche globale : clubs + joueurs ===== */
+let indexRechercheMFS=[];
+
+function reconstruireIndexRecherche(){
+    const index=[], vus=new Set();
+
+    const ajouter=(type,nom,sousTitre,action)=>{
+        nom=String(nom||"").trim();
+        if(!nom) return;
+        const cle=type+"|"+nom.toLowerCase()+"|"+String(sousTitre||"").toLowerCase();
+        if(vus.has(cle)) return;
+        vus.add(cle);
+        index.push({type,nom,sousTitre:String(sousTitre||""),action});
+    };
+
+    /* Clubs issus des classements et des matchs */
+    const clubs=new Set();
+    (Array.isArray(classementData)?classementData:[]).forEach(r=>{if(r.Club) clubs.add(String(r.Club).trim())});
+    (Array.isArray(matchsData)?matchsData:[]).forEach(r=>{
+        if(r.Domicile) clubs.add(String(r.Domicile).trim());
+        if(r.Exterieur) clubs.add(String(r.Exterieur).trim());
+    });
+    clubs.forEach(club=>{
+        const ligne=(classementData||[]).find(r=>normaliserClub(r.Club)===normaliserClub(club));
+        const poule=ligne?String(ligne.Poule||""):"";
+        ajouter("club",club,poule?("Club · "+poule):"Club",()=>ouvrirClubFavori(club));
+    });
+
+    /* Joueurs issus du classement des buteurs */
+    (Array.isArray(buteursData)?buteursData:[]).forEach(b=>{
+        const joueur=String(b.Joueur||"").trim();
+        if(!joueur) return;
+        const club=String(b.Club||"").trim();
+        const buts=Number(b.Buts)||0;
+        ajouter("joueur",joueur,`${club}${club?" · ":""}${buts} but${buts>1?"s":""}`,()=>{
+            afficherSection("buteurs");
+            setTimeout(()=>{
+                const poule=document.getElementById("pouleButeurs");
+                if(poule && b.Poule){
+                    const option=Array.from(poule.options).find(o=>normaliserPoule(o.value)===normaliserPoule(b.Poule));
+                    if(option){poule.value=option.value; afficherButeurs();}
+                }
+            },50);
+        });
+    });
+
+    indexRechercheMFS=index;
+}
+
+function normaliserRechercheMFS(v){
+    return String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+}
+
+function afficherSuggestionsRecherche(){
+    const input=document.getElementById("globalSearchInput");
+    const zone=document.getElementById("globalSearchResults");
+    if(!input||!zone) return;
+
+    const q=normaliserRechercheMFS(input.value);
+    if(q.length<2){zone.classList.remove("open");zone.innerHTML="";return;}
+
+    reconstruireIndexRecherche();
+
+    const resultats=indexRechercheMFS
+      .filter(x=>normaliserRechercheMFS(x.nom+" "+x.sousTitre).includes(q))
+      .sort((a,b)=>{
+          const aa=normaliserRechercheMFS(a.nom), bb=normaliserRechercheMFS(b.nom);
+          const pa=aa.startsWith(q)?0:1, pb=bb.startsWith(q)?0:1;
+          return pa-pb || aa.localeCompare(bb,"fr");
+      })
+      .slice(0,8);
+
+    if(!resultats.length){
+        zone.innerHTML='<div class="global-search-empty">Aucun club ou joueur trouvé.</div>';
+        zone.classList.add("open");
+        return;
+    }
+
+    zone.innerHTML="";
+    resultats.forEach((r,i)=>{
+        const bouton=document.createElement("button");
+        bouton.type="button";
+        bouton.className="global-search-item";
+        bouton.innerHTML=`<span><strong>${r.type==="club"?"⚽":"🎯"} ${echapperHtml(r.nom)}</strong><small>${echapperHtml(r.sousTitre)}</small></span><span class="global-search-arrow">→</span>`;
+        bouton.addEventListener("click",()=>{
+            zone.classList.remove("open");
+            input.value="";
+            r.action();
+        });
+        zone.appendChild(bouton);
+    });
+    zone.classList.add("open");
+}
+
+document.addEventListener("input",e=>{
+    if(e.target && e.target.id==="globalSearchInput") afficherSuggestionsRecherche();
+});
+document.addEventListener("click",e=>{
+    const panel=document.getElementById("headerSearchPanel");
+    const zone=document.getElementById("globalSearchResults");
+    const toggle=document.getElementById("headerSearchToggle");
+    if(panel&&zone&&panel.classList.contains("open")&&!panel.contains(e.target)&&!(toggle&&toggle.contains(e.target))){
+        zone.classList.remove("open");
+    }
+});
+document.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+        const zone=document.getElementById("globalSearchResults");
+        if(zone) zone.classList.remove("open");
+    }
+});
+
 
 /* ===== Chiffres clés de l'accueil — calculés depuis les données déjà chargées ===== */
 function majChiffresCles(){
