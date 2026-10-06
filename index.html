@@ -1573,6 +1573,18 @@ footer{padding:25px 15px}
 
 </style>
 
+
+<script>
+(function () {
+  if (new URLSearchParams(window.location.search).has("article")) {
+    document.documentElement.classList.add("article-direct-loading");
+  }
+})();
+</script>
+<style>
+html.article-direct-loading body { visibility: hidden; }
+</style>
+
 </head>
 
 <body>
@@ -3773,7 +3785,8 @@ function genererArticlesLies(indexActuel) {
       </aside>`;
 }
 
-function ouvrirArticle(index) {
+function ouvrirArticle(index, majUrl = true) {
+    if (majUrl && articlesData[index]) mettreAJourUrlArticle(articlesData[index], index);
     const a = articlesData[index];
     if (!a) return;
 
@@ -3810,6 +3823,7 @@ function ouvrirArticle(index) {
 }
 
 function retourArticles() {
+    nettoyerUrlArticle();
     afficherSection("actualites");
     chargerArticles();
     setTimeout(synchroniserArticlesDansActualites, 300);
@@ -3852,6 +3866,7 @@ async function chargerArticles() {
         }
 
         articlesData = articles;
+        setTimeout(ouvrirLienArticleInitial, 50);
         setTimeout(synchroniserArticlesDansActualites, 0); setTimeout(rendreFilMFS, 600);
 
         cible.innerHTML = articles.map((a, index) => {
@@ -4438,6 +4453,108 @@ function rafraichirFilMFS() {
   setTimeout(rendreFilMFS, 500);
   setTimeout(rendreFilMFS, 1200);
 }
+
+
+
+
+/* ===== V14 : liens directs vers les articles ===== */
+function obtenirIdArticle(article, index) {
+  const id = mfsValeur(article, ["ID","Id","id"]);
+  return id || ("article-" + (index + 1));
+}
+
+function mettreAJourUrlArticle(article, index) {
+  const id = obtenirIdArticle(article, index);
+  const url = new URL(window.location.href);
+  url.searchParams.set("article", id);
+  history.pushState({article:id}, "", url.toString());
+}
+
+function nettoyerUrlArticle() {
+  const url = new URL(window.location.href);
+  url.searchParams.delete("article");
+  history.pushState({}, "", url.toString());
+}
+
+function ouvrirArticleDepuisUrl() {
+  const id = new URLSearchParams(window.location.search).get("article");
+  if (!id || !Array.isArray(articlesData) || !articlesData.length) return false;
+
+  const index = articlesData.findIndex((article, i) =>
+    obtenirIdArticle(article, i).toLowerCase() === id.toLowerCase()
+  );
+
+  if (index >= 0) {
+    ouvrirArticle(index, false);
+    return true;
+  }
+  return false;
+}
+
+function copierLienArticle(index) {
+  const article = articlesData[index];
+  if (!article) return;
+  const url = new URL(window.location.href);
+  url.searchParams.set("article", obtenirIdArticle(article, index));
+  navigator.clipboard?.writeText(url.toString());
+}
+
+
+
+window.addEventListener("popstate", () => {
+  const id = new URLSearchParams(window.location.search).get("article");
+  if (id) {
+    ouvrirArticleDepuisUrl();
+  } else {
+    afficherSection("actualites");
+    setTimeout(rendreFilMFS, 200);
+  }
+});
+
+
+
+
+/* ===== V15 : ouverture fiable des liens directs ===== */
+
+setTimeout(() => {
+  document.documentElement.classList.remove("article-direct-loading");
+}, 5000);
+let lienArticleInitialTraite = false;
+
+function ouvrirLienArticleInitial() {
+  if (lienArticleInitialTraite) return;
+
+  const id = new URLSearchParams(window.location.search).get("article");
+  if (!id) return;
+
+  // If article data is not loaded yet, load it and retry.
+  if (!Array.isArray(articlesData) || !articlesData.length) {
+    try { chargerArticles(); } catch(e) { console.error(e); }
+    setTimeout(ouvrirLienArticleInitial, 350);
+    return;
+  }
+
+  const index = articlesData.findIndex((article, i) =>
+    obtenirIdArticle(article, i).toLowerCase() === id.toLowerCase()
+  );
+
+  if (index >= 0) {
+    lienArticleInitialTraite = true;
+    ouvrirArticle(index, false);
+    document.documentElement.classList.remove("article-direct-loading");
+  } else {
+    document.documentElement.classList.remove("article-direct-loading");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (new URLSearchParams(window.location.search).has("article")) {
+    // Let the site's normal startup finish, then force the requested article.
+    setTimeout(ouvrirLienArticleInitial, 250);
+    setTimeout(ouvrirLienArticleInitial, 800);
+    setTimeout(ouvrirLienArticleInitial, 1500);
+  }
+});
 
 </script>
 
