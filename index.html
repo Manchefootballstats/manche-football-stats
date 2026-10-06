@@ -3866,7 +3866,6 @@ async function chargerArticles() {
         }
 
         articlesData = articles;
-        setTimeout(ouvrirLienArticleInitial, 50);
         setTimeout(synchroniserArticlesDansActualites, 0); setTimeout(rendreFilMFS, 600);
 
         cible.innerHTML = articles.map((a, index) => {
@@ -4514,10 +4513,10 @@ window.addEventListener("popstate", () => {
 
 
 
-/* ===== V17 : ouverture directe fiable des articles ===== */
+/* ===== V18 : lien direct article, sans double chargement ===== */
 let mfsArticleDirectOuvert = false;
 
-async function mfsOuvrirArticleDirect() {
+async function mfsOuvrirArticleDirectV18() {
   if (mfsArticleDirectOuvert) return true;
 
   const idDemande = new URLSearchParams(window.location.search).get("article");
@@ -4526,86 +4525,56 @@ async function mfsOuvrirArticleDirect() {
     return false;
   }
 
-  try {
-    // Charge directement l'onglet Articles, sans dépendre du démarrage de l'accueil.
-    const response = await fetch(
-      API_URL + "?sheet=" + encodeURIComponent("Articles") + "&_=" + Date.now(),
-      { cache: "no-store" }
-    );
-
-    if (!response.ok) throw new Error("Réponse HTTP " + response.status);
-
-    const data = await response.json();
-    if (!Array.isArray(data)) throw new Error("Réponse Articles invalide");
-
-    const valeur = (obj, noms) => {
-      for (const nom of noms) {
-        if (obj && obj[nom] !== undefined && obj[nom] !== null) {
-          const v = String(obj[nom]).trim();
-          if (v) return v;
-        }
+  // Réutilise les données déjà chargées par chargerArticles().
+  // Si elles ne le sont pas encore, on lance UN SEUL chargement.
+  if (!Array.isArray(articlesData) || !articlesData.length) {
+    if (!window.mfsChargementArticlesDirect) {
+      window.mfsChargementArticlesDirect = true;
+      try {
+        await chargerArticles();
+      } catch (e) {
+        console.error("Chargement Articles :", e);
       }
-      return "";
-    };
-
-    articlesData = data.filter(a => {
-      const titre = valeur(a, ["Titre", "titre"]);
-      const publie = valeur(a, ["Publié", "Publie", "publié", "publie", "Statut"]);
-      if (!titre) return false;
-      if (!publie) return true;
-      return /^(oui|o|yes|1|true|publi[eé])$/i.test(publie);
-    });
-
-    articlesData.sort((a, b) =>
-      convertirDate(valeur(b, ["Date"])) - convertirDate(valeur(a, ["Date"]))
-    );
-
-    const idNormalise = String(idDemande).trim().toLowerCase();
-    const index = articlesData.findIndex((article, i) =>
-      obtenirIdArticle(article, i).trim().toLowerCase() === idNormalise
-    );
-
-    if (index === -1) {
-      console.warn("Article introuvable :", idDemande);
-      document.documentElement.classList.remove("article-direct-loading");
-      return false;
     }
+  }
 
-    mfsArticleDirectOuvert = true;
-    ouvrirArticle(index, false);
-
-    // Une autre fonction du site peut remettre l'accueil pendant son initialisation.
-    // On réaffirme donc la section article quelques instants.
-    [50, 250, 700, 1400].forEach(delai => {
-      setTimeout(() => {
-        if (!mfsArticleDirectOuvert) return;
-        document.querySelectorAll(".section").forEach(el => el.classList.remove("active"));
-        const lecteur = document.getElementById("articleLecture");
-        if (lecteur) lecteur.classList.add("active");
-      }, delai);
-    });
-
-    document.documentElement.classList.remove("article-direct-loading");
-    return true;
-  } catch (error) {
-    console.error("Ouverture article direct :", error);
+  if (!Array.isArray(articlesData) || !articlesData.length) {
     document.documentElement.classList.remove("article-direct-loading");
     return false;
   }
+
+  const idNormalise = String(idDemande).trim().toLowerCase();
+  const index = articlesData.findIndex((article, i) =>
+    obtenirIdArticle(article, i).trim().toLowerCase() === idNormalise
+  );
+
+  if (index < 0) {
+    console.warn("Article introuvable :", idDemande);
+    document.documentElement.classList.remove("article-direct-loading");
+    return false;
+  }
+
+  mfsArticleDirectOuvert = true;
+  ouvrirArticle(index, false);
+
+  // Protection légère contre l'initialisation de l'accueil qui pourrait
+  // reprendre la main juste après l'ouverture.
+  setTimeout(() => {
+    if (!mfsArticleDirectOuvert) return;
+    document.querySelectorAll(".section").forEach(el => el.classList.remove("active"));
+    const lecteur = document.getElementById("articleLecture");
+    if (lecteur) lecteur.classList.add("active");
+    document.documentElement.classList.remove("article-direct-loading");
+  }, 80);
+
+  return true;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   if (new URLSearchParams(window.location.search).has("article")) {
-    mfsOuvrirArticleDirect();
+    mfsOuvrirArticleDirectV18();
   } else {
     document.documentElement.classList.remove("article-direct-loading");
-  }
-});
-
-// Secours si un script tardif tente encore de revenir à l'accueil.
-window.addEventListener("load", () => {
-  if (new URLSearchParams(window.location.search).has("article")) {
-    setTimeout(mfsOuvrirArticleDirect, 100);
   }
 });
 </script>
