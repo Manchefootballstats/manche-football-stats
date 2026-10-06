@@ -1574,16 +1574,7 @@ footer{padding:25px 15px}
 </style>
 
 
-<script>
-(function () {
-  if (new URLSearchParams(window.location.search).has("article")) {
-    document.documentElement.classList.add("article-direct-loading");
-  }
-})();
-</script>
-<style>
-html.article-direct-loading body { visibility: hidden; }
-</style>
+
 
 </head>
 
@@ -3866,6 +3857,10 @@ async function chargerArticles() {
         }
 
         articlesData = articles;
+        try {
+            localStorage.setItem("mfs_articles_cache", JSON.stringify(articlesData));
+            localStorage.setItem("mfs_articles_cache_time", String(Date.now()));
+        } catch(e) {}
         setTimeout(synchroniserArticlesDansActualites, 0); setTimeout(rendreFilMFS, 600);
 
         cible.innerHTML = articles.map((a, index) => {
@@ -4513,68 +4508,69 @@ window.addEventListener("popstate", () => {
 
 
 
-/* ===== V18 : lien direct article, sans double chargement ===== */
+/* ===== V19 : article direct rapide, cache local + actualisation ===== */
 let mfsArticleDirectOuvert = false;
 
-async function mfsOuvrirArticleDirectV18() {
-  if (mfsArticleDirectOuvert) return true;
+function mfsTrouverEtOuvrirArticle(idDemande) {
+  if (!Array.isArray(articlesData) || !articlesData.length) return false;
 
-  const idDemande = new URLSearchParams(window.location.search).get("article");
-  if (!idDemande) {
-    document.documentElement.classList.remove("article-direct-loading");
-    return false;
-  }
-
-  // Réutilise les données déjà chargées par chargerArticles().
-  // Si elles ne le sont pas encore, on lance UN SEUL chargement.
-  if (!Array.isArray(articlesData) || !articlesData.length) {
-    if (!window.mfsChargementArticlesDirect) {
-      window.mfsChargementArticlesDirect = true;
-      try {
-        await chargerArticles();
-      } catch (e) {
-        console.error("Chargement Articles :", e);
-      }
-    }
-  }
-
-  if (!Array.isArray(articlesData) || !articlesData.length) {
-    document.documentElement.classList.remove("article-direct-loading");
-    return false;
-  }
-
-  const idNormalise = String(idDemande).trim().toLowerCase();
+  const idNormalise = String(idDemande || "").trim().toLowerCase();
   const index = articlesData.findIndex((article, i) =>
     obtenirIdArticle(article, i).trim().toLowerCase() === idNormalise
   );
 
-  if (index < 0) {
-    console.warn("Article introuvable :", idDemande);
-    document.documentElement.classList.remove("article-direct-loading");
-    return false;
-  }
+  if (index < 0) return false;
 
   mfsArticleDirectOuvert = true;
   ouvrirArticle(index, false);
-
-  // Protection légère contre l'initialisation de l'accueil qui pourrait
-  // reprendre la main juste après l'ouverture.
-  setTimeout(() => {
-    if (!mfsArticleDirectOuvert) return;
-    document.querySelectorAll(".section").forEach(el => el.classList.remove("active"));
-    const lecteur = document.getElementById("articleLecture");
-    if (lecteur) lecteur.classList.add("active");
-    document.documentElement.classList.remove("article-direct-loading");
-  }, 80);
-
   return true;
+}
+
+async function mfsOuvrirArticleDirectV19() {
+  const idDemande = new URLSearchParams(window.location.search).get("article");
+  if (!idDemande) return false;
+
+  // Affiche immédiatement la zone article au lieu de laisser l'utilisateur
+  // attendre sur une page blanche ou sur l'accueil.
+  document.querySelectorAll(".section").forEach(el => el.classList.remove("active"));
+  const lecteur = document.getElementById("articleLecture");
+  const contenu = document.getElementById("articleLectureContenu");
+  if (lecteur) lecteur.classList.add("active");
+  if (contenu) contenu.innerHTML =
+    '<div class="message">📰 Chargement de l’article…</div>';
+
+  // 1. Cache local : ouverture quasi instantanée si les articles ont déjà été chargés.
+  try {
+    const cache = JSON.parse(localStorage.getItem("mfs_articles_cache") || "[]");
+    if (Array.isArray(cache) && cache.length) {
+      articlesData = cache;
+      if (mfsTrouverEtOuvrirArticle(idDemande)) {
+        // Actualise silencieusement les données en arrière-plan.
+        chargerArticles().catch(() => {});
+        return true;
+      }
+    }
+  } catch(e) {}
+
+  // 2. Premier passage seulement : un unique appel à Google Sheets.
+  try {
+    await chargerArticles();
+  } catch(e) {
+    console.error("Chargement Articles :", e);
+  }
+
+  if (mfsTrouverEtOuvrirArticle(idDemande)) return true;
+
+  if (contenu) {
+    contenu.innerHTML =
+      '<div class="message">Article introuvable ou impossible à charger.</div>';
+  }
+  return false;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   if (new URLSearchParams(window.location.search).has("article")) {
-    mfsOuvrirArticleDirectV18();
-  } else {
-    document.documentElement.classList.remove("article-direct-loading");
+    mfsOuvrirArticleDirectV19();
   }
 });
 </script>
