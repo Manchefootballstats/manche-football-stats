@@ -1178,6 +1178,399 @@ footer{padding:25px 15px}
   }
 }
 
+
+/* ===== Articles Manche Football Stats ===== */
+.articles-intro{margin:0 0 18px;color:#64748b;line-height:1.5}
+.article-card{background:#fff;border:1px solid #dfe9e4;border-radius:16px;margin-bottom:16px;overflow:hidden;box-shadow:0 4px 16px #10263c0d}
+.article-card-head{padding:18px 20px 13px;border-left:5px solid var(--terrain-clair)}
+.article-card-meta{font-size:12px;color:#64748b;font-weight:700;margin-bottom:7px}
+.article-card h3{margin:0;color:var(--nuit);font-size:21px;line-height:1.25}
+.article-card-resume{margin:10px 0 0;color:#526777;line-height:1.55}
+.article-card details{border-top:1px solid #e8eeeb}
+.article-card summary{list-style:none;cursor:pointer;padding:13px 20px;color:#087b42;font-weight:900}
+.article-card summary::-webkit-details-marker{display:none}
+.article-card summary::after{content:" →"}
+.article-card details[open] summary::after{content:" ↑"}
+.article-card-content{padding:0 20px 20px;white-space:pre-line;line-height:1.75;color:#243746}
+.article-card-image{display:block;width:100%;max-height:420px;object-fit:cover}
+@media(max-width:700px){
+  .article-card-head{padding:15px 14px 11px}
+  .article-card h3{font-size:18px}
+  .article-card summary{padding:12px 14px}
+  .article-card-content{padding:0 14px 16px;font-size:14px}
+}
+
+
+/* ===== Mise en forme éditoriale des articles ===== */
+.article-card-content.article-rich{white-space:normal}
+.article-rich h1{font-size:26px;line-height:1.2;color:var(--nuit);margin:8px 0 20px}
+.article-rich h2{font-size:20px;line-height:1.3;color:var(--nuit);margin:28px 0 12px;padding-bottom:8px;border-bottom:2px solid #dcebe4}
+.article-rich h3{font-size:17px;line-height:1.35;color:#087b42;margin:22px 0 10px}
+.article-rich p{margin:0 0 16px;line-height:1.75}
+.article-rich strong{font-weight:900;color:#172b3a}
+.article-rich .article-highlight{background:#f1f8f4;border-left:4px solid #0b8a4b;border-radius:0 10px 10px 0;padding:12px 14px;margin:18px 0}
+@media(max-width:700px){
+  .article-rich h1{font-size:22px}
+  .article-rich h2{font-size:18px;margin-top:24px}
+  .article-rich h3{font-size:16px}
+  .article-rich p{line-height:1.68}
+}
+
+
+/* ===== Lecteur d'article plein écran ===== */
+.article-open-btn{
+  margin-top:14px;border:0;border-radius:10px;padding:11px 15px;
+  background:#0b8a4b;color:#fff;font-weight:900;cursor:pointer
+}
+.article-open-btn:hover{filter:brightness(.96)}
+.article-reader{max-width:900px;margin:0 auto}
+.article-reader-back{
+  border:0;background:transparent;color:#087b42;font-weight:900;
+  cursor:pointer;padding:4px 0 18px;font-size:15px
+}
+.article-reader-shell{
+  background:#fff;border:1px solid #dfe9e4;border-radius:18px;
+  overflow:hidden;box-shadow:0 5px 22px #10263c10
+}
+.article-reader-cover{display:block;width:100%;max-height:470px;object-fit:cover}
+.article-reader-header{padding:24px 28px 10px}
+.article-reader-meta{font-size:13px;font-weight:800;color:#64748b;margin-bottom:9px}
+.article-reader-title{font-size:32px;line-height:1.18;color:var(--nuit);margin:0 0 12px}
+.article-reader-summary{font-size:17px;line-height:1.6;color:#526777;margin:0}
+.article-reader-body{padding:12px 28px 30px}
+@media(max-width:700px){
+  .article-reader-shell{border-radius:13px}
+  .article-reader-header{padding:18px 16px 8px}
+  .article-reader-title{font-size:25px}
+  .article-reader-summary{font-size:15px}
+  .article-reader-body{padding:8px 16px 22px}
+}
+
+
+/* ===== V4 : optimisation mobile du lecteur d'article ===== */
+@media(max-width:700px){
+  /* Carte plus compacte */
+  #articleLecture{padding-left:10px;padding-right:10px}
+  .article-reader{max-width:100%}
+  .article-reader-back{
+    font-size:15px;
+    padding:2px 2px 14px;
+  }
+  .article-reader-shell{
+    border-radius:14px;
+    box-shadow:0 3px 14px #10263c12;
+  }
+
+  /* Si une image de couverture est ajoutée dans Sheets */
+  .article-reader-cover{
+    max-height:230px;
+  }
+
+  /* En-tête éditorial plus compact */
+  .article-reader-header{
+    padding:18px 18px 14px;
+  }
+  .article-reader-meta{
+    font-size:12px;
+    margin-bottom:7px;
+  }
+  .article-reader-title{
+    font-size:25px;
+    line-height:1.18;
+    margin-bottom:10px;
+  }
+  .article-reader-summary{
+    font-size:15px;
+    line-height:1.5;
+  }
+
+  /* Corps de l'article : taille lecture mobile */
+  .article-reader-body{
+    padding:14px 18px 24px;
+    font-size:16px;
+    line-height:1.58;
+  }
+  .article-reader-body.article-rich p{
+    font-size:16px;
+    line-height:1.58;
+    margin-bottom:15px;
+  }
+  .article-reader-body.article-rich h1{
+    font-size:22px;
+    line-height:1.22;
+    margin:6px 0 18px;
+  }
+  .article-reader-body.article-rich h2{
+    font-size:20px;
+    line-height:1.25;
+    margin:24px 0 12px;
+    padding-bottom:8px;
+  }
+  .article-reader-body.article-rich h3{
+    font-size:17px;
+    line-height:1.3;
+    margin:20px 0 9px;
+  }
+  .article-reader-body.article-rich .article-highlight{
+    padding:11px 12px;
+    margin:16px 0;
+  }
+}
+
+
+/* ===== V5 : lecteur sobre sans bloc de couverture ===== */
+.article-reader-header{
+  background:#fff;
+  border-top:4px solid #0b8a4b;
+}
+.article-reader-meta{
+  color:#64748b;
+}
+@media(max-width:700px){
+  .article-reader-header{
+    padding:17px 18px 13px;
+  }
+}
+
+
+/* ===== V6 : chapô d'article sobre ===== */
+.article-reader-summary{
+  text-transform:none !important;
+  letter-spacing:normal !important;
+  font-weight:400 !important;
+  color:#5f6f7b !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+  text-align:left !important;
+}
+@media(max-width:700px){
+  .article-reader-summary{
+    font-size:15px !important;
+    line-height:1.5 !important;
+  }
+}
+
+
+/* ===== V7 : À lire aussi ===== */
+.article-related{
+  margin:10px 28px 30px;
+  padding-top:22px;
+  border-top:1px solid #dfe9e4;
+}
+.article-related h2{
+  margin:0 0 14px;
+  font-size:21px;
+  color:#102b43;
+}
+.article-related-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.article-related-card{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:#f7faf9;
+  border:1px solid #dfe9e4;
+  border-radius:12px;
+  padding:14px;
+  cursor:pointer;
+}
+.article-related-card:hover{
+  border-color:#0b8a4b;
+}
+.article-related-meta{
+  font-size:12px;
+  font-weight:800;
+  color:#64748b;
+  margin-bottom:5px;
+}
+.article-related-title{
+  font-size:16px;
+  line-height:1.3;
+  font-weight:900;
+  color:#102b43;
+}
+@media(max-width:700px){
+  .article-related{
+    margin:4px 18px 22px;
+    padding-top:18px;
+  }
+  .article-related h2{font-size:19px}
+  .article-related-grid{grid-template-columns:1fr}
+  .article-related-card{padding:12px}
+}
+
+
+/* ===== V8 : Actualités + Articles fusionnés ===== */
+.news-hub-tabs{
+  display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 20px;
+}
+.news-hub-tab{
+  border:1px solid #d9e5df;background:#fff;color:#17324a;
+  border-radius:999px;padding:9px 15px;font-weight:900;cursor:pointer;
+}
+.news-hub-tab.active{
+  background:#0b8a4b;color:#fff;border-color:#0b8a4b;
+}
+.news-hub-block{margin-top:14px}
+.news-hub-block-title{
+  display:flex;align-items:center;gap:8px;
+  margin:0 0 12px;font-size:21px;color:#102b43;
+}
+.news-hub-empty{
+  padding:18px;border:1px dashed #cbd9d2;border-radius:12px;
+  color:#64748b;background:#f8fbfa;
+}
+.news-hub-hidden{display:none!important}
+@media(max-width:700px){
+  .news-hub-tabs{gap:7px;margin:10px 0 16px}
+  .news-hub-tab{padding:8px 12px;font-size:14px}
+  .news-hub-block-title{font-size:19px}
+}
+
+
+/* Ancienne rubrique Articles conservée comme source technique */
+#articles{display:none!important}
+
+/* ===== V9 : correctif ouverture Actualités ===== */
+#actualites.section.active,
+#actualites.active{
+  display:block !important;
+}
+
+
+/* ===== V11 : fil d'actualité compact ===== */
+#actualites{
+  max-width:920px;
+  margin:0 auto;
+}
+#actualites .news-hub-tabs{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:#f5f8f7;
+  padding:10px 0;
+  margin:0 0 6px;
+  border-bottom:1px solid #e1e8e4;
+}
+#actualites .news-hub-tab{
+  background:transparent;
+  border:0;
+  border-radius:0;
+  padding:8px 13px 10px;
+  color:#718078;
+  font-size:15px;
+  border-bottom:3px solid transparent;
+}
+#actualites .news-hub-tab.active{
+  background:transparent;
+  color:#102b43;
+  border-bottom-color:#0b8a4b;
+}
+.mfs-feed{
+  background:#fff;
+  border:1px solid #e2e8e5;
+  border-radius:14px;
+  overflow:hidden;
+}
+.mfs-feed-item{
+  display:block;
+  width:100%;
+  padding:16px 18px;
+  border:0;
+  border-bottom:1px solid #e7ece9;
+  background:#fff;
+  text-align:left;
+  cursor:pointer;
+}
+.mfs-feed-item:last-child{border-bottom:0}
+.mfs-feed-item:hover{background:#f7faf8}
+.mfs-feed-meta{
+  font-size:13px;
+  line-height:1.35;
+  color:#7a8580;
+  margin-bottom:5px;
+}
+.mfs-feed-dot{
+  display:inline-block;
+  width:7px;height:7px;
+  border-radius:50%;
+  background:#0b8a4b;
+  margin:0 6px 1px 2px;
+}
+.mfs-feed-title{
+  color:#172d3e;
+  font-weight:850;
+  font-size:18px;
+  line-height:1.28;
+}
+.mfs-feed-summary{
+  margin-top:6px;
+  color:#64716b;
+  font-size:14px;
+  line-height:1.4;
+  display:-webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.mfs-feed-empty{
+  padding:22px 18px;
+  color:#68756f;
+  background:#fff;
+}
+#actualites > h1,#actualites > h2{margin-bottom:12px}
+#actualites .article-card,
+#actualites .actualite-card,
+#actualites .news-card,
+#articlesDansActualites{display:none!important}
+
+@media(max-width:700px){
+  #actualites{padding-left:0!important;padding-right:0!important}
+  #actualites > h1,#actualites > h2{padding:0 16px}
+  #actualites .news-hub-tabs{padding-left:10px;padding-right:10px}
+  .mfs-feed{border-left:0;border-right:0;border-radius:0}
+  .mfs-feed-item{padding:14px 16px}
+  .mfs-feed-title{font-size:17px}
+  .mfs-feed-meta{font-size:12.5px}
+  .mfs-feed-summary{font-size:13.5px}
+}
+
+
+/* ===== V13 : À la Une plus compacte sur mobile ===== */
+@media(max-width:700px){
+  #actualites .news-hub-tabs{
+    margin-bottom:0;
+    padding-top:8px;
+    padding-bottom:6px;
+  }
+  #actualites > h1,
+  #actualites > h2{
+    margin-top:8px;
+    margin-bottom:8px;
+  }
+  .mfs-feed-item{
+    padding:11px 16px;
+  }
+  .mfs-feed-meta{
+    margin-bottom:3px;
+    font-size:12px;
+    line-height:1.25;
+  }
+  .mfs-feed-title{
+    font-size:16px;
+    line-height:1.22;
+  }
+  .mfs-feed-summary{
+    margin-top:4px;
+    font-size:13px;
+    line-height:1.28;
+    -webkit-line-clamp:1;
+  }
+}
+
 </style>
 
 </head>
@@ -1221,7 +1614,8 @@ footer{padding:25px 15px}
 
 <nav>
     <button id="btnAccueil" class="active" onclick="afficherSection('accueil')">🏠 Accueil</button>
-    <button id="btnActualites" onclick="afficherSection('actualites')">📰 Actualités</button>
+    <button id="btnActualites" onclick="afficherSection('actualites'); chargerActualites(); chargerArticles(); rafraichirFilMFS()">📰 Actualités</button>
+    
     <button id="btnResultats" onclick="afficherSection('resultats')">🗓️ Résultats</button>
     <button id="btnClassement" onclick="afficherSection('classement')">🥇 Classements</button>
     <button id="btnButeurs" onclick="afficherSection('buteurs')">🥅 Buteurs</button>
@@ -1324,6 +1718,32 @@ footer{padding:25px 15px}
 </section>
 
 </section>
+
+<section id="actualites" class="section">
+  <div id="newsHubTabs" class="news-hub-tabs">
+    <button type="button" class="news-hub-tab active" data-news-filter="tout" onclick="filtrerActualites('tout',this)">Tout</button>
+    <button type="button" class="news-hub-tab" data-news-filter="infos" onclick="filtrerActualites('infos',this)">⚡ Infos</button>
+    <button type="button" class="news-hub-tab" data-news-filter="articles" onclick="filtrerActualites('articles',this)">📝 Articles</button>
+  </div>
+
+    <h2>📰 À la Une</h2>
+    <div id="actualitesResult"><div class="loading">Chargement des actualités…</div></div>
+</section>
+
+<section id="articles" class="section">
+    <h2>📝 Articles</h2>
+    <p class="articles-intro">Analyses, bilans et sujets autour du football manchois.</p>
+    <div id="articlesResult"><div class="loading">Chargement des articles…</div></div>
+</section>
+
+
+<section id="articleLecture" class="section">
+    <div class="article-reader">
+        <button type="button" class="article-reader-back" onclick="retourArticles()">← Retour aux articles</button>
+        <div id="articleLectureContenu"></div>
+    </div>
+</section>
+
 <section id="classement" class="section">
 
     <h2>🏆 Classement</h2>
@@ -1653,6 +2073,8 @@ let cartonsData = [];
 let reactionsData = [];
 let reactionsLoaded = false;
 let actualitesLoaded = false;
+let articlesLoaded = false;
+let articlesData = [];
 let matchsData = [];
 let formeData = [];
 let statsEquipesData = [];
@@ -3253,6 +3675,216 @@ function afficherAccueil(){
 }
 
 
+
+
+function formaterContenuArticle(texte) {
+    if (!texte) return "";
+
+    let t = echapperHtml(String(texte)).replace(/\r\n?/g, "\n");
+
+    // Gras Markdown
+    t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+
+    const lignes = t.split("\n");
+    let html = [];
+    let paragraphe = [];
+
+    const viderParagraphe = () => {
+        const contenu = paragraphe.join(" ").trim();
+        if (contenu) html.push("<p>" + contenu + "</p>");
+        paragraphe = [];
+    };
+
+    lignes.forEach(ligne => {
+        const l = ligne.trim();
+
+        if (!l) {
+            viderParagraphe();
+            return;
+        }
+
+        if (/^###\s+/.test(l)) {
+            viderParagraphe();
+            html.push("<h3>" + l.replace(/^###\s+/, "") + "</h3>");
+        } else if (/^##\s+/.test(l)) {
+            viderParagraphe();
+            html.push("<h2>" + l.replace(/^##\s+/, "") + "</h2>");
+        } else if (/^#\s+/.test(l)) {
+            viderParagraphe();
+            html.push("<h1>" + l.replace(/^#\s+/, "") + "</h1>");
+        } else if (/^(🔢|🎯|⚽|📊)\s/.test(l)) {
+            viderParagraphe();
+            html.push('<div class="article-highlight"><strong>' + l + "</strong></div>");
+        } else if (/^---+$/.test(l)) {
+            viderParagraphe();
+        } else {
+            paragraphe.push(l);
+        }
+    });
+
+    viderParagraphe();
+    return html.join("");
+}
+
+
+
+function genererArticlesLies(indexActuel) {
+    const actuel = articlesData[indexActuel];
+    if (!actuel || articlesData.length <= 1) return "";
+
+    const valeur = (obj, noms) => {
+        for (const nom of noms) {
+            if (obj[nom] !== undefined && obj[nom] !== null) return String(obj[nom]).trim();
+        }
+        return "";
+    };
+
+    const catActuelle = valeur(actuel, ["Catégorie", "Categorie", "catégorie", "categorie"]).toLowerCase();
+
+    const autres = articlesData
+        .map((a, index) => ({a, index}))
+        .filter(x => x.index !== indexActuel)
+        .sort((x, y) => {
+            const cx = valeur(x.a, ["Catégorie", "Categorie", "catégorie", "categorie"]).toLowerCase();
+            const cy = valeur(y.a, ["Catégorie", "Categorie", "catégorie", "categorie"]).toLowerCase();
+            const sx = catActuelle && cx === catActuelle ? 1 : 0;
+            const sy = catActuelle && cy === catActuelle ? 1 : 0;
+            return sy - sx || y.index - x.index;
+        })
+        .slice(0, 3);
+
+    if (!autres.length) return "";
+
+    const cartes = autres.map(({a, index}) => {
+        const titre = echapperHtml(valeur(a, ["Titre", "titre"]) || "Article");
+        const date = echapperHtml(valeur(a, ["Date"]));
+        const categorie = echapperHtml(valeur(a, ["Catégorie", "Categorie", "catégorie", "categorie"]) || "Article");
+        return `
+          <button type="button" class="article-related-card" onclick="ouvrirArticle(${index})">
+            <div class="article-related-meta">${date}${date && categorie ? " · " : ""}${categorie}</div>
+            <div class="article-related-title">${titre}</div>
+          </button>`;
+    }).join("");
+
+    return `
+      <aside class="article-related">
+        <h2>À lire aussi</h2>
+        <div class="article-related-grid">${cartes}</div>
+      </aside>`;
+}
+
+function ouvrirArticle(index) {
+    const a = articlesData[index];
+    if (!a) return;
+
+    const valeur = (obj, noms) => {
+        for (const nom of noms) {
+            if (obj[nom] !== undefined && obj[nom] !== null) return String(obj[nom]).trim();
+        }
+        return "";
+    };
+
+    const date = echapperHtml(valeur(a, ["Date"]));
+    const titre = echapperHtml(valeur(a, ["Titre", "titre"]) || "Article");
+    const resume = echapperHtml(valeur(a, ["Résumé", "Resume", "résumé", "resume"]));
+    const categorie = echapperHtml(valeur(a, ["Catégorie", "Categorie", "catégorie", "categorie"]) || "Article");
+    const contenu = formaterContenuArticle(valeur(a, ["Contenu", "Article", "contenu", "article"]));
+    const image = valeur(a, ["Image", "image", "URL image", "Url image"]);
+
+    const cible = document.getElementById("articleLectureContenu");
+    if (!cible) return;
+
+    cible.innerHTML = `
+        <article class="article-reader-shell">
+            <header class="article-reader-header">
+                <div class="article-reader-meta">${date}${date && categorie ? " · " : ""}${categorie}</div>
+                <h1 class="article-reader-title">${titre}</h1>
+                ${resume ? `<p class="article-reader-summary">${resume}</p>` : ""}
+            </header>
+            <div class="article-reader-body article-rich">${contenu}</div>
+            ${genererArticlesLies(index)}
+        </article>`;
+
+    afficherSection("articleLecture");
+    window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function retourArticles() {
+    afficherSection("actualites");
+    chargerArticles();
+    setTimeout(synchroniserArticlesDansActualites, 300);
+    window.scrollTo({top:0, behavior:"smooth"});
+}
+
+async function chargerArticles() {
+    const cible = document.getElementById("articlesResult");
+    if (!cible) return;
+    cible.innerHTML = '<div class="loading">Chargement des articles…</div>';
+
+    try {
+        const response = await fetch(API_URL + "?sheet=" + encodeURIComponent("Articles"));
+        if (!response.ok) throw new Error("Réponse HTTP " + response.status);
+
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error(data.error || "Réponse inattendue de l’API");
+
+        const valeur = (obj, noms) => {
+            for (const nom of noms) {
+                if (obj[nom] !== undefined && obj[nom] !== null) return String(obj[nom]).trim();
+            }
+            return "";
+        };
+
+        const articles = data.filter(a => {
+            const titre = valeur(a, ["Titre", "titre"]);
+            const publie = valeur(a, ["Publié", "Publie", "publie", "Statut"]);
+            if (!titre) return false;
+            if (!publie) return true;
+            return /^(oui|o|yes|1|true|publi[eé])$/i.test(publie);
+        });
+
+        articles.sort((a, b) => convertirDate(valeur(b, ["Date"])) - convertirDate(valeur(a, ["Date"])));
+
+        if (!articles.length) {
+            cible.innerHTML = '<div class="message">Aucun article publié pour le moment.</div>';
+            articlesLoaded = true;
+            return;
+        }
+
+        articlesData = articles;
+        setTimeout(synchroniserArticlesDansActualites, 0); setTimeout(rendreFilMFS, 600);
+
+        cible.innerHTML = articles.map((a, index) => {
+            const date = echapperHtml(valeur(a, ["Date"]));
+            const titre = echapperHtml(valeur(a, ["Titre", "titre"]) || "Article");
+            const resume = echapperHtml(valeur(a, ["Résumé", "Resume", "résumé", "resume"]));
+            const categorie = echapperHtml(valeur(a, ["Catégorie", "Categorie", "catégorie", "categorie"]) || "Article");
+            const image = valeur(a, ["Image", "image", "URL image", "Url image"]);
+
+            let imageHtml = "";
+            if (image && /^https?:\/\//i.test(image)) {
+                imageHtml = `<img class="article-card-image" src="${echapperHtml(image)}" alt="">`;
+            }
+
+            return `
+                <article class="article-card">
+                    ${imageHtml}
+                    <div class="article-card-head">
+                        <div class="article-card-meta">${date}${date && categorie ? " · " : ""}${categorie}</div>
+                        <h3>${titre}</h3>
+                        ${resume ? `<p class="article-card-resume">${resume}</p>` : ""}
+                        <button type="button" class="article-open-btn" onclick="ouvrirArticle(${index})">Lire l’article →</button>
+                    </div>
+                </article>`;
+        }).join("");
+
+        articlesLoaded = true;
+    } catch (error) {
+        cible.innerHTML = '<div class="message">Impossible de charger les articles. Vérifie l’onglet « Articles » et le déploiement Apps Script.</div>';
+        console.error("Articles :", error);
+    }
+}
+
 async function chargerActualites() {
     const cible = document.getElementById("actualitesResult");
     cible.innerHTML = '<div class="loading">Chargement des actualités…</div>';
@@ -3281,7 +3913,7 @@ async function chargerActualites() {
                 const date = echapperHtml(a.Date || '');
                 const categorie = echapperHtml(a.Categorie || a['Catégorie'] || 'Actualité');
                 const titre = echapperHtml(a.Titre || 'Actualité');
-                return `<button type="button" class="accueil-news-item" onclick="afficherSection('actualites')"><small>${date} · ${categorie}</small><strong>${titre}</strong></button>`;
+                return `<button type="button" class="accueil-news-item" onclick="afficherSection('actualites'); chargerActualites(); chargerArticles(); rafraichirFilMFS()"><small>${date} · ${categorie}</small><strong>${titre}</strong></button>`;
             }).join('') : '<div class="accueil-news-message">Aucune actualité publiée pour le moment.</div>';
         }
         actualitesLoaded = true;
@@ -3610,6 +4242,203 @@ function afficherMonClub(club){
     const resume=document.getElementById('monClubResume'); resume.hidden=false;
     resume.innerHTML=(equipes.length?equipes.map(resumeEquipeMonClub).join(''):'<div class="message">Aucune équipe trouvée pour ce club.</div>')+`<div class="mon-club-actions"><button onclick="afficherSection('resultats')">🗓️ Résultats</button><button onclick="afficherSection('buteurs')">🥅 Buteurs</button></div>`;
 }
+
+
+/* ===== V8 : fusion Actualités / Articles ===== */
+
+function synchroniserArticlesDansActualites() {
+  const sectionActu = document.getElementById("actualites");
+  if (!sectionActu) return;
+
+  let bloc = document.getElementById("articlesDansActualites");
+  if (!bloc) {
+    bloc = document.createElement("div");
+    bloc.id = "articlesDansActualites";
+    bloc.className = "news-hub-block";
+    bloc.innerHTML = `<h2 class="news-hub-block-title">📝 Articles</h2><div id="articlesActualitesListe"></div>`;
+    sectionActu.appendChild(bloc);
+  }
+
+  const cible = document.getElementById("articlesActualitesListe");
+  if (!cible) return;
+
+  if (!Array.isArray(articlesData) || !articlesData.length) {
+    cible.innerHTML = `<div class="news-hub-empty">Aucun article publié pour le moment.</div>`;
+    return;
+  }
+
+  const valeur = (obj, noms) => {
+    for (const nom of noms) {
+      if (obj[nom] !== undefined && obj[nom] !== null) return String(obj[nom]).trim();
+    }
+    return "";
+  };
+
+  cible.innerHTML = articlesData.map((a,index) => {
+    const date = echapperHtml(valeur(a, ["Date"]));
+    const titre = echapperHtml(valeur(a, ["Titre","titre"]) || "Article");
+    const resume = echapperHtml(valeur(a, ["Résumé","Resume","résumé","resume"]));
+    const categorie = echapperHtml(valeur(a, ["Catégorie","Categorie","catégorie","categorie"]) || "Article");
+    return `
+      <article class="article-card" data-type="article">
+        <div class="article-card-head">
+          <div class="article-card-meta">${date}${date && categorie ? " · " : ""}${categorie}</div>
+          <h3>${titre}</h3>
+          ${resume ? `<p class="article-card-resume">${resume}</p>` : ""}
+          <button type="button" class="article-open-btn" onclick="ouvrirArticle(${index})">Lire l’article →</button>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+function ouvrirActualitesUnifiees() {
+  // Afficher immédiatement la rubrique : le clic doit toujours répondre.
+  afficherSection("actualites");
+  const sectionActualites = document.getElementById("actualites");
+  if (sectionActualites) sectionActualites.style.display = "block";
+
+  // Charger les deux sources sans bloquer l'affichage.
+  try {
+    const rActu = chargerActualites();
+    if (rActu && typeof rActu.catch === "function") rActu.catch(console.error);
+  } catch (e) {
+    console.error("Chargement actualités :", e);
+  }
+
+  try {
+    const rArticles = chargerArticles();
+    if (rArticles && typeof rArticles.then === "function") {
+      rArticles.then(synchroniserArticlesDansActualites).catch(console.error);
+    } else {
+      setTimeout(synchroniserArticlesDansActualites, 400);
+    }
+  } catch (e) {
+    console.error("Chargement articles :", e);
+    setTimeout(synchroniserArticlesDansActualites, 400);
+  }
+}
+
+
+
+/* ===== V11 : fil chronologique Actualités + Articles ===== */
+let filtreFilMFS = "tout";
+
+function mfsValeur(obj, noms) {
+  for (const nom of noms) {
+    if (obj && obj[nom] !== undefined && obj[nom] !== null) {
+      const v = String(obj[nom]).trim();
+      if (v) return v;
+    }
+  }
+  return "";
+}
+
+function mfsDateValeur(txt) {
+  const v = String(txt || "").trim();
+  const fr = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+  if (fr) return new Date(+fr[3], +fr[2]-1, +fr[1], +(fr[4]||0), +(fr[5]||0)).getTime();
+  const t = Date.parse(v);
+  return Number.isNaN(t) ? 0 : t;
+}
+
+function rendreFilMFS() {
+  const section = document.getElementById("actualites");
+  if (!section) return;
+
+  let conteneur = document.getElementById("mfsFilActualite");
+  if (!conteneur) {
+    conteneur = document.createElement("div");
+    conteneur.id = "mfsFilActualite";
+    conteneur.className = "mfs-feed";
+    section.appendChild(conteneur);
+  }
+
+  const items = [];
+
+  // Articles longs
+  if (Array.isArray(articlesData)) {
+    articlesData.forEach((a, index) => {
+      const publie = mfsValeur(a, ["Publié","Publie","publié","publie"]);
+      if (publie && !["OUI","OUI ","YES","TRUE","1"].includes(publie.toUpperCase())) return;
+      const date = mfsValeur(a, ["Date"]);
+      items.push({
+        type:"articles",
+        date,
+        ts:mfsDateValeur(date),
+        categorie:mfsValeur(a, ["Catégorie","Categorie","catégorie","categorie"]) || "Article",
+        titre:mfsValeur(a, ["Titre","titre"]) || "Article",
+        resume:mfsValeur(a, ["Résumé","Resume","résumé","resume"]),
+        action:() => ouvrirArticle(index)
+      });
+    });
+  }
+
+  // Actualités existantes : on lit les cartes déjà produites par chargerActualites()
+  const cartes = section.querySelectorAll(".actualite-card, .news-card");
+  cartes.forEach((carte) => {
+    const metaEl = carte.querySelector(".meta, .actualite-meta, .news-meta, small");
+    const titreEl = carte.querySelector("h2,h3,h4,.title,.titre");
+    const pEl = carte.querySelector("p");
+    if (!titreEl) return;
+
+    const meta = metaEl ? metaEl.textContent.trim() : "";
+    const dateMatch = meta.match(/\d{1,2}\/\d{1,2}\/\d{4}(?:\s+\d{1,2}:\d{2})?/);
+    const date = dateMatch ? dateMatch[0] : "";
+    const cat = meta.replace(date, "").replace(/^[\s·•\-–]+|[\s·•\-–]+$/g,"") || "Information";
+
+    items.push({
+      type:"infos",
+      date,
+      ts:mfsDateValeur(date),
+      categorie:cat,
+      titre:titreEl.textContent.trim(),
+      resume:pEl ? pEl.textContent.trim() : "",
+      action:() => {
+        const lien = carte.querySelector("a,button");
+        if (lien) lien.click();
+      }
+    });
+  });
+
+  const uniques = [];
+  const vus = new Set();
+  items.sort((a,b)=>b.ts-a.ts).forEach(i=>{
+    const cle = `${i.type}|${i.date}|${i.titre}`;
+    if (!vus.has(cle)) { vus.add(cle); uniques.push(i); }
+  });
+
+  const filtres = uniques.filter(i => filtreFilMFS === "tout" || i.type === filtreFilMFS);
+
+  if (!filtres.length) {
+    conteneur.innerHTML = `<div class="mfs-feed-empty">Aucun contenu dans cette rubrique pour le moment.</div>`;
+    return;
+  }
+
+  conteneur.innerHTML = filtres.map((i, idx) => `
+    <button type="button" class="mfs-feed-item" data-feed-index="${idx}">
+      <div class="mfs-feed-meta">${echapperHtml(i.date || "")}${i.date ? " · " : ""}<span class="mfs-feed-dot"></span>${echapperHtml(i.categorie)}${i.type==="articles" ? " · Article" : ""}</div>
+      <div class="mfs-feed-title">${echapperHtml(i.titre)}</div>
+      ${i.resume ? `<div class="mfs-feed-summary">${echapperHtml(i.resume)}</div>` : ""}
+    </button>
+  `).join("");
+
+  conteneur.querySelectorAll(".mfs-feed-item").forEach((el, idx) => {
+    el.addEventListener("click", () => filtres[idx].action());
+  });
+}
+
+function filtrerActualites(type, bouton) {
+  filtreFilMFS = type;
+  document.querySelectorAll(".news-hub-tab").forEach(b => b.classList.remove("active"));
+  if (bouton) bouton.classList.add("active");
+  rendreFilMFS();
+}
+
+function rafraichirFilMFS() {
+  setTimeout(rendreFilMFS, 500);
+  setTimeout(rendreFilMFS, 1200);
+}
+
 </script>
 
 <script>
