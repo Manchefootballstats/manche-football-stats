@@ -4514,48 +4514,100 @@ window.addEventListener("popstate", () => {
 
 
 
-/* ===== V15 : ouverture fiable des liens directs ===== */
+/* ===== V17 : ouverture directe fiable des articles ===== */
+let mfsArticleDirectOuvert = false;
 
-setTimeout(() => {
-  document.documentElement.classList.remove("article-direct-loading");
-}, 5000);
-let lienArticleInitialTraite = false;
+async function mfsOuvrirArticleDirect() {
+  if (mfsArticleDirectOuvert) return true;
 
-function ouvrirLienArticleInitial() {
-  if (lienArticleInitialTraite) return;
-
-  const id = new URLSearchParams(window.location.search).get("article");
-  if (!id) return;
-
-  // If article data is not loaded yet, load it and retry.
-  if (!Array.isArray(articlesData) || !articlesData.length) {
-    try { chargerArticles(); } catch(e) { console.error(e); }
-    setTimeout(ouvrirLienArticleInitial, 350);
-    return;
+  const idDemande = new URLSearchParams(window.location.search).get("article");
+  if (!idDemande) {
+    document.documentElement.classList.remove("article-direct-loading");
+    return false;
   }
 
-  const index = articlesData.findIndex((article, i) =>
-    obtenirIdArticle(article, i).toLowerCase() === id.toLowerCase()
-  );
+  try {
+    // Charge directement l'onglet Articles, sans dépendre du démarrage de l'accueil.
+    const response = await fetch(
+      API_URL + "?sheet=" + encodeURIComponent("Articles") + "&_=" + Date.now(),
+      { cache: "no-store" }
+    );
 
-  if (index >= 0) {
-    lienArticleInitialTraite = true;
+    if (!response.ok) throw new Error("Réponse HTTP " + response.status);
+
+    const data = await response.json();
+    if (!Array.isArray(data)) throw new Error("Réponse Articles invalide");
+
+    const valeur = (obj, noms) => {
+      for (const nom of noms) {
+        if (obj && obj[nom] !== undefined && obj[nom] !== null) {
+          const v = String(obj[nom]).trim();
+          if (v) return v;
+        }
+      }
+      return "";
+    };
+
+    articlesData = data.filter(a => {
+      const titre = valeur(a, ["Titre", "titre"]);
+      const publie = valeur(a, ["Publié", "Publie", "publié", "publie", "Statut"]);
+      if (!titre) return false;
+      if (!publie) return true;
+      return /^(oui|o|yes|1|true|publi[eé])$/i.test(publie);
+    });
+
+    articlesData.sort((a, b) =>
+      convertirDate(valeur(b, ["Date"])) - convertirDate(valeur(a, ["Date"]))
+    );
+
+    const idNormalise = String(idDemande).trim().toLowerCase();
+    const index = articlesData.findIndex((article, i) =>
+      obtenirIdArticle(article, i).trim().toLowerCase() === idNormalise
+    );
+
+    if (index === -1) {
+      console.warn("Article introuvable :", idDemande);
+      document.documentElement.classList.remove("article-direct-loading");
+      return false;
+    }
+
+    mfsArticleDirectOuvert = true;
     ouvrirArticle(index, false);
+
+    // Une autre fonction du site peut remettre l'accueil pendant son initialisation.
+    // On réaffirme donc la section article quelques instants.
+    [50, 250, 700, 1400].forEach(delai => {
+      setTimeout(() => {
+        if (!mfsArticleDirectOuvert) return;
+        document.querySelectorAll(".section").forEach(el => el.classList.remove("active"));
+        const lecteur = document.getElementById("articleLecture");
+        if (lecteur) lecteur.classList.add("active");
+      }, delai);
+    });
+
     document.documentElement.classList.remove("article-direct-loading");
-  } else {
+    return true;
+  } catch (error) {
+    console.error("Ouverture article direct :", error);
     document.documentElement.classList.remove("article-direct-loading");
+    return false;
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   if (new URLSearchParams(window.location.search).has("article")) {
-    // Let the site's normal startup finish, then force the requested article.
-    setTimeout(ouvrirLienArticleInitial, 250);
-    setTimeout(ouvrirLienArticleInitial, 800);
-    setTimeout(ouvrirLienArticleInitial, 1500);
+    mfsOuvrirArticleDirect();
+  } else {
+    document.documentElement.classList.remove("article-direct-loading");
   }
 });
 
+// Secours si un script tardif tente encore de revenir à l'accueil.
+window.addEventListener("load", () => {
+  if (new URLSearchParams(window.location.search).has("article")) {
+    setTimeout(mfsOuvrirArticleDirect, 100);
+  }
+});
 </script>
 
 <script>
