@@ -4925,7 +4925,7 @@ function ouvrirFormulaireContribution() {
 <script>
 // Effectifs & Joueurs : source publique filtrée UNIQUEMENT (jamais la feuille brute du formulaire).
 // Le futur Apps Script doit retourner un tableau JSON de fiches autorisées et validées.
-const MFS_JOUEURS_API = "https://script.google.com/macros/s/AKfycbxD-vrxkpL2EZeZ8ArpfnKzTeMjzcFuKvVf73g6BKAaYnd_ciK-B23mQ04QumlEP9lG/exec"; // Endpoint public filtré
+const MFS_JOUEURS_API = "https://script.google.com/macros/s/AKfycbyyvA877FSskC8OC1JzBvm8wPQT9nFBGnST6SQ2czAwQrJt_hxU3xYxXp2L386aHhaJ/exec"; // Endpoint public filtré
 const MFS_FORMULAIRE_JOUEURS = "https://docs.google.com/forms/d/e/1FAIpQLSf3eVGkltEL9KzC7gN1XRlnc13-AeOwXWliOITqFqw3QI_IsQ/viewform"; // Lien public Google Forms des fiches joueurs
 let mfsJoueurs = [], mfsJChargement = null;
 function mfsJTexte(v){return String(v==null?'':v)}
@@ -4934,13 +4934,13 @@ function mfsJNorm(v){return mfsJTexte(v).trim().toLocaleLowerCase('fr').normaliz
 function mfsJOuvrirDemande(){if(!MFS_FORMULAIRE_JOUEURS){alert('Le lien du formulaire de demande de fiche joueur reste à renseigner.');return;}window.open(MFS_FORMULAIRE_JOUEURS,'_blank','noopener,noreferrer')}
 function mfsJChargerJSONP(url){
  return new Promise((resolve,reject)=>{
-  const cb='mfsJCallback';
+  const cb='mfsJCallback_'+Date.now();
   const script=document.createElement('script');
   let termine=false;
   const finir=(err,data)=>{if(termine)return;termine=true;script.remove();delete window[cb];err?reject(err):resolve(data)};
   window[cb]=data=>finir(null,data);
   script.onerror=()=>finir(new Error('Chargement impossible'));
-  script.src=url+(url.includes('?')?'&':'?')+'callback='+cb;
+  script.src=url+(url.includes('?')?'&':'?')+'callback='+encodeURIComponent(cb)+'&_='+Date.now();
   document.head.appendChild(script);
   setTimeout(()=>finir(new Error('Délai dépassé')),15000);
  });
@@ -4959,7 +4959,7 @@ async function mfsJInitialiser(){
    // La sélection des joueurs autorisés et validés est effectuée côté Apps Script.
    mfsJoueurs=data.joueurs.map((r,i)=>({id:mfsJTexte(r.id)||'fiche-'+i,nom:mfsJTexte(r.nom),club:mfsJTexte(r.club),equipe:mfsJTexte(r.equipe),division:mfsJTexte(r.division),poule:mfsJTexte(r.poule),buts:r.buts,jaunes:r.jaunes,rouges:r.rouges,parcours:mfsJTexte(r.parcours)})).filter(r=>r.nom&&r.club);
    mfsJInitialiser();mfsJAfficher();
-  }).catch(err=>{console.error('Fiches joueurs :',err);document.getElementById('mfsJResult').innerHTML='<div class="message">Impossible de charger les fiches joueurs pour le moment. Vérifiez le déploiement Apps Script.</div>';});
+  }).catch(err=>{console.error('Fiches joueurs :',err);document.getElementById('mfsJResult').innerHTML='<div class="message">Impossible de charger les fiches joueurs : '+mfsJHtml(err.message)+'.</div>';mfsJChargement=null;});
  }else mfsJAfficher();
 }
 function mfsJAfficher(){
