@@ -1738,10 +1738,6 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 
 
 
-<style>
-/* MFS — Effectifs & Joueurs */
-.mfs-j-hero{background:linear-gradient(110deg,#0b2034,#174432);color:#fff;border-radius:16px;padding:25px;margin-bottom:17px}.mfs-j-hero span{font-size:10px;letter-spacing:1.3px;color:#9ae6b4;font-weight:800}.mfs-j-hero h2{margin:9px 0;font-size:27px}.mfs-j-hero p{margin:0;color:#d6e7de}.mfs-j-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:14px;background:white;border:1px solid #dce9e2;padding:17px;border-radius:14px;margin-bottom:16px}.mfs-j-toolbar label{display:block;font-size:12px;font-weight:800;margin-bottom:7px;color:#526777}.mfs-j-toolbar select{max-width:none;width:100%;margin:0}.mfs-j-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:12px}.mfs-j-card{border:1px solid #dce9e2;background:#fff;border-radius:12px;padding:17px;text-align:left;cursor:pointer;color:#10263c}.mfs-j-card:hover,.mfs-j-card:focus-visible{border-color:#087b42;outline:2px solid #a0e7b7}.mfs-j-card strong{display:block;font-size:17px}.mfs-j-card small{display:block;margin:7px 0;color:#64748b}.mfs-j-card em{font-style:normal;color:#087b42;font-size:12px;font-weight:800}.mfs-j-detail{background:white;border:1px solid #dce9e2;border-radius:15px;padding:20px}.mfs-j-back{background:#e7f8ef;border:0;color:#087b42;padding:9px 12px;border-radius:9px;font-weight:800;cursor:pointer}.mfs-j-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:17px 0}.mfs-j-stat{background:#f0f8f4;border-radius:10px;padding:14px;text-align:center}.mfs-j-stat b{display:block;font-size:25px;color:#10263c}.mfs-j-stat small{font-size:11px;color:#64748b}.mfs-j-career{line-height:1.8;white-space:pre-line;overflow-wrap:anywhere}.mfs-j-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#eaf8ef;border:1px solid #c9e6d4;padding:18px;border-radius:14px;margin-top:18px}.mfs-j-cta p{margin:5px 0 0;font-size:12px;color:#526777}.mfs-j-cta button{background:#087b42;color:white;border:0;border-radius:9px;padding:12px 16px;font-weight:800;cursor:pointer;white-space:nowrap}@media(max-width:600px){.mfs-j-toolbar{grid-template-columns:1fr}.mfs-j-cta{flex-direction:column;align-items:stretch}.mfs-j-cta button{width:100%}.mfs-j-stats{gap:5px}.mfs-j-stat{padding:10px 5px}}
-</style>
 </head>
 
 <body>
@@ -1791,7 +1787,7 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
     <button id="btnCartons" onclick="afficherSection('cartons')">🟨 Cartons</button>
     <button id="btnStats" onclick="afficherSection('stats')">📊 Stats</button>
     <button id="btnClubs" onclick="afficherSection('clubs')">⚽ Clubs</button>
-    <button id="btnJoueurs" onclick="afficherSection('joueurs')">👤 Effectifs & Joueurs</button>
+
     <button id="btnFaceAFace" onclick="afficherSection('faceaface')">⚔️ Face-à-Face</button>
     <button id="btnFeminines" onclick="afficherSection('feminines')">♀️ Féminines</button>
     <button id="btnArbitres" onclick="afficherSection('arbitres')">👨‍⚖️ Arbitres</button>
@@ -2146,13 +2142,6 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 <div id="ficheClubResult" aria-live="polite"></div>
 </section>
 
-<section id="joueurs" class="section">
- <div class="mfs-j-hero"><span>MAN﻿CHE FOOTBALL STATS · 2026–2027</span><h2>👤 Effectifs & Joueurs</h2><p>Découvrez les joueurs qui ont choisi de présenter leur parcours sur MFS.</p></div>
- <div class="mfs-j-toolbar"><div><label for="mfsJClub">Choisir un club</label><select id="mfsJClub" onchange="mfsJAfficher()"><option value="">Sélectionnez un club</option></select></div><div><label for="mfsJEquipe">Équipe</label><select id="mfsJEquipe" onchange="mfsJAfficher()"><option value="">Toutes les équipes</option></select></div></div>
- <div id="mfsJResult" aria-live="polite" class="mfs-j-result"><div class="message">Sélectionnez un club pour consulter ses joueurs inscrits.</div></div>
- <div class="mfs-j-cta"><div><strong>Vous êtes joueur dans la Manche ?</strong><p>Demandez votre fiche gratuitement. Votre profil ne sera publié qu'après validation et avec votre autorisation. Aucune photo.</p></div><button type="button" onclick="mfsJOuvrirDemande()">Demander ma fiche ↗</button></div>
-</section>
-
 <section id="faceaface" class="section">
   <div class="faf-heading"><div><small>MANCHE FOOTBALL STATS</small><h2>⚔️ Face-à-Face</h2><p>Deux équipes, toutes les statistiques.</p></div></div>
   <div class="faf-controls">
@@ -2312,7 +2301,6 @@ function afficherSection(section) {
 
     if (section === "accueil") { document.getElementById("btnAccueil").classList.add("active"); afficherAccueil(); }
 
-    if (section === "joueurs") { document.getElementById("btnJoueurs").classList.add("active"); mfsJInitialiser(); }
 
     if (section === "faceaface") { document.getElementById("btnFaceAFace").classList.add("active"); fafInitialiser(); }
 
@@ -4922,62 +4910,6 @@ function ouvrirFormulaireContribution() {
 }
 </script>
 
-<script>
-// Effectifs & Joueurs : source publique filtrée UNIQUEMENT (jamais la feuille brute du formulaire).
-// Le futur Apps Script doit retourner un tableau JSON de fiches autorisées et validées.
-const MFS_JOUEURS_API = "https://script.google.com/macros/s/AKfycbyyvA877FSskC8OC1JzBvm8wPQT9nFBGnST6SQ2czAwQrJt_hxU3xYxXp2L386aHhaJ/exec"; // Endpoint public filtré
-const MFS_FORMULAIRE_JOUEURS = "https://docs.google.com/forms/d/e/1FAIpQLSf3eVGkltEL9KzC7gN1XRlnc13-AeOwXWliOITqFqw3QI_IsQ/viewform"; // Lien public Google Forms des fiches joueurs
-let mfsJoueurs = [], mfsJChargement = null;
-function mfsJTexte(v){return String(v==null?'':v)}
-function mfsJHtml(v){return mfsJTexte(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function mfsJNorm(v){return mfsJTexte(v).trim().toLocaleLowerCase('fr').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-‐‑‒–—_’']/g,' ').replace(/\s+/g,' ')}
-function mfsJOuvrirDemande(){if(!MFS_FORMULAIRE_JOUEURS){alert('Le lien du formulaire de demande de fiche joueur reste à renseigner.');return;}window.open(MFS_FORMULAIRE_JOUEURS,'_blank','noopener,noreferrer')}
-function mfsJChargerJSONP(url){
- return new Promise((resolve,reject)=>{
-  const cb='mfsJCallback_'+Date.now();
-  const script=document.createElement('script');
-  let termine=false;
-  const finir=(err,data)=>{if(termine)return;termine=true;script.remove();delete window[cb];err?reject(err):resolve(data)};
-  window[cb]=data=>finir(null,data);
-  script.onerror=()=>finir(new Error('Chargement impossible'));
-  script.src=url+(url.includes('?')?'&':'?')+'callback='+encodeURIComponent(cb)+'&_='+Date.now();
-  document.head.appendChild(script);
-  setTimeout(()=>finir(new Error('Délai dépassé')),15000);
- });
-}
-async function mfsJInitialiser(){
- const sel=document.getElementById('mfsJClub');if(!sel)return;
- const ancien=sel.value;
- const classement=typeof classementData!=='undefined'&&Array.isArray(classementData)?classementData:[];
- const clubs=[...new Map([...classement.map(r=>r.Club),...mfsJoueurs.map(r=>r.club)].filter(Boolean).map(c=>[mfsJNorm(c),c])).values()].sort((a,b)=>a.localeCompare(b,'fr'));
- sel.innerHTML='<option value="">Sélectionnez un club</option>'+clubs.map(c=>'<option value="'+mfsJHtml(c)+'">'+mfsJHtml(c)+'</option>').join('');
- const equivalent=clubs.find(c=>mfsJNorm(c)===mfsJNorm(ancien));if(equivalent)sel.value=equivalent;
- if(!mfsJChargement){
-  document.getElementById('mfsJResult').innerHTML='<div class="message">Chargement des fiches joueurs validées…</div>';
-  mfsJChargement=mfsJChargerJSONP(MFS_JOUEURS_API).then(data=>{
-   if(!data||!Array.isArray(data.joueurs))throw Error('Format inattendu');
-   // La sélection des joueurs autorisés et validés est effectuée côté Apps Script.
-   mfsJoueurs=data.joueurs.map((r,i)=>({id:mfsJTexte(r.id)||'fiche-'+i,nom:mfsJTexte(r.nom),club:mfsJTexte(r.club),equipe:mfsJTexte(r.equipe),division:mfsJTexte(r.division),poule:mfsJTexte(r.poule),buts:r.buts,jaunes:r.jaunes,rouges:r.rouges,parcours:mfsJTexte(r.parcours)})).filter(r=>r.nom&&r.club);
-   mfsJInitialiser();mfsJAfficher();
-  }).catch(err=>{console.error('Fiches joueurs :',err);document.getElementById('mfsJResult').innerHTML='<div class="message">Impossible de charger les fiches joueurs : '+mfsJHtml(err.message)+'.</div>';mfsJChargement=null;});
- }else mfsJAfficher();
-}
-function mfsJAfficher(){
- const club=document.getElementById('mfsJClub').value,eq=document.getElementById('mfsJEquipe'),old=eq.value,zone=document.getElementById('mfsJResult');
- const joueurs=mfsJoueurs.filter(r=>mfsJNorm(r.club)===mfsJNorm(club));
- const equipes=[...new Set(joueurs.map(r=>r.equipe).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr'));
- eq.innerHTML='<option value="">Toutes les équipes</option>'+equipes.map(e=>'<option value="'+mfsJHtml(e)+'">'+mfsJHtml(e)+'</option>').join('');if(equipes.includes(old))eq.value=old;
- if(!club){zone.innerHTML='<div class="message">Sélectionnez un club pour consulter ses joueurs inscrits.</div>';return;}
- const affiches=joueurs.filter(r=>!eq.value||r.equipe===eq.value);
- if(!affiches.length){zone.innerHTML='<div class="message">Aucune fiche joueur publiée pour ce club ou cette équipe actuellement.</div>';return;}
- zone.innerHTML='<p><strong>'+affiches.length+' joueur(s) inscrit(s)</strong> · '+mfsJHtml(club)+'</p><div class="mfs-j-list">'+affiches.map((r)=>'<button type="button" class="mfs-j-card" data-mfs-id="'+mfsJHtml(r.id)+'"><strong>👤 '+mfsJHtml(r.nom)+'</strong><small>'+mfsJHtml(r.equipe||'Équipe non précisée')+' · '+mfsJHtml([r.division,r.poule].filter(Boolean).join(' · '))+'</small><em>Voir la fiche →</em></button>').join('')+'</div>';
- zone.querySelectorAll('[data-mfs-id]').forEach(b=>b.addEventListener('click',()=>mfsJFiche(b.getAttribute('data-mfs-id'))));
-}
-function mfsJFiche(id){const r=mfsJoueurs.find(x=>x.id===id);if(!r)return;const zone=document.getElementById('mfsJResult');const stat=(val,label)=>'<div class="mfs-j-stat"><b>'+mfsJHtml(val==null||val===''?'—':val)+'</b><small>'+label+'</small></div>';
- zone.innerHTML='<div class="mfs-j-detail"><button type="button" class="mfs-j-back" id="mfsJRetour">← Retour à l’effectif</button><h2 style="margin:18px 0 5px">👤 '+mfsJHtml(r.nom)+'</h2><p>'+mfsJHtml(r.club)+' · '+mfsJHtml(r.equipe)+' · '+mfsJHtml([r.division,r.poule].filter(Boolean).join(' · '))+'</p><div class="mfs-j-stats">'+stat(r.buts,'Buts')+stat(r.jaunes,'Cartons jaunes')+stat(r.rouges,'Cartons rouges')+'</div><h3>Parcours en carrière</h3><div class="mfs-j-career">'+(r.parcours?mfsJHtml(r.parcours):'Parcours non renseigné.')+'</div></div>';
- document.getElementById('mfsJRetour').addEventListener('click',mfsJAfficher);
-}
-</script>
 </body>
 
 </html>
