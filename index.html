@@ -1571,6 +1571,156 @@ footer{padding:25px 15px}
   }
 }
 
+
+/* Fiches clubs enrichies — octobre 2026 */
+.fiche-entete-plus{background:linear-gradient(110deg,#10263c,#075d35);color:white;padding:22px;border-radius:16px}
+.fiche-entete-plus h3{font-size:clamp(22px,3vw,30px);margin:7px 0}
+.fiche-entete-plus small{color:#b6f0d0;font-size:10px;font-weight:800;letter-spacing:1.2px}
+.fiche-entete-plus span{color:#e0f4e9}
+.fiche-rang{background:#ffffff1c;border:1px solid #ffffff35;border-radius:999px;padding:9px 13px;font-weight:800}
+.fiche-chiffres{grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:18px}
+.fiche-chiffre{border:1px solid #e0eae5;box-shadow:0 3px 12px #10263c0a}
+.fiche-chiffre strong{color:#10263c}
+.fiche-amelioration-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fiche-panel{background:white;border:1px solid #e0eae5;border-radius:14px;padding:17px;min-width:0}
+.fiche-panel h3{margin:0 0 15px;color:#10263c;font-size:17px}
+.fiche-panel>small{display:block;color:#64748b;font-size:11px;margin-top:10px}
+.fiche-forme{display:flex;gap:8px;align-items:center}
+.fiche-forme .forme-badge{width:34px;height:34px;font-size:14px;border-radius:9px}
+.fiche-bilans{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fiche-bilan{background:#f2f9f5;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:7px}
+.fiche-bilan h4{margin:0;color:#087b42;font-size:13px}
+.fiche-bilan strong{font-size:15px;color:#10263c}
+.fiche-bilan small{font-size:11px;color:#64748b}
+@media(max-width:750px){.fiche-chiffres{grid-template-columns:repeat(2,minmax(0,1fr))}.fiche-amelioration-grid{grid-template-columns:1fr}.fiche-entete-plus{padding:17px}}
+@media(max-width:380px){.fiche-bilans{grid-template-columns:1fr}}
+
+
+/* Fiches clubs — variante 1 : classique moderne, octobre 2026 */
+.fiche-entete-plus{background:linear-gradient(110deg,#071d31 0%,#123c4b 73%,#087b42 100%)!important;color:#fff!important;border:0;border-radius:14px;padding:20px 22px;box-shadow:0 5px 18px #10263c20;position:relative;overflow:hidden}
+.fiche-entete-plus::after{content:"";position:absolute;right:12%;top:-30px;width:105px;height:180px;background:#36c97722;transform:rotate(35deg);pointer-events:none}
+.fiche-entete-plus h3{color:#fff;font-size:clamp(22px,3vw,29px);margin:7px 0}
+.fiche-entete-plus small{color:#a7efc7!important}
+.fiche-entete-plus span{color:#e5f8ef!important}
+.fiche-rang{background:#071d31b8!important;border:1px solid #79d6a180!important;border-radius:10px;padding:11px 15px;color:#fff!important;z-index:1;text-align:center}
+.fiche-rang small{display:block;font-size:10px;letter-spacing:.4px;margin-top:3px}
+.fiche-chiffres{grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin-bottom:13px}
+.fiche-chiffre{min-height:78px;background:#fff;border:1px solid #e0eae5;border-radius:10px;box-shadow:0 2px 8px #10263c0a;padding:10px 6px;align-items:center;justify-content:center;text-align:center;gap:7px}
+.fiche-chiffre strong{order:0;color:#10263c;font-size:23px}
+.fiche-chiffre small{order:1;color:#526577;font-size:11px;font-weight:700}
+.fiche-amelioration-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fiche-panel{padding:15px;border-radius:11px;border:1px solid #e0eae5;box-shadow:0 2px 8px #10263c08}
+.fiche-panel h3{font-size:15px;margin-bottom:12px}
+.fiche-forme .forme-badge{width:33px;height:33px;border-radius:8px}
+.fiche-bilan{background:#e8f8ee}.fiche-bilan:nth-child(2){background:#eaf4ff}.fiche-bilan:nth-child(2) h4{color:#1b6097}
+.fiche-club-match-columns,.fiche-club-bottom-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.fiche-club-panel{min-width:0;background:#fff;border:1px solid #e0eae5;border-radius:11px;padding:14px}
+.fiche-club-panel .fiche-section-title{font-size:16px;margin:0 0 12px}
+.fiche-club-match-columns .match-card{padding:11px;margin-bottom:9px}
+.fiche-club-match-columns .fiche-match{font-size:12px;gap:5px}
+.fiche-club-match-columns .fiche-match strong{font-size:13px;white-space:nowrap;background:#e8f8ee;border-radius:6px;padding:5px;color:#08643b}
+.fiche-club-bottom-columns .fiche-table{margin-bottom:0}
+@media(max-width:950px){.fiche-chiffres{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:650px){.fiche-entete-plus{padding:16px;gap:10px}.fiche-entete-plus h3{font-size:24px}.fiche-rang{padding:8px 10px}.fiche-chiffres{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.fiche-chiffre{min-height:75px}.fiche-chiffre strong{font-size:22px}.fiche-amelioration-grid,.fiche-club-match-columns,.fiche-club-bottom-columns{grid-template-columns:1fr}.fiche-bilans{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:380px){.fiche-bilans{grid-template-columns:1fr}}
+
+
+/* Fiches clubs — version 1 compacte et hiérarchisée */
+.fiche-entete-plus{min-height:0;padding:17px 21px;margin-bottom:12px;justify-content:flex-start}
+.fiche-entete-plus h3{font-size:clamp(21px,2.7vw,27px);margin:5px 0}
+.fiche-entete-plus>div>small{font-size:10px;letter-spacing:.7px}
+.fiche-chiffres{gap:8px;margin-bottom:14px}
+.fiche-chiffre{min-height:66px;padding:9px 6px;gap:4px}
+.fiche-chiffre strong{font-size:21px;line-height:1.12}
+.fiche-chiffre small{font-size:11px;line-height:1.2}
+.fiche-chiffre:nth-child(-n+4){border-color:#b9ddcb;background:#f0faf4}
+.fiche-chiffre:nth-child(2){background:#087b42;border-color:#087b42}
+.fiche-chiffre:nth-child(2) strong,.fiche-chiffre:nth-child(2) small{color:#fff}
+.fiche-chiffre:nth-child(n+5){background:#fff}
+@media(max-width:650px){
+ .fiche-entete-plus{padding:13px 15px;border-radius:13px;margin-bottom:10px}
+ .fiche-entete-plus h3{font-size:22px;margin:4px 0}
+ .fiche-entete-plus>div>small{font-size:9px}
+ .fiche-chiffres{gap:7px}
+ .fiche-chiffre{min-height:59px;padding:8px 5px;border-radius:10px;gap:3px}
+ .fiche-chiffre strong{font-size:20px}
+ .fiche-chiffre small{font-size:10px}
+}
+
+
+/* Face-à-Face — sobre, compact et responsive */
+.faf-heading{background:linear-gradient(115deg,#0b2034,#15354a);border-radius:15px;padding:20px 23px;margin-bottom:15px;color:white;border-bottom:3px solid #16a34a}
+.faf-heading small{color:#70e1a1;font-size:10px;font-weight:900;letter-spacing:1.8px}
+.faf-heading h2{color:white;margin:7px 0;font-size:27px}
+.faf-heading p{margin:0;color:#c9e8d7;font-size:13px}
+.faf-controls{display:grid;grid-template-columns:1fr 1fr auto 1fr;gap:12px;align-items:end;background:white;padding:16px;border-radius:14px;border:1px solid #dfe9e4;margin-bottom:14px}
+.faf-controls label{font-size:12px;font-weight:800;color:#425466;min-width:0}
+.faf-controls select{width:100%;max-width:none;margin:7px 0 0;font-size:14px;min-width:0}
+.faf-swap{height:45px;width:45px;border:0;border-radius:12px;background:#087b42;color:white;font-size:24px;cursor:pointer}
+.faf-output{background:#fff;border-radius:15px;overflow:hidden;border:1px solid #dfe9e4;box-shadow:0 5px 18px #10263c0b}
+.faf-teams{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.faf-team{padding:17px 18px;color:white;font-weight:900;font-size:18px;overflow-wrap:anywhere}
+.faf-team:first-child{background:#102e56}.faf-team:last-child{background:#087b42;text-align:right}
+.faf-stat{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,.85fr) minmax(0,1fr);align-items:center;gap:12px;padding:11px 17px;border-bottom:1px solid #edf1ef}
+.faf-stat:nth-child(even){background:#f7faf8}
+.faf-stat-label{text-align:center;font-weight:800;font-size:13px;color:#34495a}
+.faf-side{display:flex;align-items:center;gap:9px;min-width:0}.faf-side.right{flex-direction:row-reverse}
+.faf-number{font-size:15px;font-weight:900;min-width:35px;color:#10263c}.faf-side.right .faf-number{text-align:right}
+.faf-bar-track{height:9px;flex:1;min-width:0;background:#e5eaf0;border-radius:99px;overflow:hidden}
+.faf-side.right .faf-bar-track{transform:scaleX(-1)}
+.faf-bar{height:100%;background:#138b4d;border-radius:99px}.faf-side.right .faf-bar{background:#2563a6}
+.faf-bottom{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;background:#f6faf8}
+.faf-panel{border:1px solid #e0eae5;border-radius:12px;padding:13px;background:white;min-width:0}
+.faf-panel h3{font-size:14px;color:#10263c;margin:0 0 10px}
+.faf-form{display:flex;gap:5px;flex-wrap:wrap}.faf-form span{display:grid;place-items:center;width:29px;height:29px;border-radius:7px;font-weight:900;color:white;font-size:12px}
+.faf-form .v{background:#16834a}.faf-form .n{background:#e9a900}.faf-form .d{background:#dc2626}
+.faf-panel small{color:#64748b;display:block;margin-top:9px;font-size:11px}
+.faf-h2h{padding:15px 17px;border-top:1px solid #e0eae5}.faf-h2h h3{margin:0 0 10px;font-size:16px;color:#10263c}
+.faf-h2h-row{padding:10px 0;border-bottom:1px solid #edf1ef;font-size:13px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.faf-h2h-row:last-child{border:0}.faf-h2h-row small{color:#64748b}
+@media(max-width:650px){.faf-heading{padding:16px}.faf-heading h2{font-size:23px}.faf-controls{grid-template-columns:1fr 45px 1fr;gap:8px;padding:11px}.faf-controls label:first-child{grid-column:1/-1}.faf-controls label:nth-child(2){grid-column:1}.faf-swap{grid-column:2;grid-row:2}.faf-controls label:nth-child(4){grid-column:3}.faf-controls select{font-size:12px;padding:8px 5px}.faf-team{font-size:14px;padding:13px 10px}.faf-stat{grid-template-columns:minmax(0,1fr) 94px minmax(0,1fr);gap:5px;padding:10px 7px}.faf-stat-label{font-size:11px}.faf-side{gap:4px}.faf-number{font-size:12px;min-width:23px}.faf-bar-track{height:7px}.faf-bottom{gap:8px;padding:9px}.faf-panel{padding:10px}.faf-panel h3{font-size:12px}}
+
+
+/* Face-à-Face — version légèrement plus compacte, sans modifier les autres rubriques */
+.faf-heading{padding:16px 20px;margin-bottom:11px}
+.faf-heading h2{font-size:25px;margin:5px 0}
+.faf-controls{padding:12px;gap:10px;margin-bottom:11px}
+.faf-controls select{margin-top:5px;padding:10px;font-size:13px}
+.faf-team{padding:13px 15px;font-size:17px}
+.faf-stat{padding:8px 14px;gap:10px}
+.faf-bottom{padding:12px;gap:10px}
+.faf-panel{padding:11px}
+.faf-h2h{padding:12px 15px}
+@media(max-width:650px){
+ .faf-heading{padding:13px 15px;margin-bottom:10px}
+ .faf-heading h2{font-size:22px;margin:5px 0}
+ .faf-heading p{font-size:12px}
+ .faf-controls{padding:10px;gap:7px;margin-bottom:10px}
+ .faf-controls select{padding:7px 6px;font-size:12px;min-height:40px;margin-top:5px}
+ .faf-swap{height:40px;width:40px;justify-self:center}
+ .faf-team{padding:11px 10px;font-size:14px}
+ .faf-stat{padding:8px 7px;gap:5px}
+ .faf-bottom{padding:8px;gap:7px}
+ .faf-panel{padding:9px}
+ .faf-form span{width:26px;height:26px}
+}
+
+/* Face-à-Face : sélection masculin/féminin et cohérence des couleurs */
+.faf-controls{grid-template-columns:1fr 1fr 1fr auto 1fr}
+.faf-mode-label{min-width:0}
+.faf-team:first-child{background:#102e56}
+.faf-team:last-child{background:#087b42}
+.faf-side:not(.right) .faf-bar{background:#2563a6}
+.faf-side.right .faf-bar{background:#138b4d}
+@media(max-width:650px){.faf-controls{grid-template-columns:1fr 40px 1fr}.faf-controls .faf-mode-label{grid-column:1/-1}.faf-controls label:nth-child(2){grid-column:1/-1}.faf-controls label:nth-child(3){grid-column:1;grid-row:3}.faf-controls .faf-swap{grid-column:2;grid-row:3}.faf-controls label:nth-child(5){grid-column:3;grid-row:3}}
+
+/* Face-à-Face : avantage statistique explicite, indépendant de la taille des barres. */
+.faf-side.faf-better .faf-bar,.faf-side.right.faf-better .faf-bar{background:#12854c}
+.faf-side.faf-worse .faf-bar,.faf-side.right.faf-worse .faf-bar{background:#d96a59}
+.faf-side.faf-neutral .faf-bar,.faf-side.right.faf-neutral .faf-bar{background:#71869b}
+.faf-side.faf-better .faf-number{color:#086b3a}
+.faf-side.faf-worse .faf-number{color:#a73e32}
+.faf-side.faf-neutral .faf-number{color:#34495a}
 </style>
 
 
@@ -1625,6 +1775,7 @@ footer{padding:25px 15px}
     <button id="btnCartons" onclick="afficherSection('cartons')">🟨 Cartons</button>
     <button id="btnStats" onclick="afficherSection('stats')">📊 Stats</button>
     <button id="btnClubs" onclick="afficherSection('clubs')">⚽ Clubs</button>
+    <button id="btnFaceAFace" onclick="afficherSection('faceaface')">⚔️ Face-à-Face</button>
     <button id="btnFeminines" onclick="afficherSection('feminines')">♀️ Féminines</button>
     <button id="btnArbitres" onclick="afficherSection('arbitres')">👨‍⚖️ Arbitres</button>
 </nav>
@@ -1969,6 +2120,18 @@ footer{padding:25px 15px}
 <div id="ficheClubResult" aria-live="polite"></div>
 </section>
 
+<section id="faceaface" class="section">
+  <div class="faf-heading"><div><small>MANCHE FOOTBALL STATS</small><h2>⚔️ Face-à-Face</h2><p>Deux équipes, toutes les statistiques.</p></div></div>
+  <div class="faf-controls">
+    <label class="faf-mode-label">Compétition<select id="fafMode" onchange="fafChangerMode()"><option value="masculin">Football masculin</option><option value="fem11">Football féminin · Foot à 11</option><option value="fem8">Football féminin · Foot à 8</option></select></label><label>Division / Poule<select id="fafPoule" onchange="fafChoixPoule()"></select></label>
+    <label>Équipe 1<select id="fafA" onchange="fafAfficher()"></select></label>
+    <button type="button" class="faf-swap" onclick="fafInverser()" aria-label="Inverser les équipes">⇄</button>
+    <label>Équipe 2<select id="fafB" onchange="fafAfficher()"></select></label>
+  </div>
+  <p class="faf-legend" style="font-size:11px;color:#536575;margin:0 0 9px;line-height:1.3">🟢 Favorable &nbsp; 🔴 Défavorable &nbsp; ⚪ Égalité</p>
+  <div id="fafResult" aria-live="polite" class="faf-output"><div class="message">Chargement des équipes…</div></div>
+</section>
+
 <section id="feminines" class="section">
     <h2>👩⚽ Football féminin</h2>
     <p class="info-note">Retrouvez le classement, les résultats et les prochains matchs du championnat féminin.</p>
@@ -2115,6 +2278,8 @@ function afficherSection(section) {
     document.getElementById(section).classList.add("active");
 
     if (section === "accueil") { document.getElementById("btnAccueil").classList.add("active"); afficherAccueil(); }
+
+    if (section === "faceaface") { document.getElementById("btnFaceAFace").classList.add("active"); fafInitialiser(); }
 
     if (section === "classement") {
         document.getElementById("btnClassement").classList.add("active");
@@ -2281,6 +2446,7 @@ async function chargerClassements() {
         afficherAccueil();
         initialiserMonClub();
         if (document.getElementById("clubs").classList.contains("active")) initialiserClubs();
+        if (document.getElementById("faceaface").classList.contains("active")) fafInitialiser();
         chargerForme();
         chargerClassementsSecondaires();
 
@@ -2334,6 +2500,7 @@ async function chargerForme() {
         formeData = Array.isArray(json) ? json : [];
         afficherClassement();
         afficherStats();
+        if(document.getElementById("faceaface").classList.contains("active")) fafAfficher();
     } catch (error) {
         console.error(error);
         formeData = [];
@@ -3596,43 +3763,142 @@ function actualiserChoixClubs(){
 }
 function afficherFicheClub(){
     const cible=document.getElementById("ficheClubResult");
-    const poule=document.getElementById("pouleClubs").value, club=document.getElementById("clubChoisi").value;
+    const poule=document.getElementById("pouleClubs").value;
+    const club=document.getElementById("clubChoisi").value;
     const classement=classementData.filter(r=>normaliserPoule(r.Poule)===normaliserPoule(poule))
-      .sort((a,b)=>(Number(b.Pts)||0)-(Number(a.Pts)||0) || (Number(b.Diff)||0)-(Number(a.Diff)||0) || (Number(b.BP)||0)-(Number(a.BP)||0));
+      .sort((a,b)=>(Number(b.Pts)||0)-(Number(a.Pts)||0)||(Number(b.Diff)||0)-(Number(a.Diff)||0)||(Number(b.BP)||0)-(Number(a.BP)||0));
     const rang=classement.findIndex(r=>normaliserClub(r.Club)===normaliserClub(club));
-    if(rang<0){cible.innerHTML='<div class="message">Aucun club disponible pour cette poule. Vérifiez les données du classement.</div>';return;}
+    if(rang<0){cible.innerHTML='<div class="message">Aucun club disponible pour cette poule.</div>';return;}
     const r=classement[rang];
-    const matchs=matchsData.filter(m=>normaliserPoule(m.Poule)===normaliserPoule(poule) && [m.Domicile,m.Exterieur].some(c=>normaliserClub(c)===normaliserClub(club)))
-      .sort((a,b)=>convertirDate(b.Date)-convertirDate(a.Date));
-    // Buteurs / cartons : certains onglets utilisent le nom du club principal
-    // alors que le classement peut contenir "(2)", "2", "II", etc.
-    // On tente d'abord une correspondance exacte, puis le nom principal.
-    const correspondAuClub=(nom)=>{
-        const exact=normaliserClub(nom)===normaliserClub(club);
-        if(exact) return true;
-        return cleClubPrincipal(nom)===cleClubPrincipal(club);
+    const matchs=matchsData.filter(m=>normaliserPoule(m.Poule)===normaliserPoule(poule)&&
+      [m.Domicile,m.Exterieur].some(c=>normaliserClub(c)===normaliserClub(club)));
+    const joues=matchs.filter(matchTermine).sort((a,b)=>convertirDate(b.Date)-convertirDate(a.Date));
+    const prochains=matchs.filter(m=>!matchTermine(m)).sort((a,b)=>convertirDate(a.Date)-convertirDate(b.Date));
+    // Alias prudents pour les noms abrégés des clubs dans les feuilles Buteurs/Cartons.
+    // Une correspondance abrégée est acceptée seulement si une seule équipe
+    // de cette poule peut lui correspondre, afin de protéger les réserves.
+    const nomRacine=nom=>String(nom||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .toUpperCase().replace(/\(\s*\d+\s*\)/g,'')
+      .replace(/\b(?:F\.?C\.?|A\.?S\.?|U\.?S\.?)\b/g,'')
+      .replace(/[^A-Z0-9]/g,'');
+    const equipeExacte=nom=>normaliserClub(nom)===normaliserClub(club);
+    const correspondEquipe=nom=>{
+      if(equipeExacte(nom)) return true;
+      const racine=nomRacine(nom);
+      if(!racine || racine!==nomRacine(club)) return false;
+      const candidats=classement.filter(l=>nomRacine(l.Club)===racine);
+      return candidats.length===1 && equipeExacte(candidats[0].Club);
     };
-
-    const buteurs=buteursData
-      .filter(b=>normaliserPoule(b.Poule)===normaliserPoule(poule) && correspondAuClub(b.Club))
+    const buteurs=buteursData.filter(b=>normaliserPoule(b.Poule)===normaliserPoule(poule)&&correspondEquipe(b.Club))
       .sort((a,b)=>(Number(b.Buts)||0)-(Number(a.Buts)||0));
-
-    const cartons=cartonsData
-      .filter(c=>normaliserPoule(c.Poule)===normaliserPoule(poule) && correspondAuClub(c.Club))
+    const cartons=cartonsData.filter(c=>normaliserPoule(c.Poule)===normaliserPoule(poule)&&correspondEquipe(c.Club))
       .sort((a,b)=>(Number(b.Rouges)||0)-(Number(a.Rouges)||0)||(Number(b.Jaunes)||0)-(Number(a.Jaunes)||0));
-    const totalJaunes=cartons.reduce((total,c)=>total+(Number(c.Jaunes)||0),0);
-    const totalRouges=cartons.reduce((total,c)=>total+(Number(c.Rouges)||0),0);
-    const chiffres=[["Classement",`${rang+1} / ${classement.length}`],["Points",r.Pts],["Matchs",r.MJ],["V / N / D",`${r.V} / ${r.N} / ${r.D}`],["Buts marqués",r.BP],["Buts encaissés",r.BC],["Différence",r.Diff],["🟨 Cartons jaunes",totalJaunes],["🟥 Cartons rouges",totalRouges]];
-    cible.innerHTML=`<div class="fiche-entete"><h3>${echapperHtml(club)}</h3><span>${echapperHtml(poule)}</span></div>`+
-      `<div class="fiche-chiffres">${chiffres.map(([titre,val])=>`<div class="fiche-chiffre"><small>${titre}</small><strong>${echapperHtml(val ?? "—")}</strong></div>`).join("")}</div>`+
-      `<h3>⚽ Buteurs</h3><div class="table-container"><table><thead><tr><th>Joueur</th><th>Buts</th></tr></thead><tbody>`+
-      (buteurs.length?buteurs.map(b=>`<tr><td>${echapperHtml(b.Joueur)}</td><td>${echapperHtml(b.Buts)}</td></tr>`).join(""):`<tr><td colspan="2">Aucun buteur renseigné.</td></tr>`)+`</tbody></table></div>`+
-      `<h3 class="fiche-section-title">🟨🟥 Cartons</h3><div class="table-container fiche-table"><table><thead><tr><th>Joueur</th><th>🟨 Jaunes</th><th>🟥 Rouges</th></tr></thead><tbody>`+
-      (cartons.length?cartons.map(c=>`<tr><td>${echapperHtml(c.Joueur||"—")}</td><td><span class="fiche-carton jaune">${echapperHtml(c.Jaunes??0)}</span></td><td><span class="fiche-carton rouge">${echapperHtml(c.Rouges??0)}</span></td></tr>`).join(""):`<tr><td colspan="3">Aucun carton renseigné pour ce club.</td></tr>`)+`</tbody></table></div>`+
-      `<h3>📅 Résultats et prochains matchs</h3>`+
-      (matchs.length?matchs.map(m=>`<div class="match-card"><div class="reaction-meta"><span>${echapperHtml(m.Date||"Date non renseignée")}</span><span>Journée ${echapperHtml(m.Journee||"—")}</span></div><div class="fiche-match"><span>${echapperHtml(m.Domicile)}</span><strong>${matchTermine(m)?echapperHtml(m["Score Dom."])+" - "+echapperHtml(m["Score Ext."]):"À venir / non joué"}</strong><span>${echapperHtml(m.Exterieur)}</span></div>${m.Statu?`<p class="match-status">${echapperHtml(m.Statu)}</p>`:""}</div>`).join(""):`<div class="message">Aucun match enregistré pour cette équipe.</div>`);
+    const jaunes=cartons.reduce((t,c)=>t+(Number(c.Jaunes)||0),0);
+    const rouges=cartons.reduce((t,c)=>t+(Number(c.Rouges)||0),0);
+    const estDom=m=>equipeExacte(m.Domicile);
+    const stats=(liste)=>{
+      let v=0,n=0,d=0,bp=0,bc=0,clean=0;
+      liste.forEach(m=>{
+        const a=Number(m["Score Dom."]),b=Number(m["Score Ext."]);
+        const pourClub=estDom(m)?a:b,contre=estDom(m)?b:a;
+        bp+=pourClub;bc+=contre;if(contre===0)clean++;
+        if(pourClub>contre)v++;else if(pourClub===contre)n++;else d++;
+      });
+      return {mj:liste.length,v,n,d,bp,bc,clean};
+    };
+    const general=stats(joues),dom=stats(joues.filter(estDom)),ext=stats(joues.filter(m=>!estDom(m)));
+    const moyenne=n=>general.mj?(n/general.mj).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+    const chiffre=(label,val)=>`<div class="fiche-chiffre"><small>${echapperHtml(label)}</small><strong>${echapperHtml(val)}</strong></div>`;
+    const matchCard=m=>`<div class="match-card"><div class="reaction-meta"><span>${echapperHtml(m.Date||'Date non renseignée')}</span><span>Journée ${echapperHtml(m.Journee||'—')}</span></div><div class="fiche-match"><span>${echapperHtml(m.Domicile||'—')}</span><strong>${matchTermine(m)?echapperHtml(m['Score Dom.'])+' - '+echapperHtml(m['Score Ext.']):'À venir'}</strong><span>${echapperHtml(m.Exterieur||'—')}</span></div>${(m.Statu||m.Statut)?`<p class="match-status">${echapperHtml(m.Statu||m.Statut)}</p>`:''}</div>`;
+    const blocBilan=(titre,s)=>`<div class="fiche-bilan"><h4>${titre}</h4><strong>${s.v} V · ${s.n} N · ${s.d} D</strong><small>${s.mj} matchs · ${s.bp} BP · ${s.bc} BC</small></div>`;
+    const forme=joues.slice(0,5).reverse().map(m=>{
+      const v=resultatClub(m,club);
+      return `<span class="forme-badge forme-${v.toLowerCase()}" title="${echapperHtml(m.Date||'')}">${v}</span>`;
+    }).join('');
+    const chiffres=[['Classement',`${rang+1} / ${classement.length}`],['Points',r.Pts??'—'],['Matchs joués',r.MJ??general.mj],['V / N / D',`${r.V??'—'} / ${r.N??'—'} / ${r.D??'—'}`],['Buts marqués',r.BP??general.bp],['Buts encaissés',r.BC??general.bc],['Différence',r.Diff??(general.bp-general.bc)],['Clean sheets',general.clean],['Buts / match',moyenne(general.bp)],['Encaissés / match',moyenne(general.bc)],['🟨 Cartons jaunes',jaunes],['🟥 Cartons rouges',rouges]];
+    cible.innerHTML=`<div class="fiche-entete fiche-entete-plus"><div><small>FICHE ÉQUIPE · MANCHE FOOTBALL STATS</small><h3>${echapperHtml(club)}</h3><span>${echapperHtml(poule)}</span></div></div>`+
+      `<div class="fiche-chiffres">${chiffres.map(([titre,val])=>chiffre(titre,val)).join('')}</div>`+
+      `<div class="fiche-amelioration-grid"><div class="fiche-panel"><h3>📈 Forme récente</h3><div class="fiche-forme">${forme||'<span class="home-empty">Aucun match terminé</span>'}</div><small>Du plus ancien au plus récent, parmi les 5 derniers matchs</small></div><div class="fiche-panel"><h3>🏠 Domicile / ✈️ Extérieur</h3><div class="fiche-bilans">${blocBilan('Domicile',dom)}${blocBilan('Extérieur',ext)}</div></div></div>`+
+      `<div class="fiche-club-match-columns"><section class="fiche-club-panel"><h3 class="fiche-section-title">🏁 Derniers résultats</h3>${joues.length?joues.slice(0,5).map(matchCard).join(''):'<div class="message">Aucun résultat enregistré.</div>'}</section><section class="fiche-club-panel"><h3 class="fiche-section-title">📅 Prochains matchs</h3>${prochains.length?prochains.slice(0,5).map(matchCard).join(''):'<div class="message">Aucun prochain match enregistré.</div>'}</section></div>`+
+      `<div class="fiche-club-bottom-columns"><section class="fiche-club-panel"><h3 class="fiche-section-title">⚽ Meilleurs buteurs</h3><div class="table-container fiche-table"><table><thead><tr><th>Joueur</th><th>Buts</th></tr></thead><tbody>${buteurs.length?buteurs.map(b=>`<tr><td>${echapperHtml(b.Joueur||'—')}</td><td>${echapperHtml(b.Buts??0)}</td></tr>`).join(''):'<tr><td colspan="2">Aucun buteur renseigné pour cette équipe.</td></tr>'}</tbody></table></div></section>`+
+      `<section class="fiche-club-panel"><h3 class="fiche-section-title">🟨🟥 Cartons</h3><div class="table-container fiche-table"><table><thead><tr><th>Joueur</th><th>🟨 Jaunes</th><th>🟥 Rouges</th></tr></thead><tbody>${cartons.length?cartons.map(c=>`<tr><td>${echapperHtml(c.Joueur||'—')}</td><td><span class="fiche-carton jaune">${echapperHtml(c.Jaunes??0)}</span></td><td><span class="fiche-carton rouge">${echapperHtml(c.Rouges??0)}</span></td></tr>`).join(''):'<tr><td colspan="3">Aucun carton renseigné pour cette équipe.</td></tr>'}</tbody></table></div></section></div>`;
 }
 
+
+
+/* Face-à-Face : utilise uniquement les données existantes du site. */
+function fafJeu(){
+ const mode=document.getElementById('fafMode')?.value||'masculin';
+ return mode==='fem11'?{fem:true,classement:classementFemininsData||[],matchs:matchsFemData||[]}:mode==='fem8'?{fem:true,classement:classementFoot8Data||[],matchs:matchsFoot8Data||[]}:{fem:false,classement:classementData||[],matchs:matchsData||[]};
+}
+async function fafChangerMode(){
+ const mode=document.getElementById('fafMode')?.value;
+ if(mode!=='masculin'&&!femininesLoaded){
+  const cible=document.getElementById('fafResult');
+  cible.innerHTML='<div class="message">Chargement des données féminines…</div>';
+  await chargerFeminines();
+  if(!femininesLoaded){cible.innerHTML='<div class="message">Données féminines indisponibles pour le moment.</div>';return;}
+ }
+ fafInitialiser();
+}
+function fafPouleCle(v,fem){return fem?femPoule({Poule:v}):normaliserPoule(v);}
+function fafInitialiser(){
+ const poule=document.getElementById('fafPoule');if(!poule)return;
+ const jeu=fafJeu();
+ if(jeu.fem&&!femininesLoaded){fafChangerMode();return;}
+ const ancienne=poule.value;
+ const groupes=[...new Set(jeu.classement.map(r=>fafPouleCle(r.Poule,jeu.fem)).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'fr',{numeric:true}));
+ poule.innerHTML=groupes.map(g=>`<option value="${echapperHtml(g)}">${jeu.fem?'Poule '+echapperHtml(g):echapperHtml(g)}</option>`).join('');
+ if(groupes.includes(ancienne))poule.value=ancienne;
+ fafChoixPoule();
+}
+function fafChoixPoule(){
+ const jeu=fafJeu(),poule=document.getElementById('fafPoule').value;
+ const clubs=jeu.classement.filter(r=>fafPouleCle(r.Poule,jeu.fem)===poule).map(r=>String(r.Club||'').trim()).filter(Boolean).sort((a,b)=>a.localeCompare(b,'fr'));
+ const a=document.getElementById('fafA'),b=document.getElementById('fafB'),va=a.value,vb=b.value;
+ const opts=clubs.map(c=>`<option value="${echapperHtml(c)}">${echapperHtml(c)}</option>`).join('');
+ a.innerHTML=opts;b.innerHTML=opts;
+ if(clubs.includes(va))a.value=va;
+ if(clubs.includes(vb))b.value=vb;
+ else if(clubs.length>1)b.selectedIndex=1;
+ if(a.value===b.value&&clubs.length>1)b.selectedIndex=clubs.findIndex(c=>c!==a.value);
+ fafAfficher();
+}
+function fafInverser(){const a=document.getElementById('fafA'),b=document.getElementById('fafB');[a.value,b.value]=[b.value,a.value];fafAfficher();}
+function fafAfficher(){
+ const cible=document.getElementById('fafResult');if(!cible)return;
+ const jeu=fafJeu(),poule=document.getElementById('fafPoule').value,a=document.getElementById('fafA').value,b=document.getElementById('fafB').value;
+ const lignes=jeu.classement.filter(r=>fafPouleCle(r.Poule,jeu.fem)===poule).sort((x,y)=>(Number(y.Pts)||0)-(Number(x.Pts)||0)||(Number(y.Diff)||0)-(Number(x.Diff)||0)||(Number(y.BP)||0)-(Number(x.BP)||0));
+ const ra=lignes.find(r=>normaliserClub(r.Club)===normaliserClub(a)),rb=lignes.find(r=>normaliserClub(r.Club)===normaliserClub(b));
+ if(!ra||!rb){cible.innerHTML='<div class="message">Aucune donnée disponible pour cette sélection.</div>';return;}
+ if(a===b){cible.innerHTML='<div class="message">Choisissez deux équipes différentes.</div>';return;}
+ const fini=m=>jeu.fem?femEstTermine(m):matchTermine(m);
+ const dom=m=>m.Domicile,ext=m=>jeu.fem?m['Extérieur']:m.Exterieur;
+ const sd=m=>jeu.fem?m['Score D']:m['Score Dom.'],se=m=>jeu.fem?m['Score E']:m['Score Ext.'];
+ const matchClub=(m,club)=>[dom(m),ext(m)].some(n=>normaliserClub(n)===normaliserClub(club));
+ const matchs=club=>jeu.matchs.filter(m=>fafPouleCle(m.Poule,jeu.fem)===poule&&matchClub(m,club)&&fini(m)).sort((x,y)=>convertirDate(y.Date)-convertirDate(x.Date));
+ const ma=matchs(a),mb=matchs(b);
+ const num=v=>{const n=Number(String(v??0).replace(',','.'));return Number.isFinite(n)?n:0};
+ const clean=(ms,club)=>ms.filter(m=>num(normaliserClub(dom(m))===normaliserClub(club)?se(m):sd(m))===0).length;
+ const moyenne=(total,mj)=>mj>0?(total/mj).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+ const records=[['Classement',lignes.indexOf(ra)+1,lignes.indexOf(rb)+1],['Points',num(ra.Pts),num(rb.Pts)],['Matchs joués',num(ra.MJ),num(rb.MJ)],['Victoires',num(ra.V),num(rb.V)],['Nuls',num(ra.N),num(rb.N)],['Défaites',num(ra.D),num(rb.D)],['Buts marqués',num(ra.BP),num(rb.BP)],['Buts encaissés',num(ra.BC),num(rb.BC)],['Différence',num(ra.Diff),num(rb.Diff)],['Clean sheets',clean(ma,a),clean(mb,b)],['Buts / match',moyenne(num(ra.BP),num(ra.MJ)),moyenne(num(rb.BP),num(rb.MJ))],['Encaissés / match',moyenne(num(ra.BC),num(ra.MJ)),moyenne(num(rb.BC),num(rb.MJ))]];
+ const stat=([label,x,y])=>{
+   const val=v=>typeof v==='number'?v:parseFloat(String(v).replace(',','.'))||0;
+   const vx=val(x),vy=val(y),max=Math.max(Math.abs(vx),Math.abs(vy),1);
+   const bar=n=>Math.round(Math.abs(n)/max*100);
+   // Les longueurs représentent les valeurs ; les couleurs signalent l'avantage.
+   // Un classement, des défaites et des buts encaissés plus faibles sont préférables.
+   const inverse=['Classement','Défaites','Buts encaissés','Encaissés / match'].includes(label);
+   const neutre=['Matchs joués','Nuls'].includes(label);
+   const avantage=neutre||vx===vy?0:((vx>vy)!==inverse?1:-1);
+   const classe=(cote)=>neutre||vx===vy?'faf-neutral':(avantage===cote?'faf-better':'faf-worse');
+   return `<div class="faf-stat"><div class="faf-side ${classe(1)}"><strong class="faf-number">${echapperHtml(x)}</strong><div class="faf-bar-track"><div class="faf-bar" style="width:${bar(x)}%"></div></div></div><div class="faf-stat-label">${echapperHtml(label)}</div><div class="faf-side right ${classe(-1)}"><strong class="faf-number">${echapperHtml(y)}</strong><div class="faf-bar-track"><div class="faf-bar" style="width:${bar(y)}%"></div></div></div></div>`;
+ };
+ const resultat=(m,club)=>{if(!jeu.fem)return resultatClub(m,club);const domicile=normaliserClub(dom(m))===normaliserClub(club),pour=num(domicile?sd(m):se(m)),contre=num(domicile?se(m):sd(m));return pour>contre?'V':pour<contre?'D':'N'};
+ const forme=(ms,club)=>{const dernier=ms.slice(0,5).reverse();return dernier.length?dernier.map(m=>{const v=resultat(m,club);return `<span class="${String(v).toLowerCase()}">${echapperHtml(v)}</span>`}).join(''):'<small>Aucun résultat enregistré</small>'};
+ const duels=jeu.matchs.filter(m=>fafPouleCle(m.Poule,jeu.fem)===poule&&fini(m)&&((normaliserClub(dom(m))===normaliserClub(a)&&normaliserClub(ext(m))===normaliserClub(b))||(normaliserClub(dom(m))===normaliserClub(b)&&normaliserClub(ext(m))===normaliserClub(a)))).sort((x,y)=>convertirDate(y.Date)-convertirDate(x.Date));
+ cible.innerHTML=`<div class="faf-teams"><div class="faf-team">${echapperHtml(a)}</div><div class="faf-team">${echapperHtml(b)}</div></div><div>${records.map(stat).join('')}</div><div class="faf-bottom"><div class="faf-panel"><h3>Forme récente · ${echapperHtml(a)}</h3><div class="faf-form">${forme(ma,a)}</div></div><div class="faf-panel"><h3>Forme récente · ${echapperHtml(b)}</h3><div class="faf-form">${forme(mb,b)}</div></div></div>${duels.length?`<div class="faf-h2h"><h3>⚔️ Historique des duels</h3>${duels.slice(0,10).map(m=>`<div class="faf-h2h-row"><span>${echapperHtml(dom(m))} <strong>${echapperHtml(sd(m))} – ${echapperHtml(se(m))}</strong> ${echapperHtml(ext(m))}</span><small>${echapperHtml(m.Date||'')}</small></div>`).join('')}</div>`:''}`;
+}
 
 /* Page d'accueil : données issues des feuilles déjà connectées. */
 function initialiserAccueil(){ afficherAccueil(); }
