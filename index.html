@@ -1721,6 +1721,18 @@ footer{padding:25px 15px}
 .faf-side.faf-better .faf-number{color:#086b3a}
 .faf-side.faf-worse .faf-number{color:#a73e32}
 .faf-side.faf-neutral .faf-number{color:#34495a}
+
+/* Accès au formulaire de contribution — accueil et navigation */
+nav button.nav-contribuer{border:1px solid #80dca6;background:#174a3b;color:#e7fff0}
+nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{background:#087b42;color:#fff}
+.contribution-accueil{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:12px 0 16px;padding:14px 17px;background:#fff;border:1px solid #d5e8dd;border-left:4px solid #087b42;border-radius:13px;box-shadow:0 3px 12px #10263c0b}
+.contribution-accueil-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.contribution-accueil-copy strong{font-size:15px;color:#10263c}
+.contribution-accueil-copy span{font-size:12px;line-height:1.4;color:#607382}
+.contribution-accueil button{flex-shrink:0;border:0;border-radius:9px;background:#087b42;color:#fff;font-weight:800;padding:11px 15px;cursor:pointer}
+.contribution-accueil button:hover,.contribution-accueil button:focus-visible{background:#065d35}
+@media(max-width:520px){.contribution-accueil{padding:12px;gap:10px}.contribution-accueil-copy strong{font-size:13px}.contribution-accueil-copy span{font-size:11px}.contribution-accueil button{padding:10px;font-size:11px}}
+
 </style>
 
 
@@ -1778,6 +1790,7 @@ footer{padding:25px 15px}
     <button id="btnFaceAFace" onclick="afficherSection('faceaface')">⚔️ Face-à-Face</button>
     <button id="btnFeminines" onclick="afficherSection('feminines')">♀️ Féminines</button>
     <button id="btnArbitres" onclick="afficherSection('arbitres')">👨‍⚖️ Arbitres</button>
+    <button type="button" class="nav-contribuer" onclick="ouvrirFormulaireContribution()">✍️ Contribuer</button>
 </nav>
 
 <main>
@@ -1840,6 +1853,14 @@ footer{padding:25px 15px}
 
 
 <!-- Emplacement publicitaire réservé : invisible tant qu’aucune publicité n’est activée. -->
+<section class="contribution-accueil" aria-label="Participer à Manche Football Stats">
+  <div class="contribution-accueil-copy">
+    <strong>✍️ Une information à partager ?</strong>
+    <span>Résultats, buteurs, cartons ou actualités de votre club : contribuez à MFS.</span>
+  </div>
+  <button type="button" onclick="ouvrirFormulaireContribution()">Contribuer <span aria-hidden="true">→</span></button>
+</section>
+
 <div class="ad-slot" id="pubAccueilHaut" hidden></div>
 
 <section class="mon-club-card" id="monClubCard" aria-label="Mon club favori">
@@ -4873,6 +4894,18 @@ window.addEventListener('DOMContentLoaded',()=>{
   });
   mfsAfficherInstallation();
 });
+</script>
+
+<script>
+// Renseigner ici l'URL publique du formulaire Google Forms.
+const URL_FORMULAIRE_CONTRIBUTION = "";
+function ouvrirFormulaireContribution() {
+  if (!URL_FORMULAIRE_CONTRIBUTION) {
+    alert("Le lien du formulaire de contribution reste à renseigner.");
+    return;
+  }
+  window.open(URL_FORMULAIRE_CONTRIBUTION, "_blank", "noopener,noreferrer");
+}
 </script>
 
 </body>
