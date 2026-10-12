@@ -1879,6 +1879,7 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
     <div>
       <h2>📊 LE WEEK-END EN CHIFFRES</h2>
       <p id="weekStatsPeriod">Les statistiques de la dernière journée</p>
+      <p style="margin-top:4px">Football masculin et féminin · District de la Manche</p>
     </div>
     <button type="button" onclick="afficherSection('stats')">Voir toutes les statistiques →</button>
   </div>
@@ -2376,6 +2377,7 @@ async function chargerFeminines() {
         matchsFoot8Data = await rMatchs8.json();
         femininesLoaded = true;
         afficherFeminines();
+        afficherAccueil();
     } catch (error) {
         if (cible) cible.innerHTML = '<div class="message">Impossible de charger les données féminines. Vérifie les onglets « Classement Feminins », « MatchsFem », « ClassementFoot8 » et « MatchsFoot8 » dans Apps Script.</div>';
         console.error("Football féminin :", error);
@@ -3354,6 +3356,7 @@ async function chargerMatchs() {
         }
 
         matchsData = await response.json();
+        await chargerMatchsFemininsAccueil();
 
         console.log(
             "Matchs récupérés :",
@@ -3923,49 +3926,67 @@ function fafAfficher(){
  cible.innerHTML=`<div class="faf-teams"><div class="faf-team">${echapperHtml(a)}</div><div class="faf-team">${echapperHtml(b)}</div></div><div>${records.map(stat).join('')}</div><div class="faf-bottom"><div class="faf-panel"><h3>Forme récente · ${echapperHtml(a)}</h3><div class="faf-form">${forme(ma,a)}</div></div><div class="faf-panel"><h3>Forme récente · ${echapperHtml(b)}</h3><div class="faf-form">${forme(mb,b)}</div></div></div>${duels.length?`<div class="faf-h2h"><h3>⚔️ Historique des duels</h3>${duels.slice(0,10).map(m=>`<div class="faf-h2h-row"><span>${echapperHtml(dom(m))} <strong>${echapperHtml(sd(m))} – ${echapperHtml(se(m))}</strong> ${echapperHtml(ext(m))}</span><small>${echapperHtml(m.Date||'')}</small></div>`).join('')}</div>`:''}`;
 }
 
-/* Page d'accueil : données issues des feuilles déjà connectées. */
+/* Statistiques de l'accueil : championnats masculins et féminins. */
+let matchsFemininsAccueilCharges = false;
+async function chargerMatchsFemininsAccueil(){
+    if (matchsFemininsAccueilCharges || femininesLoaded) return;
+    try {
+        const [r11,r8] = await Promise.all([
+            fetch(API_URL + "?sheet=MatchsFem"),
+            fetch(API_URL + "?sheet=MatchsFoot8")
+        ]);
+        if (!r11.ok || !r8.ok) throw new Error("Chargement des matchs féminins impossible");
+        const [d11,d8] = await Promise.all([r11.json(),r8.json()]);
+        if (!Array.isArray(d11) || !Array.isArray(d8)) throw new Error("Format des données féminines incorrect");
+        matchsFemData=d11;
+        matchsFoot8Data=d8;
+        matchsFemininsAccueilCharges=true;
+    } catch(error) {
+        console.error("Statistiques féminines de l'accueil :",error);
+    }
+}
 function initialiserAccueil(){ afficherAccueil(); }
-
 function afficherAccueil(){
     const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
     const fmt=n=>new Intl.NumberFormat("fr-FR").format(n||0);
-
-    const termines=(Array.isArray(matchsData)?matchsData:[])
-      .filter(m=>m&&m.Domicile&&m.Exterieur&&matchTermine(m))
-      .map(m=>({...m,__date:convertirDate(m.Date)}))
+    const normaliser=(liste,feminin)=> (Array.isArray(liste)?liste:[])
+      .filter(m=>m&&m.Domicile&&(feminin?m["Extérieur"]:m.Exterieur))
+      .filter(m=>{
+          if(!feminin) return matchTermine(m);
+          const statut=String(m.Statut||m.Statu||"").toLowerCase();
+          if(/report|annul|forfait|non jou|à venir|a venir/.test(statut)) return false;
+          return ["Score D","Score E"].every(k=>m[k]!==""&&m[k]!=null&&Number.isFinite(Number(m[k])));
+      })
+      .map(m=>({__date:convertirDate(m.Date),dom:Number(m[feminin?"Score D":"Score Dom."]),ext:Number(m[feminin?"Score E":"Score Ext."])}))
       .filter(m=>m.__date instanceof Date&&!isNaN(m.__date));
 
+    const masculins=normaliser(matchsData,false);
+    const feminins11=normaliser(matchsFemData,true);
+    const feminins8=normaliser(matchsFoot8Data,true);
+    const termines=[...masculins,...feminins11,...feminins8];
     if(!termines.length) return;
 
     const derniere=new Date(Math.max(...termines.map(m=>m.__date.getTime())));
     derniere.setHours(12,0,0,0);
-
-    /* Fenêtre du dernier week-end : vendredi -> lundi. */
     const j=derniere.getDay();
     const recul=j===0?2:j===1?3:j===5?0:j===6?1:(j+2)%7;
-    const debut=new Date(derniere); debut.setDate(debut.getDate()-recul); debut.setHours(0,0,0,0);
-    const fin=new Date(debut); fin.setDate(fin.getDate()+3); fin.setHours(23,59,59,999);
-
+    const debut=new Date(derniere);debut.setDate(debut.getDate()-recul);debut.setHours(0,0,0,0);
+    const fin=new Date(debut);fin.setDate(fin.getDate()+3);fin.setHours(23,59,59,999);
     let weekend=termines.filter(m=>m.__date>=debut&&m.__date<=fin);
     if(!weekend.length) weekend=termines.filter(m=>m.__date.toDateString()===derniere.toDateString());
 
-    const sd=m=>Number(m["Score Dom."])||0, se=m=>Number(m["Score Ext."])||0;
     const matchs=weekend.length;
-    const buts=weekend.reduce((t,m)=>t+sd(m)+se(m),0);
+    const buts=weekend.reduce((t,m)=>t+m.dom+m.ext,0);
     const moyenne=matchs?buts/matchs:0;
     let clean=0;
-    weekend.forEach(m=>{if(se(m)===0)clean++;if(sd(m)===0)clean++;});
-
+    weekend.forEach(m=>{if(m.ext===0)clean++;if(m.dom===0)clean++;});
     set("wsMatchs",fmt(matchs));
     set("wsButs",fmt(buts));
     set("wsMoyenne",moyenne.toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2}));
     set("wsCleanSheets",fmt(clean));
-
     const fd=d=>d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"});
-    set("weekStatsPeriod",`Du ${fd(debut)} au ${fd(fin)} · dernière journée jouée`);
-
+    set("weekStatsPeriod",`Du ${fd(debut)} au ${fd(fin)} · dernière journée jouée${matchsFemininsAccueilCharges||femininesLoaded?'':' · données féminines indisponibles'}`);
 }
-
 
 
 
