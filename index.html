@@ -4656,7 +4656,8 @@ function mfsValeur(obj, noms) {
 
 function mfsDateValeur(txt) {
   const v = String(txt || "").trim();
-  const fr = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+  // Formats français jj/mm/aaaa et jj-mm-aaaa, avec heure facultative.
+  const fr = v.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
   if (fr) return new Date(+fr[3], +fr[2]-1, +fr[1], +(fr[4]||0), +(fr[5]||0)).getTime();
   const t = Date.parse(v);
   return Number.isNaN(t) ? 0 : t;
@@ -4737,7 +4738,7 @@ function rendreFilMFS() {
     if (!titreEl) return;
 
     const meta = metaEl ? metaEl.textContent.trim() : "";
-    const dateMatch = meta.match(/\d{1,2}\/\d{1,2}\/\d{4}(?:\s+\d{1,2}:\d{2})?/);
+    const dateMatch = meta.match(/\d{1,2}[\/-]\d{1,2}[\/-]\d{4}(?:\s+\d{1,2}:\d{2})?/);
     const date = dateMatch ? dateMatch[0] : "";
     const cat = meta.replace(date, "").replace(/^[\s·•\-–]+|[\s·•\-–]+$/g,"") || "Information";
 
