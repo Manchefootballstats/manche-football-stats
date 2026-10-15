@@ -1733,6 +1733,17 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 .contribution-accueil button:hover,.contribution-accueil button:focus-visible{background:#065d35}
 @media(max-width:520px){.contribution-accueil{padding:12px;gap:10px}.contribution-accueil-copy strong{font-size:13px}.contribution-accueil-copy span{font-size:11px}.contribution-accueil button{padding:10px;font-size:11px}}
 
+
+/* Interviews : lecture claire sur ordinateur et mobile */
+.article-rich .interview-question{background:#edf6f0;border-left:4px solid #087b42;padding:13px 16px;border-radius:0 10px 10px 0;margin:25px 0 10px;font-weight:750;color:#10263c}
+.article-rich .interview-question strong{color:#10263c}
+.article-rich .interview-speaker{font-size:13px;font-weight:800;color:#087b42;margin:12px 0 6px}
+.article-rich .interview-answer{padding:0 8px 0 16px;border-left:2px solid #d8e6df;margin:0 0 15px;color:#334155;font-weight:400}
+.article-rich .interview-intro{font-weight:400;color:#475569}
+.article-rich .interview-intro strong{font-weight:500;color:#475569}
+.article-rich .interview-question + .interview-speaker{margin-top:10px}
+@media(max-width:700px){.article-rich .interview-question{padding:12px;margin-top:20px}.article-rich .interview-answer{padding-left:12px}}
+
 </style>
 
 
@@ -3797,31 +3808,14 @@ function afficherResultats() {
 }
 
 function convertirDate(dateValue) {
-
-    if (!dateValue) {
-        return new Date(0);
-    }
-
-    const texte =
-        String(dateValue).trim();
-
-    const parts =
-        texte.split("/");
-
-    if (parts.length === 3) {
-
-        return new Date(
-
-            Number(parts[2]),
-            Number(parts[1]) - 1,
-            Number(parts[0])
-
-        );
-
-    }
-
-    return new Date(dateValue);
-
+    if (!dateValue) return new Date(0);
+    if (dateValue instanceof Date) return dateValue;
+    const texte = String(dateValue).trim().replace(/(\d{1,2})h(\d{2})\b/gi, "$1:$2");
+    // Date française, avec heure facultative (jj/mm/aaaa HH:mm:ss).
+    const fr = texte.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:[\sT]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+    if (fr) return new Date(+fr[3], +fr[2]-1, +fr[1], +(fr[4]||0), +(fr[5]||0), +(fr[6]||0));
+    const date = new Date(texte);
+    return Number.isNaN(date.getTime()) ? new Date(0) : date;
 }
 
 
@@ -4120,6 +4114,52 @@ function formaterContenuArticle(texte) {
 
 
 
+
+/* Mise en page des interviews : sans doublon de titre, questions et réponses distinctes. */
+function nettoyerMiseEnPageInterview(html, titre, resume = "") {
+    const bloc = document.createElement("div");
+    bloc.innerHTML = html;
+    const normaliser = s => String(s || "")
+        .replace(/<[^>]*>/g, " ").replace(/[«»“”’'–—:!?,.]/g, " ")
+        .replace(/\s+/g, " ").trim().toLocaleLowerCase("fr");
+    const semblable = (a, b) => {
+        const x = normaliser(a), y = normaliser(b);
+        return x && y && (x === y || x.startsWith(y) || y.startsWith(x) ||
+            (x.length > 35 && y.length > 35 && x.slice(0, 38) === y.slice(0, 38)));
+    };
+    // Le titre est déjà affiché par l'en-tête de la fiche.
+    for (const el of [...bloc.children]) {
+        if (/^H[1-3]$/.test(el.tagName) && semblable(el.textContent, titre)) el.remove();
+    }
+    // Un chapeau de l'article peut répéter le résumé déjà visible au-dessus.
+    const avantQuestion = [];
+    for (const el of [...bloc.children]) {
+        if (/^Manche Football Stats\s*:/i.test(el.textContent.trim())) break;
+        if (el.tagName === "P") avantQuestion.push(el);
+    }
+    if (avantQuestion.length) {
+        const premier = avantQuestion[0];
+        if (semblable(premier.textContent, resume) ||
+            (normaliser(premier.textContent).startsWith("à la veille de recevoir") &&
+             normaliser(resume).startsWith("à la veille de recevoir"))) premier.remove();
+        else premier.classList.add("interview-intro");
+    }
+    let questionVue = false;
+    [...bloc.querySelectorAll("p")].forEach(p => {
+        const txt = p.textContent.trim();
+        if (/^Manche Football Stats\s*:/i.test(txt) ||
+            (txt.endsWith("?") && (p.querySelector("strong, b") || /^(Avec|Vous|Demain|Au-delà|Face à|Comment|Quel|Quelle|Quels|Quelles|Pourquoi|Pensez-vous|Selon vous)\b/i.test(txt)))) {
+            p.classList.add("interview-question");
+            questionVue = true;
+        } else if (/^Maxime(?:\s+coach de Sourdeval)?\s*:/i.test(txt)) {
+            p.classList.add("interview-speaker");
+        } else if (questionVue && /^[«“]/.test(txt)) {
+            p.classList.add("interview-answer");
+        }
+    });
+    return bloc.innerHTML;
+}
+
 function genererArticlesLies(indexActuel) {
     const actuel = articlesData[indexActuel];
     if (!actuel || articlesData.length <= 1) return "";
@@ -4181,7 +4221,10 @@ function ouvrirArticle(index, majUrl = true) {
     const titre = echapperHtml(valeur(a, ["Titre", "titre"]) || "Article");
     const resume = echapperHtml(valeur(a, ["Résumé", "Resume", "résumé", "resume"]));
     const categorie = echapperHtml(valeur(a, ["Catégorie", "Categorie", "catégorie", "categorie"]) || "Article");
-    const contenu = formaterContenuArticle(valeur(a, ["Contenu", "Article", "contenu", "article"]));
+    let contenu = formaterContenuArticle(valeur(a, ["Contenu", "Article", "contenu", "article"]));
+    if (/interview/i.test(valeur(a, ["Catégorie", "Categorie", "catégorie", "categorie"]))) {
+        contenu = nettoyerMiseEnPageInterview(contenu, titre, resume);
+    }
     const image = valeur(a, ["Image", "image", "URL image", "Url image"]);
 
     const cible = document.getElementById("articleLectureContenu");
@@ -4695,7 +4738,8 @@ function ouvrirActualitesUnifiees() {
   // Afficher immédiatement la rubrique : le clic doit toujours répondre.
   afficherSection("actualites");
   const sectionActualites = document.getElementById("actualites");
-  if (sectionActualites) sectionActualites.style.display = "block";
+  // Ne pas forcer display:block : cela empêchait la lecture des articles de masquer le fil.
+  if (sectionActualites) sectionActualites.style.removeProperty("display");
 
   // Charger les deux sources sans bloquer l'affichage.
   try {
@@ -4734,7 +4778,7 @@ function mfsValeur(obj, noms) {
 }
 
 function mfsDateValeur(txt) {
-  const v = String(txt || "").trim();
+  const v = String(txt || "").trim().replace(/(\d{1,2})h(\d{2})\b/gi, "$1:$2");
   // Formats français jj/mm/aaaa et jj-mm-aaaa, avec heure facultative.
   const fr = v.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
   if (fr) return new Date(+fr[3], +fr[2]-1, +fr[1], +(fr[4]||0), +(fr[5]||0)).getTime();
@@ -4776,6 +4820,18 @@ function ouvrirInfoMFS(carte) {
   fermer.focus();
 }
 
+function ouvrirElementFilMFS(event, bouton) {
+  event.stopPropagation();
+  const indexArticle = bouton.getAttribute("data-article-index");
+  if (indexArticle !== null) {
+    ouvrirArticle(Number(indexArticle));
+    return;
+  }
+  const conteneur = document.getElementById("mfsFilActualite");
+  const item = conteneur?._mfsActions?.[Number(bouton.dataset.feedIndex)];
+  if (item && typeof item.action === "function") item.action();
+}
+
 function rendreFilMFS() {
   const section = document.getElementById("actualites");
   if (!section) return;
@@ -4803,6 +4859,7 @@ function rendreFilMFS() {
         categorie:mfsValeur(a, ["Catégorie","Categorie","catégorie","categorie"]) || "Article",
         titre:mfsValeur(a, ["Titre","titre"]) || "Article",
         resume:mfsValeur(a, ["Résumé","Resume","résumé","resume"]),
+        articleIndex:index,
         action:() => ouvrirArticle(index)
       });
     });
@@ -4847,16 +4904,14 @@ function rendreFilMFS() {
   }
 
   conteneur.innerHTML = filtres.map((i, idx) => `
-    <button type="button" class="mfs-feed-item" data-feed-index="${idx}">
+    <button type="button" class="mfs-feed-item" data-feed-index="${idx}" onclick="ouvrirElementFilMFS(event, this)" ${i.type === "articles" ? `data-article-index="${i.articleIndex}"` : ""}>
       <div class="mfs-feed-meta">${echapperHtml(i.date || "")}${i.date ? " · " : ""}<span class="mfs-feed-dot"></span>${echapperHtml(i.categorie)}${i.type==="articles" ? " · Article" : ""}</div>
       <div class="mfs-feed-title">${echapperHtml(i.titre)}</div>
       ${i.resume ? `<div class="mfs-feed-summary">${echapperHtml(i.resume)}</div>` : ""}
     </button>
   `).join("");
 
-  conteneur.querySelectorAll(".mfs-feed-item").forEach((el, idx) => {
-    el.addEventListener("click", () => filtres[idx].action());
-  });
+  conteneur._mfsActions = filtres;
 }
 
 function filtrerActualites(type, bouton) {
