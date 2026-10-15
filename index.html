@@ -2111,6 +2111,11 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 
     <h2>📊 Stats</h2>
 
+    <div class="classement-tabs" aria-label="Catégorie des statistiques">
+      <button type="button" id="statsMasculin" class="active" onclick="changerModeStats('masculin')">♂ Masculin</button>
+      <button type="button" id="statsFem11" onclick="changerModeStats('fem11')">♀ Féminin à 11</button>
+      <button type="button" id="statsFem8" onclick="changerModeStats('fem8')">♀ Féminin à 8</button>
+    </div>
     <select id="pouleStats" onchange="afficherStats()">
         <option value="D1 A">D1 A</option>
         <option value="D1 B">D1 B</option>
@@ -2128,6 +2133,10 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
         <option value="D4 D">D4 D</option>
         <option value="D4 E">D4 E</option>
         <option value="D4 F">D4 F</option>
+    </select>
+    <select id="pouleStatsFem" onchange="afficherStats()" style="display:none">
+      <option value="A">Poule A</option>
+      <option value="B">Poule B</option>
     </select>
 
     <div id="statsResult"><div class="loading">Chargement des statistiques...</div></div>
@@ -2779,7 +2788,75 @@ function telechargerClassementImage() {
     }
 }
 
+let modeStats = "masculin";
+function changerModeStats(mode) {
+    modeStats = mode;
+    ["masculin", "fem11", "fem8"].forEach(m => {
+        const id = {masculin:"statsMasculin", fem11:"statsFem11", fem8:"statsFem8"}[m];
+        document.getElementById(id).classList.toggle("active", mode === m);
+    });
+    document.getElementById("pouleStats").style.display = mode === "masculin" ? "" : "none";
+    const selectFem = document.getElementById("pouleStatsFem");
+    selectFem.style.display = mode === "masculin" ? "none" : "";
+    if (mode !== "masculin") {
+        const ancienne = selectFem.value;
+        const poules = mode === "fem8" ? ["A", "B", "C"] : ["A", "B"];
+        selectFem.innerHTML = poules.map(p => `<option value="${p}">Poule ${p}</option>`).join("");
+        selectFem.value = poules.includes(ancienne) ? ancienne : "A";
+    }
+    afficherStats();
+}
+function afficherStatsFeminines() {
+    const cible = document.getElementById("statsResult");
+    if (!femininesLoaded) {
+        cible.innerHTML = '<div class="loading">Chargement des statistiques féminines…</div>';
+        chargerFeminines().then(() => { if (modeStats !== "masculin" && femininesLoaded) afficherStatsFeminines(); });
+        return;
+    }
+    const poule = document.getElementById("pouleStatsFem").value;
+    const classement = modeStats === "fem8" ? classementFoot8Data : classementFemininsData;
+    const matchs = modeStats === "fem8" ? matchsFoot8Data : matchsFemData;
+    const lignes = classement.filter(r => femPoule(r) === poule && femNombre(r.MJ) > 0);
+    const rencontres = matchs.filter(m => femPoule(m) === poule && femEstTermine(m));
+    const equipe = v => normaliserClub(String(v || ""));
+    const exterieur = m => m["Extérieur"] ?? m.Exterieur ?? "";
+    const detail = lignes.map(r => {
+        const club = String(r.Club || "").trim();
+        const joues = rencontres.filter(m => equipe(m.Domicile) === equipe(club) || equipe(exterieur(m)) === equipe(club));
+        const clean = joues.filter(m => equipe(m.Domicile) === equipe(club) ? femNombre(m["Score E"]) === 0 : femNombre(m["Score D"]) === 0).length;
+        const ordre = [...joues].sort((a,b) => convertirDate(b.Date)-convertirDate(a.Date) || femNombre(b["Journée"] ?? b.Journee)-femNombre(a["Journée"] ?? a.Journee));
+        const resultats = ordre.map(m => { const dom = equipe(m.Domicile) === equipe(club); const bp = femNombre(m[dom ? "Score D" : "Score E"]); const bc = femNombre(m[dom ? "Score E" : "Score D"]); return bp > bc ? "V" : bp === bc ? "N" : "D"; });
+        let serieV = 0, serieInv = 0;
+        for (const x of resultats) { if (x === "V") serieV++; else break; }
+        for (const x of resultats) { if (x !== "D") serieInv++; else break; }
+        return {...r, clean, serieV, serieInv};
+    });
+    const num = v => femNombre(v).toLocaleString("fr-FR",{maximumFractionDigits:2});
+    const club = r => femTexte(r.Club);
+    const espace = '<div style="height:25px"></div>';
+    function tableau(titre, cle, libelle, croissant = false) {
+        const liste = [...detail].sort((a,b) => (croissant ? femNombre(a[cle])-femNombre(b[cle]) : femNombre(b[cle])-femNombre(a[cle])) || String(a.Club).localeCompare(String(b.Club),"fr"));
+        return `<h3>${titre}</h3><div class="table-container"><table><thead><tr><th>Pos</th><th>Club</th><th>${libelle}</th></tr></thead><tbody>` + (liste.length ? liste.map((r,i) => `<tr><td><strong>${i+1}</strong></td><td>${club(r)}</td><td><strong>${num(r[cle])}</strong></td></tr>`).join("") : '<tr><td colspan="3">Aucune statistique disponible.</td></tr>') + '</tbody></table></div>';
+    }
+    function tableauSeries(titre, cle) {
+        const liste = detail.filter(r => rencontres.some(m => equipe(m.Domicile) === equipe(r.Club) || equipe(exterieur(m)) === equipe(r.Club)))
+            .sort((a,b) => femNombre(b[cle])-femNombre(a[cle]) || String(a.Club).localeCompare(String(b.Club),"fr"));
+        return `<h3>${titre}</h3><div class="table-container"><table><thead><tr><th>Pos</th><th>Club</th><th>Matchs consécutifs</th></tr></thead><tbody>` + (liste.length ? liste.map((r,i) => `<tr><td>${i+1}</td><td>${club(r)}</td><td><strong>${num(r[cle])}</strong></td></tr>`).join("") : '<tr><td colspan="3">Aucun match terminé disponible.</td></tr>') + '</tbody></table></div>';
+    }
+    const clean = [...detail].sort((a,b) => b.clean-a.clean || String(a.Club).localeCompare(String(b.Club),"fr"));
+    const htmlClean = `<h3>🧤 Clean sheets</h3><div class="table-container"><table><thead><tr><th>Pos</th><th>Club</th><th>MJ</th><th>Clean sheets</th><th>%</th></tr></thead><tbody>` + (clean.length ? clean.map((r,i) => `<tr><td><strong>${i+1}</strong></td><td>${club(r)}</td><td>${num(r.MJ)}</td><td><strong>${r.clean}</strong></td><td>${r.MJ ? num(r.clean/femNombre(r.MJ)*100) : '0'} %</td></tr>`).join("") : '<tr><td colspan="5">Aucune statistique disponible.</td></tr>') + '</tbody></table></div>';
+    cible.innerHTML = `<p class="info-note">Football féminin · ${modeStats === "fem8" ? "Foot à 8" : "Foot à 11"} · Poule ${poule}. Statistiques issues des classements et des matchs enregistrés. Les clean sheets et séries dépendent des scores disponibles.</p>` +
+      htmlClean + espace +
+      tableau('⚽ Meilleures attaques','BP','Buts marqués') + espace +
+      (() => { const liste = [...detail].filter(r => femNombre(r.MJ) > 0).sort((a,b) => femNombre(b.BP)/femNombre(b.MJ)-femNombre(a.BP)/femNombre(a.MJ) || String(a.Club).localeCompare(String(b.Club),'fr')); return `<h3>📊 Moyenne de buts par match</h3><div class="table-container"><table><thead><tr><th>Pos</th><th>Club</th><th>MJ</th><th>Buts</th><th>Buts/match</th></tr></thead><tbody>` + (liste.length ? liste.map((r,i) => `<tr><td>${i+1}</td><td>${club(r)}</td><td>${num(r.MJ)}</td><td>${num(r.BP)}</td><td><strong>${(femNombre(r.BP)/femNombre(r.MJ)).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})}</strong></td></tr>`).join('') : '<tr><td colspan="5">Aucune statistique disponible.</td></tr>') + '</tbody></table></div>'; })() + espace +
+      tableau('🛡️ Meilleures défenses','BC','Buts encaissés',true) + espace +
+      tableau('🏆 Plus de victoires','V','Victoires') + espace +
+      tableauSeries('🔥 Série de victoires en cours','serieV') + espace +
+      tableauSeries('🛡️ Série d’invincibilité en cours','serieInv');
+}
+
 function afficherStats() {
+    if (modeStats !== "masculin") { afficherStatsFeminines(); return; }
     const select = document.getElementById("pouleStats");
     const cible = document.getElementById("statsResult");
     if (!select || !cible) return;
@@ -2937,6 +3014,8 @@ function afficherStats() {
         tableauCleanSheets() +
         `<div style="height:25px"></div>` +
         tableau(attaques, "⚽ Meilleures attaques", "BP", "Buts marqués") +
+        `<div style="height:25px"></div>` +
+        (() => { const liste = [...data].filter(r => Number(r.MJ)>0).sort((a,b) => (Number(b.BP)||0)/Number(b.MJ)-(Number(a.BP)||0)/Number(a.MJ) || String(a.Club).localeCompare(String(b.Club),'fr')); return `<h3>📊 Moyenne de buts par match</h3><div class="table-container"><table><thead><tr><th>Pos</th><th>Club</th><th>MJ</th><th>Buts</th><th>Buts/match</th></tr></thead><tbody>` + (liste.length ? liste.map((r,i) => `<tr><td>${i+1}</td><td>${lienClub(r.Club,poule)}</td><td>${Number(r.MJ)}</td><td>${Number(r.BP)||0}</td><td><strong>${((Number(r.BP)||0)/Number(r.MJ)).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})}</strong></td></tr>`).join('') : '<tr><td colspan="5">Aucune statistique disponible.</td></tr>') + '</tbody></table></div>'; })() +
         `<div style="height:25px"></div>` +
         tableau(defenses, "🛡️ Meilleures défenses", "BC", "Buts encaissés") +
         `<div style="height:25px"></div>` +
