@@ -517,6 +517,8 @@ footer{padding:25px 15px}
 }
 
 
+/* Respecter les éléments masqués même lorsque leurs classes utilisent display:flex/grid */
+.mon-club-card [hidden]{display:none!important}
 /* --- Mon club : favori mémorisé sur l’appareil --- */
 .mon-club-card{margin:18px 0;padding:20px;border:1px solid #cfe9dc;border-radius:20px;background:linear-gradient(135deg,#fff 0%,#f2fff8 100%);box-shadow:0 8px 24px rgba(8,42,61,.07)}
 .mon-club-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.mon-club-head h2{margin:4px 0 4px;font-size:1.35rem}.mon-club-head p{margin:0;color:#617282}.mon-club-kicker{font-size:.75rem;font-weight:900;letter-spacing:.08em;color:#07894e}.mon-club-change{border:0;background:#e7f8ef;color:#087a49;font-weight:800;border-radius:999px;padding:9px 13px;cursor:pointer}.mon-club-choice{display:flex;gap:10px;margin-top:16px}.mon-club-choice select{flex:1;min-width:0}.mon-club-choice button{border:0;border-radius:12px;padding:0 18px;background:#07894e;color:#fff;font-weight:800;cursor:pointer}.mon-club-resume{margin-top:16px}.mon-club-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.mon-club-stat{padding:14px;border-radius:15px;background:#fff;border:1px solid #dfece6}.mon-club-stat small{display:block;color:#73818d;margin-bottom:5px}.mon-club-stat strong{display:block;color:#0b2b40;line-height:1.25}.mon-club-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.mon-club-actions button{border:0;border-radius:999px;padding:9px 13px;background:#0b2b40;color:#fff;font-weight:750;cursor:pointer}
@@ -1827,11 +1829,92 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
   .article-reader-body.article-rich h3{margin:24px 0 12px;padding-left:11px}
 }
 
+
+/* Accueil éditorial 2026 — n'affecte pas les autres rubriques */
+.mfs-home-editorial,.mfs-latest-home{margin:0 0 20px}.mfs-editorial-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 13px}.mfs-editorial-heading span{font-size:10px;font-weight:900;letter-spacing:1.5px;color:#087b42}.mfs-editorial-heading h2{margin:3px 0 0;color:#10263c;font-size:23px}.mfs-editorial-heading button{background:white;border:1px solid #d4e7dd;color:#087b42;padding:10px 13px;border-radius:9px;cursor:pointer;font-weight:800}.mfs-editorial-grid{display:grid;grid-template-columns:1.65fr 1fr;grid-template-rows:repeat(3,minmax(100px,1fr));gap:12px;min-height:365px}.mfs-editorial-card{position:relative;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;text-align:left;border:0;border-radius:15px;background:linear-gradient(120deg,#0b2338,#0d6044);color:white;min-height:100px;padding:17px;cursor:pointer;isolation:isolate}.mfs-editorial-card:first-child{grid-row:span 3;padding:25px}.mfs-editorial-card:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#061826f2,#06182620);z-index:-1}.mfs-editorial-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}.mfs-editorial-card .category{font-size:10px;font-weight:900;color:#a1f2c4;text-transform:uppercase;letter-spacing:.5px}.mfs-editorial-card strong{font-size:16px;line-height:1.25;margin-top:7px}.mfs-editorial-card:first-child strong{font-size:clamp(23px,3vw,36px)}.mfs-editorial-card .summary{font-size:13px;line-height:1.45;color:#e4f0e9;margin-top:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.mfs-editorial-card .read{font-size:12px;color:#a1f2c4;margin-top:12px;font-weight:800}.mfs-editorial-loading{grid-column:1/-1;background:#fff;padding:30px;border-radius:15px;color:#64748b}.mfs-latest-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.mfs-latest-card{background:#fff;border:1px solid #dfe9e4;border-radius:13px;padding:17px;text-align:left;cursor:pointer;min-height:130px;display:flex;flex-direction:column;gap:9px}.mfs-latest-card small{color:#087b42;font-size:11px;font-weight:800}.mfs-latest-card strong{color:#10263c;font-size:16px;line-height:1.3}.mfs-latest-card span{font-size:12px;color:#64748b;line-height:1.4}.mfs-latest-card:hover,.mfs-editorial-card:hover{outline:2px solid #40b67a}.mfs-latest-home{margin-top:20px}
+@media(max-width:700px){.mfs-editorial-grid{grid-template-columns:1fr;grid-template-rows:auto;min-height:0}.mfs-editorial-card:first-child{grid-row:auto;min-height:260px;padding:20px}.mfs-editorial-card:not(:first-child){min-height:105px}.mfs-editorial-card:first-child strong{font-size:25px}.mfs-latest-grid{grid-template-columns:1fr}.mfs-latest-card{min-height:0}.mfs-editorial-heading h2{font-size:20px}.mfs-editorial-heading button{font-size:11px;padding:8px}}
+
+/* Refonte À la Une : visuels, hiérarchie et miniatures — octobre 2026 */
+.mfs-editorial-grid{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);grid-template-rows:repeat(3,minmax(112px,1fr));gap:13px;min-height:405px}
+.mfs-editorial-card{border-radius:14px;padding:0;min-width:0;background:linear-gradient(135deg,#10263c,#164e40);box-shadow:0 4px 15px #10263c19;transition:transform .18s,box-shadow .18s}
+.mfs-editorial-card:hover{transform:translateY(-2px);box-shadow:0 10px 25px #10263c2a}
+.mfs-editorial-card::before{display:none}
+.mfs-editorial-card:first-child{padding:0;grid-row:span 3;min-height:405px}
+.mfs-editorial-card .mfs-cover{position:absolute;inset:0;z-index:-2;overflow:hidden}
+.mfs-editorial-card .mfs-cover img{width:100%;height:100%;object-fit:cover;position:static;display:block;transition:transform .35s}
+.mfs-editorial-card:hover .mfs-cover img{transform:scale(1.035)}
+.mfs-editorial-card .mfs-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#071927f5 0%,#071927bf 42%,#07192728 100%)}
+.mfs-editorial-card .mfs-editorial-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;width:100%;height:100%;padding:17px;text-align:left}
+.mfs-editorial-card:first-child .mfs-editorial-content{padding:26px}
+.mfs-editorial-card .category{display:inline-block;background:#087b42;color:#fff;padding:5px 9px;border-radius:6px;font-size:10px;letter-spacing:.5px}
+.mfs-editorial-card strong{font-size:clamp(14px,1.45vw,18px);line-height:1.3;text-wrap:pretty}
+.mfs-editorial-card:first-child strong{font-size:clamp(24px,2.8vw,36px);line-height:1.15}
+.mfs-editorial-card .summary{font-size:13px;max-width:65ch}
+.mfs-editorial-card .read{display:inline-flex;align-items:center;margin-top:15px;background:#078b4d;color:white;padding:10px 14px;border-radius:9px}
+@media(min-width:701px){.mfs-editorial-card:not(:first-child) .mfs-cover{inset:0 auto 0 0;width:36%}.mfs-editorial-card:not(:first-child) .mfs-cover::after{background:linear-gradient(90deg,transparent,#0b2338 100%)}.mfs-editorial-card:not(:first-child) .mfs-editorial-content{padding:13px 13px 13px 40%;background:linear-gradient(90deg,transparent,#0b2338aa 55%)}.mfs-editorial-card:not(:first-child):has(.mfs-no-image) .mfs-editorial-content{padding-left:17px}}
+@media(max-width:700px){.mfs-editorial-grid{grid-template-columns:1fr;grid-template-rows:auto;min-height:0;gap:9px}.mfs-editorial-card:first-child{min-height:300px;grid-row:auto}.mfs-editorial-card:not(:first-child){min-height:120px}.mfs-editorial-card:first-child .mfs-editorial-content{padding:19px}.mfs-editorial-card:first-child strong{font-size:clamp(22px,6vw,29px)}.mfs-editorial-card:not(:first-child) .mfs-editorial-content{padding:14px 15px}.mfs-editorial-card .summary{font-size:12px}}
+
+
+/* Mon Club — tableau de bord MFS, version 3 */
+.mon-club-card{background:#fff;border:1px solid #dbe8e1;border-radius:16px;padding:0;overflow:hidden;box-shadow:0 5px 22px #10263c12}
+.mon-club-head{background:linear-gradient(110deg,#10263c,#173c3a);color:white;padding:20px 23px;align-items:center}
+.mon-club-kicker{color:#79e6ab;font-size:11px;letter-spacing:1.5px}
+.mon-club-head h2{color:white;font-size:23px;margin:7px 0 5px}
+.mon-club-head p{color:#c8ded6;font-size:12px}
+.mon-club-change{background:#ffffff18;color:white;border:1px solid #ffffff35;border-radius:8px}
+.mon-club-choice{padding:18px 22px;margin:0;align-items:flex-start}
+.mon-club-choice select{margin:0;max-width:none}
+.mon-club-choice button{min-height:46px;border-radius:9px}
+.mon-club-resume{margin:0;padding:18px}
+.mon-club-dashboard{display:grid;grid-template-columns:220px minmax(0,1fr);gap:17px;align-items:start}
+.mon-club-sidebar{background:#f4f8f6;border:1px solid #e0ebe5;border-radius:12px;padding:10px}
+.mon-club-side-label{display:block;padding:8px 10px 12px;font-size:10px;font-weight:900;letter-spacing:1.2px;color:#647b73;text-transform:uppercase}
+.mon-club-team-tab{display:block;width:100%;border:0;border-radius:9px;padding:12px 11px;text-align:left;background:transparent;color:#10263c;cursor:pointer;margin-bottom:4px;font:inherit}
+.mon-club-team-tab.active{background:#087b42;color:white;box-shadow:0 3px 8px #087b4225}
+.mon-club-team-tab strong{display:block;font-size:13px}
+.mon-club-team-tab small{display:block;font-size:11px;margin-top:5px;opacity:.75}
+.mon-club-main{min-width:0}
+.mon-club-main-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.mon-club-main-title strong{font-size:16px;color:#10263c}
+.mon-club-main-title span{font-size:11px;color:#657b70}
+.mon-club-dashboard .mon-club-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.mon-club-dashboard .mon-club-stat{padding:17px;border-radius:11px;border:1px solid #e0eae5;background:#fbfdfc;min-height:104px}
+.mon-club-dashboard .mon-club-stat small{font-size:11px;font-weight:800;color:#5f776b;margin-bottom:10px}
+.mon-club-dashboard .mon-club-stat strong{font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.mon-club-dashboard .mon-club-stat strong small{font-size:11px;font-weight:500;margin-top:5px}
+.mon-club-dashboard .mon-club-equipe-link{text-align:left;margin-top:14px}
+.mon-club-dashboard .mon-club-equipe-link button{background:#10263c;color:white;border-radius:8px;padding:11px 15px}
+.mon-club-actions{margin-top:16px;padding-top:14px;border-top:1px solid #e6eee9}
+.mon-club-actions button{border-radius:8px}
+@media(max-width:700px){.mon-club-head{padding:16px}.mon-club-head h2{font-size:19px}.mon-club-resume{padding:12px}.mon-club-dashboard{grid-template-columns:1fr;gap:12px}.mon-club-sidebar{display:flex;gap:7px;overflow-x:auto;padding:8px}.mon-club-side-label{display:none}.mon-club-team-tab{flex:0 0 auto;width:auto;min-width:115px;margin:0;padding:10px}.mon-club-dashboard .mon-club-grid{gap:8px}.mon-club-dashboard .mon-club-stat{padding:11px;min-height:105px}.mon-club-dashboard .mon-club-stat strong{font-size:12px}.mon-club-choice{padding:14px;flex-direction:column}.mon-club-choice button{width:100%}}
+
+
+/* Mon Club — finitions professionnelles */
+.mon-club-dashboard .mon-club-team-tab{border:1px solid transparent;font-weight:800}
+.mon-club-dashboard .mon-club-team-tab.active{border-color:#087b42}
+.mon-club-dashboard .mon-club-main-title{padding-bottom:10px;border-bottom:1px solid #e3ebe7}
+.mon-club-dashboard .mon-club-stat:first-child,.mon-club-dashboard .mon-club-stat:nth-child(2){background:#fff}
+.mfs-match-line{display:flex;align-items:center;justify-content:space-between;gap:9px;line-height:1.3}
+.mfs-match-line>span{flex:1;min-width:0;font-weight:700}
+.mfs-match-line>span:last-child{text-align:right}
+.mon-club-dashboard .mon-club-stat .mfs-match-score{flex:0 0 auto;display:inline-block;background:#10263c;color:white;border-radius:8px;padding:8px 10px;font-size:18px;white-space:nowrap}
+.mon-club-dashboard .mon-club-stat .mfs-match-date{display:block;margin-top:10px;color:#64748b;font-size:11px;font-weight:600}
+@media(max-width:700px){.mon-club-dashboard .mon-club-team-tab{min-width:125px}.mon-club-dashboard .mon-club-stat .mfs-match-score{font-size:15px;padding:7px}.mfs-match-line{gap:5px}.mfs-match-line>span{font-size:11px}}
 </style>
 
 
 
 
+<style>
+/* Mise en valeur du classement dans Mon Club */
+.mon-club-dashboard .mon-club-rank{background:#f1f8f4;border-color:#cfe5d8}
+.mfs-rank-layout{display:flex;align-items:center;gap:16px;min-height:62px}
+.mfs-rank-number{color:#087a49;font-size:48px;font-weight:900;line-height:1;letter-spacing:-2px;white-space:nowrap}
+.mfs-rank-number sup{font-size:18px;letter-spacing:0;vertical-align:super;margin-left:2px}
+.mfs-rank-details{display:flex;flex-direction:column;gap:4px;color:#526575;font-size:12px}
+.mfs-rank-details b{font-size:13px;color:#10263c}
+@media(max-width:700px){.mfs-rank-number{font-size:39px}.mfs-rank-layout{gap:12px}}
+</style>
 </head>
 
 <body>
@@ -1891,6 +1974,10 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 <main>
 
 <section id="accueil" class="section active">
+<div class="mfs-home-editorial" aria-label="Articles à la Une">
+  <div class="mfs-editorial-heading"><div><span>LE FOOTBALL MANCHOIS À LA UNE</span><h2>À la Une</h2></div><button type="button" onclick="afficherSection('actualites')">Toutes les publications →</button></div>
+  <div id="mfsHomeHeadlines" class="mfs-editorial-grid"><div class="mfs-editorial-loading">Chargement des articles…</div></div>
+</div>
 
 
 <div class="install-app" id="installAppBox" aria-label="Installer Manche Football Stats">
@@ -1948,13 +2035,7 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 
 
 <!-- Emplacement publicitaire réservé : invisible tant qu’aucune publicité n’est activée. -->
-<section class="contribution-accueil" aria-label="Participer à Manche Football Stats">
-  <div class="contribution-accueil-copy">
-    <strong>✍️ Une information à partager ?</strong>
-    <span>Résultats, buteurs, cartons ou actualités de votre club : contribuez à MFS.</span>
-  </div>
-  <button type="button" onclick="ouvrirFormulaireContribution()">Contribuer <span aria-hidden="true">→</span></button>
-</section>
+
 
 <div class="ad-slot" id="pubAccueilHaut" hidden></div>
 
@@ -1988,6 +2069,14 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
   
 </section>
 
+<section class="mfs-latest-home" aria-label="Dernières actualités"><div class="mfs-editorial-heading"><div><span>LE FIL MFS</span><h2>Dernières actualités</h2></div><button type="button" onclick="afficherSection('actualites')">Voir tout →</button></div><div id="mfsHomeLatest" class="mfs-latest-grid"><p>Chargement des actualités…</p></div></section>
+<section class="contribution-accueil" aria-label="Participer à Manche Football Stats">
+  <div class="contribution-accueil-copy">
+    <strong>✍️ Une information à partager ?</strong>
+    <span>Résultats, buteurs, cartons ou actualités de votre club : contribuez à MFS.</span>
+  </div>
+  <button type="button" onclick="ouvrirFormulaireContribution()">Contribuer <span aria-hidden="true">→</span></button>
+</section>
 </section>
 
 <section id="actualites" class="section">
@@ -4411,6 +4500,7 @@ async function chargerArticles() {
         if (!articles.length) {
             cible.innerHTML = '<div class="message">Aucun article publié pour le moment.</div>';
             articlesLoaded = true;
+            rendreAccueilEditorial();
             return;
         }
 
@@ -4446,6 +4536,7 @@ async function chargerArticles() {
         }).join("");
 
         articlesLoaded = true;
+        rendreAccueilEditorial();
     } catch (error) {
         cible.innerHTML = '<div class="message">Impossible de charger les articles. Vérifie l’onglet « Articles » et le déploiement Apps Script.</div>';
         console.error("Articles :", error);
@@ -4486,6 +4577,7 @@ async function chargerActualites() {
             }).join('') : '<div class="accueil-news-message">Aucune actualité publiée pour le moment.</div>';
         }
         actualitesLoaded = true;
+        rendreFilMFS();
     } catch (error) {
         cible.innerHTML = '<div class="message">Impossible de charger les actualités. Vérifie le déploiement Apps Script et l’onglet « Actualites ».</div>';
         const accueilNews = document.getElementById('accueilNewsList');
@@ -4719,7 +4811,17 @@ function majChiffresCles(){
 }
 
 initialiserAccueil();
-chargerActualites();
+// Accueil éditorial : charger les deux sources dès l'ouverture.
+Promise.allSettled([chargerActualites(), chargerArticles()]).then(() => {
+    try { rendreFilMFS(); rendreAccueilEditorial(); }
+    catch (e) { console.error('Accueil éditorial :', e); }
+    const titres = document.getElementById('mfsHomeHeadlines');
+    const recents = document.getElementById('mfsHomeLatest');
+    if (titres && /Chargement des articles/.test(titres.textContent))
+        titres.innerHTML = '<div class="mfs-editorial-loading">Articles indisponibles pour le moment. Vérifiez la connexion aux données.</div>';
+    if (recents && /Chargement des actualités/.test(recents.textContent))
+        recents.innerHTML = '<p>Actualités indisponibles pour le moment. Vérifiez la connexion aux données.</p>';
+});
 chargerClassements();
 chargerStatsEquipes();
 chargerButeurs();
@@ -4781,7 +4883,20 @@ function changerMonClub(){
     if(select){ const o=Array.from(select.options).find(x=>cleClubPrincipal(x.value)===cleClubPrincipal(favori)); if(o) select.value=o.value; }
 }
 function ouvrirClubFavori(equipe){
-    afficherSection('clubs'); setTimeout(()=>{ const sel=document.getElementById('clubSelect'); if(!sel) return; const option=Array.from(sel.options).find(o=>normaliserClub(o.value)===normaliserClub(equipe)); if(option){sel.value=option.value; if(typeof afficherFicheClub==='function') afficherFicheClub();}},0);
+    // La fiche utilise les sélecteurs pouleClubs et clubChoisi (et non clubSelect).
+    const ligne=classementData.find(r=>normaliserClub(r.Club)===normaliserClub(equipe));
+    const poule=ligne?.Poule || matchsData.find(m=>[m.Domicile,m.Exterieur].some(n=>normaliserClub(n)===normaliserClub(equipe)))?.Poule;
+    afficherSection('clubs');
+    const selectPoule=document.getElementById('pouleClubs');
+    const selectClub=document.getElementById('clubChoisi');
+    if(!selectPoule||!selectClub||!poule) return;
+    const optionPoule=Array.from(selectPoule.options).find(o=>normaliserPoule(o.value)===normaliserPoule(poule));
+    if(!optionPoule) return;
+    selectPoule.value=optionPoule.value;
+    actualiserChoixClubs();
+    const optionClub=Array.from(selectClub.options).find(o=>normaliserClub(o.value)===normaliserClub(equipe));
+    if(optionClub){selectClub.value=optionClub.value;afficherFicheClub();}
+    document.getElementById('ficheClubResult')?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function resumeEquipeMonClub(equipe){
     const n=normaliserClub(equipe), aujourdHui=new Date(); aujourdHui.setHours(0,0,0,0);
@@ -4789,27 +4904,50 @@ function resumeEquipeMonClub(equipe){
     const termines=matchs.filter(matchTermine).sort((a,b)=>convertirDate(b.Date)-convertirDate(a.Date));
     const futurs=matchs.filter(m=>!matchTermine(m)&&convertirDate(m.Date)>=aujourdHui&&!/annul|report|forfait/i.test(String(m.Statu||m.Statut||''))).sort((a,b)=>convertirDate(a.Date)-convertirDate(b.Date));
     const classement=classementData.find(r=>normaliserClub(r.Club)===n);
+    // Position automatique : même filtre et même tri que l’onglet Classements.
+    // La feuille Classement peut ne pas avoir de colonne Competition : ne pas en dépendre.
+    const rangEquipe = classement ? classementData
+      .filter(r => normaliserPoule(r.Poule) === normaliserPoule(classement.Poule))
+      .slice()
+      .sort((a,b) => (Number(b.Pts)||0)-(Number(a.Pts)||0) ||
+                     (Number(b.Diff)||0)-(Number(a.Diff)||0) ||
+                     (Number(b.BP)||0)-(Number(a.BP)||0)) : [];
+    const positionEquipe = rangEquipe.findIndex(r => normaliserClub(r.Club) === n);
+    const texteClassement = classement ?
+      (positionEquipe >= 0 ? `${positionEquipe+1}${positionEquipe===0?'er':'e'} sur ${rangEquipe.length} · ` : '') +
+      `${echapperHtml(classement.Pts??0)} pts · ${echapperHtml(classement.Poule||'')}` : 'Non renseigné';
+    const classementVisuel = `<strong>${texteClassement}</strong>`;
     const buteurs=buteursData.filter(r=>normaliserClub(r.Club)===n).sort((a,b)=>(Number(b.Buts)||0)-(Number(a.Buts)||0));
     const meilleur=buteurs[0], dernier=termines[0], prochain=futurs[0];
     const competition=(classement&&(classement.Competition||classement['Compétition'])) || (matchs[0]&&(matchs[0].Competition||matchs[0]['Compétition'])) || '';
     const poule=(classement&&classement.Poule) || (matchs[0]&&matchs[0].Poule) || '';
-    const fmtMatch=(m,score)=>m?`${echapperHtml(m.Domicile||'')} ${score?'<b>'+echapperHtml(m['Score Dom.']||'0')+' – '+echapperHtml(m['Score Ext.']||'0')+'</b>':'–'} ${echapperHtml(m.Exterieur||'')}<small>${echapperHtml(m.Date||'')}</small>`:'Non renseigné';
-    const equipeJs=String(equipe).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    const fmtMatch=(m,score)=>m?`<span class="mfs-match-line"><span>${echapperHtml(m.Domicile||'')}</span><b class="mfs-match-score">${score?echapperHtml(m['Score Dom.']??'0')+' – '+echapperHtml(m['Score Ext.']??'0'):'VS'}</b><span>${echapperHtml(m.Exterieur||'')}</span></span><small class="mfs-match-date">${echapperHtml(m.Date||'')}</small>`:'Non renseigné';
     const principal=nomClubPrincipal(equipe);
     const suffixe=String(equipe).slice(principal.length).trim();
-    let numero='1';
-    const m=suffixe.match(/(?:\(|\s|^)([2-9])\)?/); if(m) numero=m[1];
-    const libelle='Équipe '+numero;
-    return `<div class="mon-club-equipe collapsed"><div class="mon-club-equipe-head" onclick="this.parentElement.classList.toggle('collapsed')"><div class="mon-club-equipe-title"><span class="mon-club-equipe-badge">${numero}</span><div><strong>${libelle}</strong><small>${echapperHtml([competition,poule].filter(Boolean).join(' · ')||'Équipe du club')}</small></div></div><button type="button" class="mon-club-equipe-toggle" aria-label="Afficher ou masquer les détails">⌄</button></div><div class="mon-club-equipe-body"><div class="mon-club-grid"><div class="mon-club-stat"><small>Dernier résultat</small><strong>${fmtMatch(dernier,true)}</strong></div><div class="mon-club-stat"><small>Prochain match</small><strong>${fmtMatch(prochain,false)}</strong></div><div class="mon-club-stat"><small>Classement</small><strong>${classement?echapperHtml(classement.Pts||0)+' pts · '+echapperHtml(classement.Poule||''):'Non renseigné'}</strong></div><div class="mon-club-stat"><small>Meilleur buteur</small><strong>${meilleur?echapperHtml(meilleur.Joueur||'Joueur')+' · '+echapperHtml(meilleur.Buts||0)+' but(s)':'Non renseigné'}</strong></div></div><div class="mon-club-equipe-link"><button type="button" onclick="event.stopPropagation();ouvrirClubFavori('${equipeJs}')">Voir la fiche →</button></div></div></div>`;
+    const m=suffixe.match(/(?:\(|\s|^)([2-9])\)?/);
+    const numero=m?m[1]:'1';
+    return {equipe,libelle:[competition,poule].filter(Boolean).join(' – ')||'Équipe '+numero,competition,poule,dernier:fmtMatch(dernier,true),prochain:fmtMatch(prochain,false),classement:texteClassement,classementVisuel,meilleur:meilleur?echapperHtml(meilleur.Joueur||'Joueur')+' · '+echapperHtml(meilleur.Buts??0)+' but(s)':'Non renseigné'};
+}
+let equipesTableauMonClub=[];
+function selectionnerEquipeMonClub(index){
+    const info=equipesTableauMonClub[index], cible=document.getElementById('monClubDashboard');
+    if(!info||!cible)return;
+    cible.querySelectorAll('.mon-club-team-tab').forEach((b,i)=>{b.classList.toggle('active',i===index);b.setAttribute('aria-selected',String(i===index));});
+    const panneau=cible.querySelector('.mon-club-main');
+    panneau.innerHTML=`<div class="mon-club-main-title"><strong>${echapperHtml(info.libelle)}</strong><span>Tableau de bord de l’équipe</span></div><div class="mon-club-grid"><div class="mon-club-stat"><small>DERNIER RÉSULTAT</small><strong>${info.dernier}</strong></div><div class="mon-club-stat"><small>PROCHAIN MATCH</small><strong>${info.prochain}</strong></div><div class="mon-club-stat mon-club-rank"><small>CLASSEMENT</small>${info.classementVisuel}</div><div class="mon-club-stat"><small>MEILLEUR BUTEUR</small><strong>${info.meilleur}</strong></div></div><div class="mon-club-equipe-link"><button type="button" id="monClubFicheBtn">Voir la fiche complète →</button></div>`;
+    panneau.querySelector('#monClubFicheBtn').addEventListener('click',()=>ouvrirClubFavori(info.equipe));
 }
 function afficherMonClub(club){
-    if(!club) return;
+    if(!club)return;
     const equipes=equipesDuClub(club), principal=nomClubPrincipal(club);
     document.getElementById('monClubTitre').textContent=principal;
     document.getElementById('monClubIntro').textContent=equipes.length>1?`${equipes.length} équipes suivies dans ce club`:'Votre résumé personnalisé';
-    document.getElementById('monClubChoix').hidden=true; document.getElementById('monClubChange').hidden=false;
-    const resume=document.getElementById('monClubResume'); resume.hidden=false;
-    resume.innerHTML=(equipes.length?equipes.map(resumeEquipeMonClub).join(''):'<div class="message">Aucune équipe trouvée pour ce club.</div>')+`<div class="mon-club-actions"><button onclick="afficherSection('resultats')">🗓️ Résultats</button><button onclick="afficherSection('buteurs')">🥅 Buteurs</button></div>`;
+    document.getElementById('monClubChoix').hidden=true;document.getElementById('monClubChange').hidden=false;
+    const resume=document.getElementById('monClubResume');resume.hidden=false;
+    equipesTableauMonClub=equipes.map(resumeEquipeMonClub);
+    resume.innerHTML=equipesTableauMonClub.length?`<div id="monClubDashboard" class="mon-club-dashboard"><div class="mon-club-sidebar" role="tablist" aria-label="Équipes du club"><span class="mon-club-side-label">Les équipes</span>${equipesTableauMonClub.map((e,i)=>`<button type="button" class="mon-club-team-tab" role="tab" aria-selected="false" data-index="${i}"><strong>${echapperHtml(e.libelle)}</strong></button>`).join('')}</div><div class="mon-club-main"></div></div>`:'<div class="message">Aucune équipe trouvée pour ce club.</div>';
+    const dashboard=document.getElementById('monClubDashboard');
+    if(dashboard){dashboard.querySelectorAll('.mon-club-team-tab').forEach(b=>b.addEventListener('click',()=>selectionnerEquipeMonClub(Number(b.dataset.index))));selectionnerEquipeMonClub(0);}
 }
 
 
@@ -5038,7 +5176,39 @@ function rendreFilMFS() {
   `).join("");
 
   conteneur._mfsActions = filtres;
+  rendreAccueilEditorial();
 }
+
+
+function rendreAccueilEditorial(){
+ const zone=document.getElementById('mfsHomeHeadlines');
+ const latest=document.getElementById('mfsHomeLatest');
+ if(!zone||!latest)return;
+ const valeur=(a,keys)=>{for(const k of keys)if(a[k]!=null&&String(a[k]).trim())return String(a[k]).trim();return '';};
+ const articles=Array.isArray(articlesData)?articlesData:[];
+ const esc=(v)=>echapperHtml(String(v||''));
+ if(articles.length){
+  zone.innerHTML=articles.slice(0,4).map((a,i)=>{
+   const titre=esc(valeur(a,['Titre','titre']));
+   const cat=esc(valeur(a,['Catégorie','Categorie','categorie'])||'Football manchois');
+   const resume=esc(valeur(a,['Résumé','Resume','resume']));
+   const url=valeur(a,['Image','image','URL image','Url image','Image URL','imageUrl','Photo','photo']);
+   const photo=/^https:\/\//i.test(url)
+     ? `<img src="${esc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`
+     : '<span class="mfs-no-image" aria-hidden="true"></span>';
+   return `<button type="button" class="mfs-editorial-card" onclick="ouvrirArticle(${i})" aria-label="Lire : ${titre}"><span class="mfs-cover">${photo}</span><span class="mfs-editorial-content"><span class="category">${cat}</span><strong>${titre}</strong>${i===0&&resume?`<span class="summary">${resume}</span>`:''}${i===0?'<span class="read">Lire l’article →</span>':''}</span></button>`;
+  }).join('');
+ }else if(articlesLoaded){zone.innerHTML='<div class="mfs-editorial-loading">Aucun article publié pour le moment.</div>';}
+ const fil=document.getElementById('mfsFilActualite');
+ const items=fil?._mfsActions||[];
+ // Les articles déjà présentés dans le bandeau principal sont exclus de ce bloc.
+ const autres=items.filter(x=>x.type!=='articles'||x.articleIndex>=4).slice(0,3);
+ if(autres.length){
+  latest.innerHTML=autres.map((x,i)=>`<button type="button" class="mfs-latest-card" onclick="ouvrirActualiteAccueil(${i})"><small>${esc(x.categorie)} · ${esc(x.date)}</small><strong>${esc(x.titre)}</strong><span>${esc(x.resume).slice(0,125)}</span></button>`).join('');
+  latest._actions=autres;
+ }else if(actualitesLoaded&&articlesLoaded){latest.innerHTML='<p>Les prochaines actualités apparaîtront ici.</p>';}
+}
+function ouvrirActualiteAccueil(i){const a=document.getElementById('mfsHomeLatest')?._actions?.[i];if(a&&typeof a.action==='function')a.action();}
 
 function filtrerActualites(type, bouton) {
   filtreFilMFS = type;
