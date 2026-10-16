@@ -1745,81 +1745,86 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 @media(max-width:700px){.article-rich .interview-question{padding:12px;margin-top:20px}.article-rich .interview-answer{padding-left:12px}}
 
 
-/* ===== MFS : présentation éditoriale avant-match ===== */
-.mfs-match-hero{padding:30px 24px;background:#10263c;color:#fff;text-align:center;border-bottom:3px solid #16834e}
-.mfs-match-kicker{font-size:11px;letter-spacing:1.6px;font-weight:800;color:#b8dfce;text-transform:uppercase}
-.mfs-match-teams{display:grid;grid-template-columns:minmax(0,1fr) 42px minmax(0,1fr);gap:14px;align-items:center;max-width:800px;margin:24px auto 16px;font-size:clamp(17px,2.4vw,26px);font-weight:800;line-height:1.25}
-.mfs-match-teams span{overflow-wrap:break-word}.mfs-match-versus{font-size:15px;color:#8ce1b2}
-.mfs-match-stakes{font-size:13px;letter-spacing:1.3px;font-weight:800;text-transform:uppercase;color:#fff}
-.mfs-match-detail{font-size:12px;margin-top:15px;color:#cbdce6}
-.article-reader-shell.mfs-feature .article-reader-header{padding-top:26px;padding-bottom:24px}
-.article-reader-shell.mfs-feature .article-reader-title{font-size:clamp(23px,3vw,34px);line-height:1.19;letter-spacing:-.5px;max-width:900px}
-.article-reader-shell.mfs-feature .article-reader-summary{font-size:15px;line-height:1.7}
-.mfs-comparison{margin:8px 42px 32px;background:#fff;border:1px solid #e0e8e5;border-radius:14px;overflow:hidden}
-.mfs-comparison h2{margin:0;padding:15px 18px;background:#10263c;color:white;font-size:17px;text-align:left}
-.mfs-comp-row{display:grid;grid-template-columns:minmax(0,1fr) 1.15fr minmax(0,1fr);align-items:center;gap:8px;padding:12px 14px;border-top:1px solid #edf1ef;text-align:center}
-.mfs-comp-row:nth-child(odd){background:#f6f9f7}.mfs-comp-row strong{font-size:20px;color:#10263c}.mfs-comp-row span{font-size:12px;color:#64748b}
-.mfs-comp-names{background:#eaf3ee!important}.mfs-comp-names span{font-weight:800;color:#10263c;font-size:12px}
-.mfs-feature .article-reader-body{line-height:1.85}.mfs-feature .article-reader-body p{margin:0 0 19px}
-.mfs-feature .article-reader-body h2,.mfs-feature .article-reader-body h3{margin-top:32px;margin-bottom:15px;line-height:1.35;color:#10263c}
-.mfs-stakes-note{margin:22px 0;padding:19px 21px;background:#f0f8f3;border-left:4px solid #16834e;border-radius:0 10px 10px 0}
-.mfs-stakes-note strong{display:block;margin-bottom:7px;color:#10263c;font-size:16px}.mfs-stakes-note p{margin:0!important;line-height:1.6}
-.mfs-practical{margin:22px 42px 34px;padding:20px 23px;border:1px solid #dce8e3;border-radius:12px;background:#f7faf8}
-.mfs-practical h2{margin:0 0 13px;color:#10263c;font-size:19px}.mfs-practical-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 18px}
-.mfs-practical-item small{display:block;color:#667785;font-size:11px;margin-bottom:3px}.mfs-practical-item strong{font-size:14px;color:#10263c}
-@media(max-width:700px){.mfs-match-hero{padding:23px 12px}.mfs-match-teams{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:7px;font-size:15px}.mfs-match-detail{font-size:11px}.mfs-comparison{margin:5px 12px 24px}.mfs-comparison h2{font-size:15px}.mfs-comp-row{padding:11px 5px;gap:4px}.mfs-comp-row strong{font-size:17px}.mfs-comp-row span,.mfs-comp-names span{font-size:10px}.mfs-practical{margin:20px 12px 28px;padding:16px}.mfs-practical-grid{grid-template-columns:1fr 1fr}.article-reader-shell.mfs-feature .article-reader-title{font-size:24px}}
+/* ===== MFS : présentation éditoriale 2026 ===== */
+.article-reader-shell{max-width:980px;margin:auto;border-radius:12px;background:#fff}
+.article-reader-header{padding:32px 42px 22px;border-bottom:1px solid #e7edf1;background:#fff}
+.article-reader-meta{color:#087b42;text-transform:uppercase;letter-spacing:1px;font-size:11px}
+.article-reader-title{font-size:clamp(27px,3.2vw,40px);letter-spacing:-.8px;line-height:1.15;max-width:850px}
+.article-reader-summary{font-size:17px;color:#40576a;line-height:1.7}
+.article-reader-body{padding:28px 42px 36px;font-size:16px;line-height:1.8}
+.article-reader-body h2{margin-top:34px;border-bottom:1px solid #dce8e3;padding-bottom:11px;font-size:23px}
+.article-reader-body h3{font-size:19px;color:#10263c}
+.mfs-match-hero{padding:32px 22px;text-align:center;background:linear-gradient(120deg,#091f33,#14354b);color:white}
+.mfs-match-kicker{font-size:12px;letter-spacing:2px;font-weight:800;color:#b9e8d0;text-transform:uppercase}
+.mfs-match-teams{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;max-width:780px;margin:25px auto;font-size:clamp(17px,2.7vw,29px);font-weight:900;line-height:1.15}
+.mfs-match-versus{color:#6cdda0;font-size:22px}
+.mfs-match-stakes{display:inline-block;background:#fff;color:#10263c;border-radius:5px;padding:9px 20px;font-weight:900;text-transform:uppercase;letter-spacing:.7px}
+.mfs-match-detail{font-size:13px;margin-top:18px;color:#d6e7f0}
+.mfs-comparison{margin:0 42px 24px;border:1px solid #dce8e3;border-radius:12px;overflow:hidden}
+.mfs-comparison h2{background:#10263c;color:#fff;text-align:center;font-size:18px;margin:0;padding:15px}
+.mfs-comp-row{display:grid;grid-template-columns:1fr 1.35fr 1fr;gap:6px;text-align:center;align-items:center;padding:12px 9px;border-top:1px solid #e7edf1}
+.mfs-comp-row:nth-child(odd){background:#f5f9f7}
+.mfs-comp-row strong{font-size:19px;color:#10263c}
+.mfs-comp-row span{font-size:12px;color:#5d7180}
+.mfs-comp-row.mfs-comp-names{background:#e9f3ee;font-weight:800}
+.mfs-comp-row.mfs-comp-names span{font-size:13px;color:#10263c}
+@media(max-width:700px){.article-reader-header{padding:22px 17px 17px}.article-reader-body{padding:18px 17px 26px;font-size:15px}.article-reader-title{font-size:26px}.mfs-match-hero{padding:24px 12px}.mfs-match-teams{gap:8px;font-size:16px}.mfs-match-versus{font-size:17px}.mfs-match-detail{font-size:11px}.mfs-comparison{margin:0 12px 20px}.mfs-comparison h2{font-size:16px}.mfs-comp-row{padding:10px 5px}.mfs-comp-row.mfs-comp-names span{font-size:11px}}
 
 
-/* ===== Manche Football Stats : édition presse sportive ===== */
-#articleLecture .article-reader-shell{background:#fff;border:1px solid #dce7e1;border-radius:15px;box-shadow:0 12px 38px #10263c12;overflow:hidden}
-#articleLecture .article-reader-header{padding:34px clamp(18px,5vw,58px) 25px;background:#fff;border-bottom:1px solid #e6eeea}
-#articleLecture .article-reader-meta{display:inline-block;font-size:11px;font-weight:900;letter-spacing:1.1px;text-transform:uppercase;color:#087b42;margin-bottom:16px}
-#articleLecture .article-reader-title{max-width:950px;font-size:clamp(25px,3.6vw,43px);line-height:1.14;letter-spacing:-.8px;color:#10263c;font-weight:900;margin:0 0 18px}
-#articleLecture .article-reader-summary{max-width:850px;font-size:clamp(15px,1.65vw,19px);line-height:1.65;color:#526577;font-weight:500;border-left:4px solid #0b9955;padding-left:17px}
-#articleLecture .article-reader-body{max-width:910px;margin:0 auto;padding:28px clamp(18px,4vw,42px) 40px;color:#273b4a;font-size:16px;line-height:1.8}
-#articleLecture .article-reader-body.article-rich p{font-size:16px;line-height:1.85;margin:0 0 21px;color:#344b5b;font-weight:400}
-#articleLecture .article-reader-body.article-rich h1,#articleLecture .article-reader-body.article-rich h2,#articleLecture .article-reader-body.article-rich h3{color:#10263c;font-weight:900;line-height:1.3;letter-spacing:-.3px;text-align:left}
-#articleLecture .article-reader-body.article-rich h1{font-size:27px;margin:34px 0 17px}
-#articleLecture .article-reader-body.article-rich h2{font-size:23px;margin:39px 0 18px;padding:0 0 11px;border-bottom:2px solid #e5efe9;position:relative}
-#articleLecture .article-reader-body.article-rich h2:after{content:"";position:absolute;bottom:-2px;left:0;width:54px;height:3px;background:#0a9c56}
-#articleLecture .article-reader-body.article-rich h3{font-size:20px;margin:33px 0 16px;padding-left:14px;border-left:4px solid #0a9c56}
-#articleLecture .article-reader-body.article-rich strong{color:#142f43;font-weight:800}
-#articleLecture .mfs-match-hero{padding:33px 20px 31px;background:linear-gradient(120deg,#081c2d,#15354a 65%,#0c4935);border-bottom:4px solid #12a663}
-#articleLecture .mfs-match-teams{margin:23px auto 18px;max-width:900px;gap:12px;font-size:clamp(16px,2.3vw,28px)}
-#articleLecture .mfs-match-versus{color:#5ae09a;font-weight:900}
-#articleLecture .mfs-match-stakes{display:inline-block;border:1px solid #ffffff50;border-radius:4px;padding:9px 17px;letter-spacing:1.5px}
-#articleLecture .mfs-comparison{margin:25px clamp(16px,5vw,60px) 10px;border:1px solid #dce8e2;border-radius:12px;box-shadow:0 5px 20px #10263c0b}
-#articleLecture .mfs-comparison h2{background:#10263c;color:#fff;padding:17px 20px;font-size:18px;letter-spacing:.1px}
-#articleLecture .mfs-comp-row{padding:13px 15px;grid-template-columns:minmax(0,1fr) 1.3fr minmax(0,1fr)}
-#articleLecture .mfs-comp-row strong{font-size:clamp(18px,2.5vw,25px);font-weight:900}
-#articleLecture .mfs-comp-row span{font-size:12px}
-#articleLecture .mfs-comp-names span{font-size:12px;font-weight:800}
-#articleLecture .mfs-stakes-note{background:#edf8f2;border:1px solid #cde9d9;border-left:5px solid #098c4c;border-radius:9px;margin:35px 0 5px;padding:23px 25px}
-#articleLecture .mfs-stakes-note .mfs-note-label{display:block;color:#087b42;font-size:11px;font-weight:900;letter-spacing:1.5px;margin-bottom:9px}
-#articleLecture .mfs-stakes-note strong{display:block;color:#10263c;font-size:20px;margin-bottom:8px}
-#articleLecture .mfs-stakes-note p{margin:0!important}
-#articleLecture .mfs-practical{margin:0 clamp(16px,5vw,60px) 35px;background:#f3f7fa;border-radius:12px;padding:23px}
-#articleLecture .mfs-practical h2{color:#10263c;font-size:20px;margin:0 0 18px}
-#articleLecture .article-related{border-top:1px solid #e2ebe7}
+/* ===== Presse sportive : finitions des articles ===== */
+.mfs-key-stat{
+  display:flex;align-items:center;gap:24px;
+  margin:24px 28px 6px;padding:24px 26px;
+  background:linear-gradient(115deg,#10263c,#173c50);color:#fff;
+  border-radius:15px;border-left:5px solid #35b778;
+  box-shadow:0 7px 22px #10263c1a;
+}
+.mfs-key-stat-number{font-size:clamp(64px,9vw,98px);line-height:1;font-weight:950;letter-spacing:-5px;color:#79e3a6;flex:0 0 auto}
+.mfs-key-stat-label{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#9de8bc;font-weight:900}
+.mfs-key-stat-content h2{font-size:clamp(18px,2.4vw,25px);line-height:1.2;margin:7px 0 9px;color:white}
+.mfs-key-stat-content p{font-size:14px;line-height:1.6;color:#e1edf0;margin:0}
+.article-related{margin-top:26px;padding-top:24px}
+.article-related h2{font-size:23px;margin-bottom:17px;border-left:4px solid #0b8a4b;padding-left:12px}
+.article-related-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.article-related-card{
+  min-height:160px;display:flex;flex-direction:column;gap:14px;
+  background:#fff;border:1px solid #dce7e1;border-radius:14px;
+  padding:18px;box-shadow:0 4px 15px #10263c0c;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.article-related-card:hover,.article-related-card:focus-visible{transform:translateY(-3px);box-shadow:0 10px 24px #10263c1b;border-color:#0b8a4b;outline:none}
+.article-related-card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.article-related-category{display:inline-flex;max-width:100%;padding:5px 9px;border-radius:6px;background:#e8f7ee;color:#087b42;font-size:11px;font-weight:900;overflow-wrap:anywhere}
+.article-related-arrow{font-size:19px;color:#0b8a4b}
+.article-related-title{font-size:16px;line-height:1.4;flex:1}
+.article-related-date{font-size:11px;color:#70818b;font-weight:700}
+@media(max-width:900px){.article-related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){
- #articleLecture .article-reader-header{padding:24px 18px 20px}
- #articleLecture .article-reader-title{font-size:26px;letter-spacing:-.4px}
- #articleLecture .article-reader-summary{font-size:15px;line-height:1.55;padding-left:12px}
- #articleLecture .article-reader-body{padding:20px 18px 30px}
- #articleLecture .article-reader-body.article-rich p{font-size:15px;line-height:1.75}
- #articleLecture .article-reader-body.article-rich h2{font-size:20px;margin-top:30px}
- #articleLecture .article-reader-body.article-rich h3{font-size:18px;margin-top:27px}
- #articleLecture .mfs-match-hero{padding:26px 13px}
- #articleLecture .mfs-match-teams{grid-template-columns:minmax(0,1fr) 27px minmax(0,1fr);gap:5px;font-size:15px}
- #articleLecture .mfs-match-kicker{font-size:9px}
- #articleLecture .mfs-match-detail{font-size:11px}
- #articleLecture .mfs-comparison{margin:17px 10px 5px}
- #articleLecture .mfs-comp-row{padding:11px 5px;gap:5px}
- #articleLecture .mfs-comp-row span{font-size:10px}
- #articleLecture .mfs-comp-names span{font-size:10px}
- #articleLecture .mfs-comp-row strong{font-size:18px}
- #articleLecture .mfs-stakes-note{padding:18px}
- #articleLecture .mfs-practical{margin:0 12px 25px;padding:18px}
+ .mfs-key-stat{margin:18px 12px 4px;padding:18px 15px;gap:15px}
+ .mfs-key-stat-number{font-size:65px;letter-spacing:-3px}
+ .mfs-key-stat-content h2{font-size:18px}
+ .mfs-key-stat-content p{font-size:12px}
+ .article-related-grid{grid-template-columns:1fr}
+ .article-related-card{min-height:130px;padding:15px}
+}
+
+
+/* Finition presse sportive : titres de sections avec filet vert, sans modifier le titre principal */
+.article-reader-body.article-rich h2,
+.article-reader-body.article-rich h3{
+  color:#10263c;
+  border-left:4px solid #0b8a4b;
+  border-bottom:0;
+  padding:2px 0 2px 14px;
+  font-weight:800;
+  line-height:1.35;
+  margin:30px 0 14px;
+}
+.article-reader-body.article-rich h2{font-size:clamp(20px,2.3vw,24px)}
+.article-reader-body.article-rich h3{font-size:clamp(18px,2vw,21px)}
+@media(max-width:700px){
+  .article-reader-body.article-rich h2,
+  .article-reader-body.article-rich h3{margin:24px 0 12px;padding-left:11px}
 }
 
 </style>
@@ -4271,8 +4276,9 @@ function genererArticlesLies(indexActuel) {
         const categorie = echapperHtml(valeur(a, ["Catégorie", "Categorie", "catégorie", "categorie"]) || "Article");
         return `
           <button type="button" class="article-related-card" onclick="ouvrirArticle(${index})">
-            <div class="article-related-meta">${date}${date && categorie ? " · " : ""}${categorie}</div>
+            <div class="article-related-card-top"><span class="article-related-category">${categorie}</span><span class="article-related-arrow" aria-hidden="true">↗</span></div>
             <div class="article-related-title">${titre}</div>
+            ${date ? `<div class="article-related-date">${date}</div>` : ""}
           </button>`;
     }).join("");
 
@@ -4303,80 +4309,52 @@ function ouvrirArticle(index, majUrl = true) {
     if (/interview/i.test(valeur(a, ["Catégorie", "Categorie", "catégorie", "categorie"]))) {
         contenu = nettoyerMiseEnPageInterview(contenu, titre, resume);
     }
-    // Nettoyage éditorial commun : le titre et le résumé sont déjà dans l'en-tête.
-    // Ne supprime que les premiers blocs qui correspondent clairement aux champs Sheets.
-    {
-        const bloc = document.createElement("div");
-        bloc.innerHTML = contenu;
-        const norm = t => String(t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-        const nt = norm(titre), nr = norm(resume);
-        for (const el of Array.from(bloc.children).slice(0, 3)) {
-            const v = norm(el.textContent);
-            if (!v) continue;
-            const titreIdentique = /^H[1-3]$/.test(el.tagName) && nt && (v === nt || (v.length > 45 && nt.startsWith(v)));
-            const resumeIdentique = el.tagName === "P" && nr && (v === nr || (v.length > 90 && nr.startsWith(v)));
-            if (titreIdentique || resumeIdentique) el.remove();
-            else break;
-        }
-        contenu = bloc.innerHTML;
+    // Retire la signature éditoriale lorsqu'elle est déjà portée par le site.
+    // Nettoyage ciblé : ne touche pas aux mentions de MFS dans les interviews.
+    contenu = contenu.replace(/<p>\s*(?:<em>)?\*?Manche Football Stats\s*[–—-]\s*Le football manchois en chiffres\.?\*?(?:<\/em>)?\s*<\/p>/gi, "");
+    // Supprime le titre recopié dans le contenu Sheets : l'en-tête affiche déjà ce titre.
+    // Ne retire que le premier élément s'il correspond exactement au titre de l'article.
+    const conteneurArticle = document.createElement("div");
+    conteneurArticle.innerHTML = contenu;
+    const normaliserTitreArticle = texte => String(texte || "")
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, " ").trim().toLowerCase();
+    const premierBloc = conteneurArticle.firstElementChild;
+    if (premierBloc && /^(H1|H2|H3|P)$/.test(premierBloc.tagName) &&
+        normaliserTitreArticle(premierBloc.textContent) === normaliserTitreArticle(valeur(a, ["Titre", "titre"]))) {
+        premierBloc.remove();
     }
+    contenu = conteneurArticle.innerHTML;
     const image = valeur(a, ["Image", "image", "URL image", "Url image"]);
 
     const cible = document.getElementById("articleLectureContenu");
     if (!cible) return;
 
-    // Présentation spéciale réservée à cet avant-match.
     const estDuelMaintien = /agon.?coutainville/i.test(titre) && /roncey.?c[ée]risy/i.test(titre);
-    let afficheMatch = "", comparatif = "", infosMatch = "";
-    if (estDuelMaintien) {
-        afficheMatch = `<div class="mfs-match-hero">
-            <div class="mfs-match-kicker">Départemental 2 · Poule C · 5e journée</div>
-            <div class="mfs-match-teams"><span>FC Agon-Coutainville (2)</span><span class="mfs-match-versus">VS</span><span>US Roncey-Cérisy</span></div>
-            <div class="mfs-match-stakes">Duel pour le maintien</div>
-            <div class="mfs-match-detail">Samedi 17 octobre 2026 · 19 h · Stade Pierre-Drouet</div>
-        </div>`;
-        const lignes = [["11e","Classement","12e"],["1","Points","0"],["4","Matchs joués","4"],["0","Victoires","0"],["2","Buts marqués","3"],["15","Buts encaissés","12"],["−13","Différence de buts","−9"],["0","Matchs sans encaisser","0"]];
-        comparatif = `<section class="mfs-comparison"><h2>Le face-à-face en chiffres</h2>
-            <div class="mfs-comp-row mfs-comp-names"><span>Agon-Coutainville (2)</span><span>Statistique</span><span>Roncey-Cérisy</span></div>
-            ${lignes.map(r=>`<div class="mfs-comp-row"><strong>${r[0]}</strong><span>${r[1]}</span><strong>${r[2]}</strong></div>`).join("")}</section>`;
-        infosMatch = `<section class="mfs-practical"><h2>Informations sur la rencontre</h2><div class="mfs-practical-grid">
-            <div class="mfs-practical-item"><small>Compétition</small><strong>D2 · Poule C · 5e journée</strong></div>
-            <div class="mfs-practical-item"><small>Affiche</small><strong>FC Agon-Coutainville (2) – US Roncey-Cérisy</strong></div>
-            <div class="mfs-practical-item"><small>Date et heure</small><strong>Samedi 17 octobre 2026 · 19 h</strong></div>
-            <div class="mfs-practical-item"><small>Lieu</small><strong>Stade Pierre-Drouet · Agon-Coutainville</strong></div>
-        </div></section>`;
-        // Le titre et le chapô figurent déjà dans l'en-tête : retirer les doublons du texte importé.
-        const temp = document.createElement("div");
-        temp.innerHTML = contenu;
-        const normaliser = t => (t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-        const titreNormal = normaliser(titre);
-        const resumeNormal = normaliser(resume);
-        let debut = true;
-        for (const el of Array.from(temp.children)) {
-            if (!debut) break;
-            const t = normaliser(el.textContent);
-            if (!t) {el.remove();continue;}
-            const estTitre = titreNormal && (t === titreNormal || (t.length > 40 && titreNormal.includes(t)));
-            const estResume = resumeNormal && (t === resumeNormal || (t.length > 85 && resumeNormal.includes(t)));
-            if (estTitre || estResume) {el.remove();continue;}
-            debut = false;
-        }
-        // Encadré éditorial placé après le contenu, sans changer le texte d'origine.
-        temp.insertAdjacentHTML("beforeend", `<aside class="mfs-stakes-note"><span class="mfs-note-label">L’ENJEU DU MATCH</span><strong>Une première victoire pour lancer la saison</strong><p>Deux promus, quatre journées sans succès : cette confrontation directe peut déjà compter dans la course au maintien.</p></aside>`);
-        contenu = temp.innerHTML;
-        // Masquer les informations pratiques répétées à la fin du contenu si elles sont dans un bloc distinct.
-        for (const el of Array.from(temp.querySelectorAll("h2,h3,h4"))) {
-            if (/^informations sur la rencontre$/i.test(el.textContent.trim())) {
-                let suivant = el.nextElementSibling;
-                while (suivant && !/^H[234]$/.test(suivant.tagName)) {const apres = suivant.nextElementSibling; suivant.remove(); suivant = apres;}
-                el.remove();
-            }
-        }
-        contenu = temp.innerHTML;
-    }
+    const afficheMatch = estDuelMaintien ? `
+      <div class="mfs-match-hero">
+        <div class="mfs-match-kicker">Départemental 2 · Poule C · 5e journée</div>
+        <div class="mfs-match-teams"><span>FC Agon-Coutainville (2)</span><span class="mfs-match-versus">VS</span><span>US Roncey-Cérisy</span></div>
+        <div class="mfs-match-stakes">Duel pour le maintien</div>
+        <div class="mfs-match-detail">Samedi 17 octobre 2026 · 19 h · Stade Pierre-Drouet, Agon-Coutainville</div>
+      </div>` : "";
+    const comparatif = estDuelMaintien ? `
+      <section class="mfs-comparison" aria-label="Comparatif statistique des deux équipes">
+        <h2>Le face-à-face en chiffres</h2>
+        <div class="mfs-comp-row mfs-comp-names"><span>Agon-Coutainville (2)</span><span>Statistique</span><span>Roncey-Cérisy</span></div>
+        ${[["11e","Classement","12e"],["1","Points","0"],["4","Matchs joués","4"],["0","Victoires","0"],["2","Buts marqués","3"],["15","Buts encaissés","12"],["−13","Différence de buts","−9"],["0","Matchs sans encaisser","0"]].map(r=>`<div class="mfs-comp-row"><strong>${r[0]}</strong><span>${r[1]}</span><strong>${r[2]}</strong></div>`).join("")}
+      </section>` : "";
+    const chiffreDuMatch = estDuelMaintien ? `
+      <aside class="mfs-key-stat" aria-label="Le chiffre du match">
+        <div class="mfs-key-stat-number">15</div>
+        <div class="mfs-key-stat-content">
+          <span class="mfs-key-stat-label">Le chiffre du match</span>
+          <h2>15 buts encaissés en quatre journées</h2>
+          <p>Le FC Agon-Coutainville (2) concède en moyenne 3,75 buts par rencontre. Retrouver de la solidité défensive sera l'une des clés face à Roncey-Cérisy.</p>
+        </div>
+      </aside>` : "";
     cible.innerHTML = `
-        <article class="article-reader-shell ${estDuelMaintien ? 'mfs-feature' : ''}">
+        <article class="article-reader-shell">
             ${afficheMatch}
             <header class="article-reader-header">
                 <div class="article-reader-meta">${date}${date && categorie ? " · " : ""}${categorie}</div>
@@ -4384,8 +4362,8 @@ function ouvrirArticle(index, majUrl = true) {
                 ${resume ? `<p class="article-reader-summary">${resume}</p>` : ""}
             </header>
             ${comparatif}
+            ${chiffreDuMatch}
             <div class="article-reader-body article-rich">${contenu}</div>
-            ${infosMatch}
             ${genererArticlesLies(index)}
         </article>`;
 
