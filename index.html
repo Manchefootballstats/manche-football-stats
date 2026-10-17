@@ -1843,7 +1843,7 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 .mfs-editorial-card .mfs-cover{position:absolute;inset:0;z-index:-2;overflow:hidden}
 .mfs-editorial-card .mfs-cover img{width:100%;height:100%;object-fit:cover;position:static;display:block;transition:transform .35s}
 .mfs-editorial-card:hover .mfs-cover img{transform:scale(1.035)}
-.mfs-editorial-card .mfs-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#071927f5 0%,#071927bf 42%,#07192728 100%)}
+.mfs-editorial-card .mfs-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(7,25,39,.96) 0%,rgba(7,25,39,.88) 20%,rgba(7,25,39,.40) 43%,rgba(7,25,39,0) 70%)}
 .mfs-editorial-card .mfs-editorial-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;width:100%;height:100%;padding:17px;text-align:left}
 .mfs-editorial-card:first-child .mfs-editorial-content{padding:26px}
 .mfs-editorial-card .category{display:inline-block;background:#087b42;color:#fff;padding:5px 9px;border-radius:6px;font-size:10px;letter-spacing:.5px}
@@ -1911,6 +1911,14 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 .article-rich .article-comparison-table tbody tr:nth-child(even){background:#f2f9f5}
 .article-rich .article-comparison-table tbody tr:last-child td{border-bottom:0}
 @media(max-width:600px){.article-rich .article-comparison-table{font-size:12px}.article-rich .article-comparison-table th,.article-rich .article-comparison-table td{padding:10px 6px}}
+
+/* À la Une : image nette en haut, dégradé concentré sous les textes */
+.mfs-editorial-card:first-child .mfs-cover::after{
+  background:linear-gradient(to top,rgba(7,25,39,.97) 0%,rgba(7,25,39,.91) 20%,rgba(7,25,39,.42) 43%,transparent 72%)!important;
+}
+@media(max-width:700px){
+ .mfs-editorial-card:first-child .mfs-cover::after{background:linear-gradient(to top,rgba(7,25,39,.97) 0%,rgba(7,25,39,.83) 29%,rgba(7,25,39,.18) 55%,transparent 80%)!important}
+}
 </style>
 
 
