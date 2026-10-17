@@ -1900,6 +1900,17 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 .mon-club-dashboard .mon-club-stat .mfs-match-score{flex:0 0 auto;display:inline-block;background:#10263c;color:white;border-radius:8px;padding:8px 10px;font-size:18px;white-space:nowrap}
 .mon-club-dashboard .mon-club-stat .mfs-match-date{display:block;margin-top:10px;color:#64748b;font-size:11px;font-weight:600}
 @media(max-width:700px){.mon-club-dashboard .mon-club-team-tab{min-width:125px}.mon-club-dashboard .mon-club-stat .mfs-match-score{font-size:15px;padding:7px}.mfs-match-line{gap:5px}.mfs-match-line>span{font-size:11px}}
+
+/* Tableaux comparatifs intégrés aux articles */
+.article-rich .article-table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:18px 0 22px;border:1px solid #dce9e3;border-radius:12px;background:#fff}
+.article-rich .article-comparison-table{width:100%;min-width:0;border-collapse:collapse;font-size:14px}
+.article-rich .article-comparison-table th{background:#10263c;color:#fff;text-align:center;padding:13px 10px;white-space:normal}
+.article-rich .article-comparison-table th:first-child{text-align:left}
+.article-rich .article-comparison-table td{padding:12px 10px;text-align:center;border-bottom:1px solid #e7eeea}
+.article-rich .article-comparison-table td:first-child{text-align:left;font-weight:700;color:#10263c}
+.article-rich .article-comparison-table tbody tr:nth-child(even){background:#f2f9f5}
+.article-rich .article-comparison-table tbody tr:last-child td{border-bottom:0}
+@media(max-width:600px){.article-rich .article-comparison-table{font-size:12px}.article-rich .article-comparison-table th,.article-rich .article-comparison-table td{padding:10px 6px}}
 </style>
 
 
@@ -4239,52 +4250,67 @@ function formaterContenuArticle(texte) {
     if (!texte) return "";
 
     let t = echapperHtml(String(texte)).replace(/\r\n?/g, "\n");
-
-    // Gras Markdown
     t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 
     const lignes = t.split("\n");
-    let html = [];
+    const html = [];
     let paragraphe = [];
+    let index = 0;
 
     const viderParagraphe = () => {
         const contenu = paragraphe.join(" ").trim();
         if (contenu) html.push("<p>" + contenu + "</p>");
         paragraphe = [];
     };
+    const estLigneTableau = l => /^\s*\|.*\|\s*$/.test(l);
+    const cellules = l => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim());
+    const estSeparateur = l => {
+        const cs = cellules(l);
+        return cs.length > 0 && cs.every(c => /^:?-{3,}:?$/.test(c));
+    };
 
-    lignes.forEach(ligne => {
-        const l = ligne.trim();
+    while (index < lignes.length) {
+        const l = lignes[index].trim();
+        if (!l) { viderParagraphe(); index++; continue; }
 
-        if (!l) {
+        // Tableau Markdown : ligne d'en-tête, séparateur puis lignes de données.
+        if (estLigneTableau(l) && index + 1 < lignes.length &&
+            estLigneTableau(lignes[index + 1]) && estSeparateur(lignes[index + 1])) {
             viderParagraphe();
-            return;
+            const entetes = cellules(l);
+            const corps = [];
+            index += 2;
+            while (index < lignes.length && estLigneTableau(lignes[index])) {
+                const valeurs = cellules(lignes[index]);
+                if (!estSeparateur(lignes[index])) {
+                    corps.push("<tr>" + entetes.map((_, i) => "<td>" + (valeurs[i] || "") + "</td>").join("") + "</tr>");
+                }
+                index++;
+            }
+            html.push('<div class="article-table-wrap"><table class="article-comparison-table"><thead><tr>' +
+                entetes.map(c => "<th>" + c + "</th>").join("") +
+                "</tr></thead><tbody>" + corps.join("") + "</tbody></table></div>");
+            continue;
         }
 
         if (/^###\s+/.test(l)) {
-            viderParagraphe();
-            html.push("<h3>" + l.replace(/^###\s+/, "") + "</h3>");
+            viderParagraphe(); html.push("<h3>" + l.replace(/^###\s+/, "") + "</h3>");
         } else if (/^##\s+/.test(l)) {
-            viderParagraphe();
-            html.push("<h2>" + l.replace(/^##\s+/, "") + "</h2>");
+            viderParagraphe(); html.push("<h2>" + l.replace(/^##\s+/, "") + "</h2>");
         } else if (/^#\s+/.test(l)) {
-            viderParagraphe();
-            html.push("<h1>" + l.replace(/^#\s+/, "") + "</h1>");
+            viderParagraphe(); html.push("<h1>" + l.replace(/^#\s+/, "") + "</h1>");
         } else if (/^(🔢|🎯|⚽|📊)\s/.test(l)) {
-            viderParagraphe();
-            html.push('<div class="article-highlight"><strong>' + l + "</strong></div>");
+            viderParagraphe(); html.push('<div class="article-highlight"><strong>' + l + "</strong></div>");
         } else if (/^---+$/.test(l)) {
             viderParagraphe();
         } else {
             paragraphe.push(l);
         }
-    });
-
+        index++;
+    }
     viderParagraphe();
     return html.join("");
 }
-
-
 
 
 /* Mise en page des interviews : sans doublon de titre, questions et réponses distinctes. */
