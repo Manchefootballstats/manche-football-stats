@@ -1920,25 +1920,42 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
  .mfs-editorial-card:first-child .mfs-cover::after{background:linear-gradient(to top,rgba(7,25,39,.97) 0%,rgba(7,25,39,.83) 29%,rgba(7,25,39,.18) 55%,transparent 80%)!important}
 }
 /* Interview Charles Landry : visuel seul, carte toujours cliquable */
-.mfs-editorial-card.mfs-interview-cover .category,
-.mfs-editorial-card.mfs-interview-cover .summary,
-.mfs-editorial-card.mfs-interview-cover .mfs-editorial-content > strong {
-  display:none !important;
+.mfs-editorial-card.mfs-interview-cover {
+  position: relative;
+  padding: 0;
+  background: #10263c;
+  overflow: hidden;
+  isolation: isolate;
 }
-.mfs-editorial-card.mfs-interview-cover .mfs-cover::after {
-  background:none !important;
+.mfs-editorial-card.mfs-interview-cover .mfs-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
 }
 .mfs-editorial-card.mfs-interview-cover .mfs-cover img {
-  object-fit:cover;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.mfs-editorial-card.mfs-interview-cover::before,
+.mfs-editorial-card.mfs-interview-cover::after,
+.mfs-editorial-card.mfs-interview-cover .mfs-cover::after {
+  display: none !important;
 }
 .mfs-editorial-card.mfs-interview-cover .mfs-editorial-content {
-  justify-content:flex-end;
-  align-items:flex-start;
+  display: none !important;
 }
-.mfs-editorial-card.mfs-interview-cover .read {
-  margin-top:0;
-  background:#087b42;
-  box-shadow:0 3px 12px rgba(0,0,0,.35);
+.mfs-editorial-card.mfs-interview-cover:hover .mfs-cover img {
+  transform: none;
+}
+@media (max-width: 700px) {
+  .mfs-editorial-card.mfs-interview-cover {
+    min-height: 300px;
+  }
 }
 
 /* Nouveau logo MFS : image entière visible dans le bandeau */
