@@ -1919,6 +1919,29 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 @media(max-width:700px){
  .mfs-editorial-card:first-child .mfs-cover::after{background:linear-gradient(to top,rgba(7,25,39,.97) 0%,rgba(7,25,39,.83) 29%,rgba(7,25,39,.18) 55%,transparent 80%)!important}
 }
+
+/* Interview Charles Landry : afficher le visuel sans doublon de texte */
+.mfs-editorial-card.mfs-interview-cover .category,
+.mfs-editorial-card.mfs-interview-cover .summary,
+.mfs-editorial-card.mfs-interview-cover .mfs-editorial-content > strong {
+  display: none;
+}
+.mfs-editorial-card.mfs-interview-cover .mfs-cover::after {
+  background: none !important;
+}
+.mfs-editorial-card.mfs-interview-cover .mfs-cover img {
+  object-fit: contain;
+}
+.mfs-editorial-card.mfs-interview-cover .mfs-editorial-content {
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.mfs-editorial-card.mfs-interview-cover .read {
+  margin-top: 0;
+  background: #087b42;
+  box-shadow: 0 3px 12px rgba(0,0,0,.35);
+}
+
 /* Nouveau logo MFS : image entière visible dans le bandeau */
 .site-header .header-logo{object-fit:contain;background:transparent;border:0;padding:0;border-radius:0}
 </style>
@@ -5232,7 +5255,7 @@ function rendreAccueilEditorial(){
    const photo=/^https:\/\//i.test(url)
      ? `<img src="${esc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">`
      : '<span class="mfs-no-image" aria-hidden="true"></span>';
-   return `<button type="button" class="mfs-editorial-card" onclick="ouvrirArticle(${i})" aria-label="Lire : ${titre}"><span class="mfs-cover">${photo}</span><span class="mfs-editorial-content"><span class="category">${cat}</span><strong>${titre}</strong>${i===0&&resume?`<span class="summary">${resume}</span>`:''}${i===0?'<span class="read">Lire l’article →</span>':''}</span></button>`;
+   return `<button type="button" class="mfs-editorial-card${i===0 && /Interview Charles Landry/i.test(url) ? " mfs-interview-cover" : ""}" onclick="ouvrirArticle(${i})" aria-label="Lire : ${titre}"><span class="mfs-cover">${photo}</span><span class="mfs-editorial-content"><span class="category">${cat}</span><strong>${titre}</strong>${i===0&&resume?`<span class="summary">${resume}</span>`:''}${i===0?'<span class="read">Lire l’article →</span>':''}</span></button>`;
   }).join('');
  }else if(articlesLoaded){zone.innerHTML='<div class="mfs-editorial-loading">Aucun article publié pour le moment.</div>';}
  const fil=document.getElementById('mfsFilActualite');
