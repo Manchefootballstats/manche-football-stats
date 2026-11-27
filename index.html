@@ -1960,6 +1960,12 @@ nav button.nav-contribuer:hover,nav button.nav-contribuer:focus-visible{backgrou
 
 /* Nouveau logo MFS : image entière visible dans le bandeau */
 .site-header .header-logo{object-fit:contain;background:transparent;border:0;padding:0;border-radius:0}
+
+/* Photos intégrées aux articles */
+.article-rich .article-photo{margin:24px auto;text-align:center;max-width:760px}
+.article-rich .article-photo img{display:block;width:auto;max-width:100%;height:auto;max-height:720px;object-fit:contain;margin:0 auto;border-radius:12px}
+.article-rich .article-photo figcaption{margin-top:9px;color:#64748b;font-size:13px;font-style:italic;line-height:1.5;text-align:center}
+@media(max-width:600px){.article-rich .article-photo{margin:18px auto}.article-rich .article-photo img{max-height:none;border-radius:9px}}
 </style>
 
 
@@ -4299,7 +4305,7 @@ function formaterContenuArticle(texte) {
     if (!texte) return "";
 
     let t = echapperHtml(String(texte)).replace(/\r\n?/g, "\n");
-    t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    const formatInline = l => l.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, "<em>$1</em>");
 
     const lignes = t.split("\n");
     const html = [];
@@ -4312,14 +4318,34 @@ function formaterContenuArticle(texte) {
         paragraphe = [];
     };
     const estLigneTableau = l => /^\s*\|.*\|\s*$/.test(l);
-    const cellules = l => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim());
+    const cellules = l => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => formatInline(c.trim()));
     const estSeparateur = l => {
         const cs = cellules(l);
         return cs.length > 0 && cs.every(c => /^:?-{3,}:?$/.test(c));
     };
 
     while (index < lignes.length) {
-        const l = lignes[index].trim();
+        let l = lignes[index].trim();
+        // Images Markdown, avec URL sur la même ligne ou la suivante.
+        let sourceImage = l;
+        let lignesImage = 1;
+        if (/^!\[[^\]]*\]$/.test(l) && index + 1 < lignes.length) {
+            sourceImage += lignes[index + 1].trim();
+            lignesImage = 2;
+        }
+        const photo = sourceImage.match(/^!\[([^\]]*)\]\(\s*(https?:\/\/[^\s)<>]+)\s*\)$/i);
+        if (photo) {
+            viderParagraphe();
+            index += lignesImage;
+            let suivant = index;
+            while (suivant < lignes.length && !lignes[suivant].trim()) suivant++;
+            const legende = (lignes[suivant] || "").trim().match(/^\*([^*]+)\*$/);
+            if (legende) index = suivant + 1;
+            html.push('<figure class="article-photo"><img src="' + photo[2] + '" alt="' + photo[1] + '" loading="lazy" decoding="async">' +
+                (legende ? '<figcaption>' + legende[1] + '</figcaption>' : '') + '</figure>');
+            continue;
+        }
+        l = formatInline(l);
         if (!l) { viderParagraphe(); index++; continue; }
 
         // Tableau Markdown : ligne d'en-tête, séparateur puis lignes de données.
